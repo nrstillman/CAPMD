@@ -11,7 +11,7 @@ file(GLOB SOURCE_FILES src/main.cpp src/system/*.cpp include/*.h )
 include_directories(src/system)
 include_directories(include)
 
-add_subdirectory(pybind11)
+add_subdirectory(pybind11 [../pybind11])
 pybind11_add_module(capmd src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/bindings.cpp include/Simulation.h include/Particle.h include/Population.h include/Domain.h include/Dynamics.h include/Interaction.h)
 
 # Add executable target with source files listed in SOURCE_FILES variable
