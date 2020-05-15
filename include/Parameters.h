@@ -13,12 +13,14 @@ struct Parameters {
     // interaction parameters
 
     // Random
-    int seed = 2020;
+    int initseed = 2020;
+    int angseed = 2001;
+    int deathseed = 2021;
 
     // Simulation
     double dt  = 0.01;
     int dim = 2;
-    int maxmove = 10;
+    int maxmove = 1;
     double cutoff = 2.5;
     double cutoffZ = 2.5;
 
@@ -29,7 +31,7 @@ struct Parameters {
 
     //Population
     // Population size
-    int N = 10;
+    int N = 50;
     std::string init_opt = "random_unif";
 
     int NTA = 0;
@@ -46,12 +48,12 @@ struct Parameters {
     int ntypes = 3;
     int fade = 0;
     std::vector<double> pairstiff  = {1,1};
-    std::vector<double> pairatt = {0, 0}; //max limit
+    std::vector<double> pairatt = {0.2, 0.2}; //max limit
 
     //Dynamics (active parameters)
-    std::vector<double> factive = {0.1};
+    std::vector<double> factive = {10};
     std::vector <double> zeta  = {1};
-    std::vector <double> tau= {10};
+    double tau = 0.1;
 
 };
 

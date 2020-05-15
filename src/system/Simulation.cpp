@@ -12,6 +12,7 @@ void Simulation::initSimulation(Domain domain,Population population, Parameters 
     cutoff = params.cutoff;
     cutoffZ = params.cutoffZ;
     dt = params.dt;
+    tau = params.tau;
     maxmove = params.maxmove;
     currentflag = 0;
 }
@@ -33,7 +34,7 @@ void Simulation::initPopulation() {
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        gen.seed(params.seed);
+        gen.seed(params.initseed);
 
         // default constructs N Particle objects into the vector
         std::vector<Particle> tmp_vec;
@@ -95,13 +96,12 @@ void Simulation::initPopulation() {
             dynamics.step(p, dt); // dt in params
         }
         bool rebuild = domain.checkRebuild(particles, maxmove);
+
         if (rebuild){
                     domain.makeNeighbourList(particles, cutoff);
                     neighbours = domain.NeighbourList;
-
         }
     }
-
     // population dynamics here
     // For a density dependent divison rate:
     // First division, then death, else new particles will appear in the just vacated holes ...

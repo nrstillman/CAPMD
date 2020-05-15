@@ -41,7 +41,6 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
         force.push_back(kij[n]*(bij - dist - 2*epsij[n])*dr[n]/dist);
         }
     }
-
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     double multi = 1.0;
     if (i.age<fade) {multi = i.age/fade;}

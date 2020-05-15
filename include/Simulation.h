@@ -48,6 +48,8 @@ class Simulation : virtual public Particle{
         double maxmove;
         // running counter on particle flags
         int currentflag;
+        // correaltion time
+        double tau;
 
         // Constructors:
         Simulation();

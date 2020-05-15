@@ -24,6 +24,7 @@ PYBIND11_MODULE(capmd, m) {
         .def_readwrite("N", &Simulation::N) // parameters to be set in python
         .def_readwrite("cutoff", &Simulation::cutoff)
         .def_readwrite("dt", &Simulation::dt)
+        .def_readwrite("tau", &Simulation::tau)
         .def("initialise", &Simulation::initialise)
         .def("initSimulation", &Simulation::initSimulation)
         .def("initPopulation", &Simulation::initPopulation)

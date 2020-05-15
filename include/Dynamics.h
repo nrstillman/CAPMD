@@ -19,7 +19,7 @@ class Dynamics {
         // substrate friction
         std::vector <double>  zeta;
         // correlation time of the active driving
-        std::vector <double>  tau;
+        double tau;
     public:
         //Constructor
         Dynamics();
