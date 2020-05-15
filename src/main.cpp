@@ -9,15 +9,13 @@
 #include "Simulation.h"
 
 int main() {
-
     Simulation sim = Simulation();
+
     sim.initialise();
     Particle p = sim.getParticle(0);
     std::vector<double> x = p.getPosition();
 
     std::cout<< x[0] << ", " << x[1] <<std::endl;
-
-    //    TODO: Initialise NeighbourList
 
     std::list<int> n;
     n = sim.getNeighbours(p);
@@ -33,6 +31,5 @@ int main() {
 
     std::cout<< x[0] << ", " << x[1] <<std::endl;
 
-    //    TODO: Interactions & Dynamics
 }
 

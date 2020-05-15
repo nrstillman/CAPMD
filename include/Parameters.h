@@ -45,8 +45,8 @@ struct Parameters {
     //Interaction
     int ntypes = 3;
     int fade = 0;
-    std::vector<double> pairstiff  = {0.4,0.4};
-    std::vector<double> pairatt = {1};
+    std::vector<double> pairstiff  = {1,1};
+    std::vector<double> pairatt = {0.2, 0.2};
 
     //Dynamics (active parameters)
     std::vector<double> factive = {1};

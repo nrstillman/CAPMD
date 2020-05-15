@@ -16,18 +16,30 @@ Interaction::Interaction(){
 std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
     // get pair parameters
     std::vector<double> kij = pairstiff;
-    double epsij = pairatt[i.type*ntypes + j.type];
+    std::vector<double> epsij= pairatt;
+    std::vector<double> x = j.getPosition();
 
     // compute vector distance between particles
     std::vector<double> dr = D.calc_dr(i,j);
+    // compute distance
+    double dist = D.dist(i,j);
 
+    double eps = D.dist(epsij[0], epsij[1]);
     // actual force computation according to our potential
     // several lines since piecewise defined
-    std::vector<double> force;
-    for (int n = 0;n<2; n++){
-        force.push_back(kij[n]*(i.radius + j.radius - std::abs(dr[n]))*dr[n]/std::abs(dr[n]));
-    }
 
+    std::vector<double> force;
+    double bij = i.radius + j.radius;
+    if (dist/bij - 1 < eps) {
+        for (int n = 0;n<2; n++){
+        force.push_back(kij[n]*(bij - dist)*dr[n]/dist);
+        }
+    }
+    else if(eps < dist/bij - 1 <= 2*eps){
+        for (int n = 0;n<2; n++){
+        force.push_back(kij[n]*(bij - dist - 2*epsij[n])*dr[n]/dist);
+        }
+    }
 
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     double multi = 1.0;

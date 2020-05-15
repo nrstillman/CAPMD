@@ -76,31 +76,20 @@ void Simulation::initPopulation() {
     {
         // compute forces
         for (Particle& p : particles) {
-//                std::vector<double> tmp_f = p.force;
+            // get neighbours of p out of neighbour list
+            std::list<int> neighbours = Simulation::getNeighbours(p);
 
-                // get neighbours of p out of neighbour list
-                std::list<int> neighbours = Simulation::getNeighbours(p);
-                for (auto n : neighbours) {
-                    // use interaction to compute force
-                    std::vector<double> interact = interaction.computeForce(p,n,domain);
-                    // add to previous force (ie force += interact)
-                    std::transform (interact.begin(), interact.end(), p.force.begin(), p.force.begin(), std::plus<double>());
-                }
-                std::cout<<p.force[0]<<std::endl;
-                std::cout<<p.force[1]<<std::endl;
-
-            // store the new force with the particle
-//                p.force = tmp_f;
-
-
-//                std::cout<<p.force[0]<<std::endl;
-//                std::cout<<p.force[1]<<std::endl;
+            for (auto n : neighbours) {
+                Particle pj = Simulation::getParticle(n);
+                // use interaction to compute force
+                std::vector<double> interact = interaction.computeForce(p,pj,domain);
+                // add to previous force (ie force += interact)
+                std::transform (interact.begin(), interact.end(), p.force.begin(), p.force.begin(), std::plus<double>());
+            }
         }
         // using the forces, update the positions and angles
         for (Particle& p : particles) {
-            std::vector<double> x = p.getPosition();
             dynamics.step(p, dt); // dt in params
-            x = p.getPosition();
         }
         //TODO:
         // check if there is a neighbour list rebuild necesary

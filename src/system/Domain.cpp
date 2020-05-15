@@ -14,7 +14,7 @@ std::vector<double> Domain::calc_dr(Particle i, Particle j)
     std::vector<double> a = i.position;
     std::vector<double> b = j.position;
 
-    std::transform(a.begin(), a.end(), b.begin(), std::back_inserter(dr), std::minus<double>());
+    std::transform(b.begin(), b.end(), a.begin(), std::back_inserter(dr), std::minus<double>());
     return dr;
 }
 
