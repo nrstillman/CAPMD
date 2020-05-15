@@ -20,7 +20,7 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
     std::vector<double> x = i.getPosition();
 
     // compute vector distance between particles
-    std::vector<double> dr = D.calc_dr(i,j);
+    std::vector<double> dr = D.calc_dr(i.getPosition(),j.getPosition());
     // compute distance
     double dist = D.dist(i,j);
 

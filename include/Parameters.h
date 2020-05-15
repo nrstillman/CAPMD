@@ -24,12 +24,12 @@ struct Parameters {
 
     //Domain
     // x and y length
-    int Lx = 20;
-    int Ly = 20;
+    int Lx = 50;
+    int Ly = 50;
 
     //Population
     // Population size
-    int N = 1;
+    int N = 10;
     std::string init_opt = "random_unif";
 
     int NTA = 0;

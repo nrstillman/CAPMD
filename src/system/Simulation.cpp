@@ -22,7 +22,10 @@ void Simulation::initialise() {
     // create population of particles
     Simulation::initPopulation();
     // create the first neighbour list
-    neighbours = domain.makeNeighbourList(particles, cutoff);
+    domain.makeNeighbourList(particles, cutoff);
+
+    neighbours = domain.NeighbourList;
+
 }
 
 void Simulation::initPopulation() {
@@ -91,12 +94,12 @@ void Simulation::initPopulation() {
         for (Particle& p : particles) {
             dynamics.step(p, dt); // dt in params
         }
-        //TODO:
-        // check if there is a neighbour list rebuild necesary
-//        bool rebuild = domain.checkRebuild(particles, maxmove);
-//        if rebuild {
-//                    space.makeNeighbourList(particles, cutoff)
-//            }
+        bool rebuild = domain.checkRebuild(particles, maxmove);
+        if (rebuild){
+                    domain.makeNeighbourList(particles, cutoff);
+                    neighbours = domain.NeighbourList;
+
+        }
     }
 
     // population dynamics here
@@ -165,6 +168,7 @@ void Simulation::initPopulation() {
 //        }
         // and do a neighbour list rebuild to get all the indices straightened out again
         domain.makeNeighbourList(particles, cutoff);
+        neighbours = domain.NeighbourList;
     }
 
 

@@ -21,6 +21,8 @@ class Domain
     {
     public:
 
+        std::vector<std::list<int>> NeighbourList;
+        std::vector<std::vector<double>> PrevPositions;
         // Constructors
         Domain();
 
@@ -29,14 +31,14 @@ class Domain
         //  Domain(parameters.boundary);
 
         // vector between two particles
-        std::vector<double> calc_dr(Particle, Particle);
+        std::vector<double> calc_dr(std::vector<double> , std::vector<double> );
 
         // distance between two particles
         double dist(Particle , Particle);
 
 
-        std::vector<std::list<int>> makeNeighbourList(std::vector<Particle>, int);
-
+        void makeNeighbourList(std::vector<Particle>, int);
+        bool checkRebuild(std::vector<Particle>, double);
     };
 
 
