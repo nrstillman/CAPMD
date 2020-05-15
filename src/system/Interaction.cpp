@@ -17,7 +17,7 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
     // get pair parameters
     std::vector<double> kij = pairstiff;
     std::vector<double> epsij= pairatt;
-    std::vector<double> x = j.getPosition();
+    std::vector<double> x = i.getPosition();
 
     // compute vector distance between particles
     std::vector<double> dr = D.calc_dr(i,j);
@@ -25,17 +25,18 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
     double dist = D.dist(i,j);
 
     double eps = D.dist(epsij[0], epsij[1]);
+
     // actual force computation according to our potential
     // several lines since piecewise defined
 
     std::vector<double> force;
     double bij = i.radius + j.radius;
-    if (dist/bij - 1 < eps) {
+    if (dist < bij*(1 + eps)) {
         for (int n = 0;n<2; n++){
-        force.push_back(kij[n]*(bij - dist)*dr[n]/dist);
+        force.push_back(-kij[n]*(bij - dist)*dr[n]/dist);
         }
     }
-    else if(eps < dist/bij - 1 <= 2*eps){
+    else if(dist < bij*(1 + 2*eps)){
         for (int n = 0;n<2; n++){
         force.push_back(kij[n]*(bij - dist - 2*epsij[n])*dr[n]/dist);
         }

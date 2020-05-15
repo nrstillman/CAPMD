@@ -16,13 +16,12 @@ Dynamics::Dynamics() {
 
 // move a particle according to the force law, and add active motion
 void Dynamics::step(Particle &p, double dt) {
-    ////TODO: Better upgrading of position is possible...
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    gen.seed(2002);
 
-    std::uniform_real_distribution<> rng(0.0, 1);
+    //TODO: check rng
+    std::normal_distribution<double> rng(0.0, 1);
 
     // get particle posn
     std::vector<double> x = p.getPosition();
@@ -38,12 +37,17 @@ void Dynamics::step(Particle &p, double dt) {
     }
     p.position = x;
 
+//    std::cout << p.theta << std::endl;
+
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
     p.theta += 2.0/tau[p.type]*sqrt(dt)*rng(gen);
+//    std::cout << "random number " << rng(gen) << std::endl;
+//    std::cout << "theta update " << 2.0/tau[p.type]*sqrt(dt)*rng(gen)<< std:: endl;
+//    std::cout << "new theta "<< p.theta << std::endl;
+//    std::cout << x[0] << ',' << x[1] << std::endl;
 
-    ////TODO: Check this
     /// more general form if some form of torque or alignment is present:
-    //i.theta += alignmentTorque*dt + 2.0/tau[i.type]*sqrt(dt)*rng.normal(0,1);
+    // p.theta += alignmentTorque*dt + 2.0/tau[p.type]*sqrt(dt)*rng(gen);
 }

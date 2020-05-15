@@ -16,11 +16,11 @@ struct Parameters {
     int seed = 2020;
 
     // Simulation
-    double dt  = 1;
+    double dt  = 0.01;
     int dim = 2;
     int maxmove = 10;
-    double cutoff = 1;
-    int cutoffZ = 10;
+    double cutoff = 2.5;
+    double cutoffZ = 2.5;
 
     //Domain
     // x and y length
@@ -29,7 +29,7 @@ struct Parameters {
 
     //Population
     // Population size
-    int N = 50;
+    int N = 1;
     std::string init_opt = "random_unif";
 
     int NTA = 0;
@@ -40,18 +40,18 @@ struct Parameters {
     int type = 0;
 
     double R = 1;
-    double poly = 1;
+    double poly = 0.3;
 
     //Interaction
     int ntypes = 3;
     int fade = 0;
     std::vector<double> pairstiff  = {1,1};
-    std::vector<double> pairatt = {0.2, 0.2};
+    std::vector<double> pairatt = {0, 0}; //max limit
 
     //Dynamics (active parameters)
-    std::vector<double> factive = {1};
+    std::vector<double> factive = {0.1};
     std::vector <double> zeta  = {1};
-    std::vector <double> tau= {1};
+    std::vector <double> tau= {10};
 
 };
 

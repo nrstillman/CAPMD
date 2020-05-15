@@ -21,7 +21,7 @@ PYBIND11_MODULE(capmd, m) {
     //Main simulation happens here
     py::class_<Simulation>(m, "simulation")
         .def(py::init<>())
-        .def_readwrite("N", &Simulation::N)
+        .def_readwrite("N", &Simulation::N) // parameters to be set in python
         .def_readwrite("cutoff", &Simulation::cutoff)
         .def("initialise", &Simulation::initialise)
         .def("initSimulation", &Simulation::initSimulation)
