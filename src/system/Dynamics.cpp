@@ -29,7 +29,6 @@ void Dynamics::step(Particle &p, double dt) {
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
     std::vector<double> unit = {cos(p.theta),sin(p.theta)};
     std::vector <double> factvector = {factive[p.type]*unit[0], factive[p.type]*unit[1]};
-//    std::cout << unit[0] << ", " << unit[1] << std::endl;
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise

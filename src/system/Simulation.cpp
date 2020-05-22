@@ -32,8 +32,12 @@ void Simulation::initialise() {
 
     // create population of particles
     Simulation::initPopulation();
+
+    // create population of boundary particles
+    Simulation::initBoundary();
+
     // create the first neighbour list
-    domain.makeNeighbourList(particles, params.cutoff);
+    domain.makeNeighbourList(particles, params.cutoff, params.btype);
 
     neighbours = domain.NeighbourList;
     currentflag = 1;
@@ -85,30 +89,69 @@ void Simulation::initPopulation() {
         throw "Cannot accept input yet";
     }
 }
-    // time stepping of the simulation
+
+
+void Simulation::initBoundary() {
+    if (params.bc_opt == "bounded") {
+
+        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
+        std::uniform_real_distribution<> disx(0.0, 1);
+        std::uniform_real_distribution<> disy(0.0, 1);
+        std::uniform_real_distribution<> disr(0.0, 1);
+        std::uniform_real_distribution<> distheta(0.0, 1);
+
+        for (int i = 0; i < 2; i++) {
+            for (int n = 0; n <= params.Lx/params.R; n++) {
+
+                double x = -params.Lx/2 + n*params.R;
+                double y = (params.Ly/2)*pow(-1,i);
+                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
+                particles.push_back(boundaryP);
+                boundarysize +=1;
+            }
+            for (int n = 0; n <= params.Ly/params.R; n++) {
+                double x = (params.Lx/2)*pow(-1,i);
+                double y = -params.Ly/2 + n*params.R;
+                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
+                particles.push_back(boundaryP);
+                boundarysize +=1;
+            }
+        }
+    }
+    if (params.bc_opt == "input") {
+//       TODO: Add in input from .txt and python
+        throw "Cannot accept input yet";
+    }
+}
+
+// time stepping of the simulation
     void Simulation::move(void)
     {
         // compute forces
         for (Particle& p : particles) {
-            // get neighbours of p out of neighbour list
-            std::list<int> neighbours = Simulation::getNeighbours(p);
+            if (p.type != params.btype){
+                // get neighbours of p out of neighbour list
+                std::list<int> neighbours = Simulation::getNeighbours(p);
 
-            for (auto n : neighbours) {
-                Particle pj = Simulation::getParticle(n);
-                // use interaction to compute force
-                std::vector<double> interact = interaction.computeForce(p,pj,domain);
-                // add to previous force (ie force += interact)
-                std::transform (interact.begin(), interact.end(), p.force.begin(), p.force.begin(), std::plus<double>());
+                for (auto n : neighbours) {
+                    Particle pj = Simulation::getParticle(n);
+                    // use interaction to compute force
+                    std::vector<double> interact = interaction.computeForce(p,pj,domain);
+                    // add to previous force (ie force += interact)
+                    std::transform (interact.begin(), interact.end(), p.force.begin(), p.force.begin(), std::plus<double>());
+                }
             }
         }
         // using the forces, update the positions and angles
         for (Particle& p : particles) {
-            dynamics.step(p, params.dt);
+            if (p.type != params.btype) {
+                dynamics.step(p, params.dt);
+            }
         }
         bool rebuild = domain.checkRebuild(particles, params.maxmove);
 
         if (rebuild){
-                    domain.makeNeighbourList(particles, params.cutoff);
+                    domain.makeNeighbourList(particles, params.cutoff, params.btype);
                     neighbours = domain.NeighbourList;
         }
     }
@@ -149,7 +192,7 @@ void Simulation::initPopulation() {
 //        // now, at the end, stick the new particles at the end of the existing particle list
 //        particles.extend(addparticles)
         // and rebuild the neighbour list
-        domain.makeNeighbourList(particles, params.cutoff);
+        domain.makeNeighbourList(particles, params.cutoff, params.btype);
 
         // Now, separately, we will check for death
         std::vector<int> deleteparticles;
@@ -177,7 +220,7 @@ void Simulation::initPopulation() {
 //                pdel.deleteParticle()
 //        }
         // and do a neighbour list rebuild to get all the indices straightened out again
-        domain.makeNeighbourList(particles, params.cutoff);
+        domain.makeNeighbourList(particles, params.cutoff, params.btype);
         neighbours = domain.NeighbourList;
     }
 

@@ -48,8 +48,10 @@ class Simulation : virtual public Particle{
         double maxmove;
         // running counter on particle flags <- using this to check initialisation instead
         int currentflag;
-        // correaltion time
+        // correlation time
         double tau;
+
+        int boundarysize = 0;
 
         // Constructors:
         Simulation();
@@ -59,7 +61,8 @@ class Simulation : virtual public Particle{
         void setParams(Parameters);
         // Methods to initialise the system, including creating the particle vector and the first NeighbourList
         void initialise();
-        void initPopulation(); // Just to initialise a population
+        void initPopulation(); //  To initialise a population
+        void initBoundary(); //  To create the boundary
 
         // Methods for particle dynamics
         void move(void);
@@ -67,6 +70,8 @@ class Simulation : virtual public Particle{
 
         // Methods for getting sim data
         int popSize(void){ return particles.size();}
+        int boundarySize(void){ return boundarysize;}
+
         Particle getParticle(int);
         std::list<int> getNeighbours(Particle);
         std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);

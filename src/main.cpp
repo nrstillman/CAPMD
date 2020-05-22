@@ -19,18 +19,19 @@ int main() {
     p1.setPosition( std::vector<double>  {4,10});
     std::vector<double> x = p1.getPosition();
     std::cout<< x[0] << ", " << x[1] <<std::endl;
-//
-//    std::list<int> n;
-//    std::cout<< x[0] << ", " << x[1] <<std::endl;
-//
-//
-//    n = sim.getNeighbours(p);
-//    sim.getPopulationPosition(n);
-//
-//
-//    for (int i = 0; i<1;i++){
-//        sim.move();
-//    }
+
+    std::list<int> n;
+    std::cout<< x[0] << ", " << x[1] <<std::endl;
+
+
+    n = sim.getNeighbours(p);
+    sim.getPopulationPosition(n);
+
+
+    for (int i = 0; i<100;i++){
+        std::cout << i << std::endl;
+        sim.move();
+    }
 //    sim.getPopulationPosition(n);
 //    Particle p0 = sim.getParticle(0);
 //    x = p0.getPosition();

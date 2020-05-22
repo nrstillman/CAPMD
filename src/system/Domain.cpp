@@ -30,25 +30,27 @@ double Domain::dist(Particle i, Particle j)
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-void Domain::makeNeighbourList(std::vector<Particle> particles, int cutoff){
+void Domain::makeNeighbourList(std::vector<Particle> particles, int cutoff, int btype){
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
 
     for (auto p : particles){
-        _PrevPositions.push_back(p.position);
-        std::list<int> pneighs;
-        for (auto q: particles) {
-            if (p.getId() != q.getId()){
-                double dist_pq = dist(p, q);
+        if (p.type != btype){
+            _PrevPositions.push_back(p.position);
+            std::list<int> pneighs;
+            for (auto q: particles) {
+                if (p.getId() != q.getId()){
+                    double dist_pq = dist(p, q);
 
-                if (dist_pq < cutoff) {
-                    pneighs.push_back(q.getId());
+                    if (dist_pq < cutoff) {
+                        pneighs.push_back(q.getId());
+                    }
                 }
             }
+            _NeighbourList.push_back(pneighs);
+            pneighs.clear();
         }
-        _NeighbourList.push_back(pneighs);
-        pneighs.clear();
     }
     NeighbourList = _NeighbourList;
     PrevPositions = _PrevPositions;
