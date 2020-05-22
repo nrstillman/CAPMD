@@ -34,6 +34,8 @@ PYBIND11_MODULE(capmd, m) {
         .def("getParticle", &Simulation::getParticle)
         .def("getNeighbours", &Simulation::getNeighbours)
         .def("getPopulationPosition", &Simulation::getPopulationPosition)
+        .def("getBoundaryPosition", &Simulation::getBoundaryPosition)
+
         .def("getPopulationRadius", &Simulation::getPopulationRadius)
         .def("savePopulation", &Simulation::savePopulation);
 

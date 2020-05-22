@@ -26,12 +26,12 @@ struct Parameters {
 
     //Domain
     // x and y length
-    int Lx = 30;
-    int Ly = 30;
+    int Lx = 30; //30
+    int Ly = 30; //30
 
     //Population
     // Population size
-    int N = 250;
+    int N = 1; //250
     std::string init_opt = "random_unif";
     std::string bc_opt = "bounded";
 
@@ -44,18 +44,18 @@ struct Parameters {
     int type = 0;
 
     double R = 1;
-    double poly = 0.3;
+    double poly = 0.3; // 0.3
 
     //Interaction
-    int ntypes = 3;
+    int ntypes = 4;
     int fade = 0;
     std::vector<double> pairstiff  = {1,1};
     std::vector<double> pairatt = {0.2, 0.2}; //max limit
 
     //Dynamics (active parameters)
-    std::vector<double> factive = {0.1};
-    std::vector <double> zeta  = {1};
-    double tau = 10;
+    double factive = 10; // 0.1
+    double zeta  = 1; //1
+    double tau = 10; //10
 
 };
 

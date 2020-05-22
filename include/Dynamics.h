@@ -15,9 +15,9 @@ class Dynamics {
         Parameters params;
 
         // magnitude of the active force
-        std::vector <double> factive;
+        double factive;
         // substrate friction
-        std::vector <double>  zeta;
+        double  zeta;
         // correlation time of the active driving
         double tau;
     public:

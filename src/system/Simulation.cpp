@@ -29,18 +29,52 @@ void Simulation::initialise() {
         throw "No particles (N=0).";
     }
 
+    // create population of boundary particles <- must happen first
+    Simulation::initBoundary();
 
     // create population of particles
     Simulation::initPopulation();
 
-    // create population of boundary particles
-    Simulation::initBoundary();
 
     // create the first neighbour list
-    domain.makeNeighbourList(particles, params.cutoff, params.btype);
+    domain.makeNeighbourList(particles, boundary, params.cutoff);
 
     neighbours = domain.NeighbourList;
     currentflag = 1;
+}
+
+
+void Simulation::initBoundary() {
+    if (params.bc_opt == "bounded") {
+
+        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
+        std::uniform_real_distribution<> disx(0.0, 1);
+        std::uniform_real_distribution<> disy(0.0, 1);
+        std::uniform_real_distribution<> disr(0.0, 1);
+        std::uniform_real_distribution<> distheta(0.0, 1);
+
+        for (int i = 0; i < 2; i++) {
+            for (int n = 0; n <= params.Lx/params.R; n++) {
+
+                double x = -params.Lx/2 + n*params.R;
+                double y = (params.Ly/2)*pow(-1,i);
+                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
+                boundary.push_back(boundaryP);
+                boundarysize +=1;
+            }
+            for (int n = 0; n <= params.Ly/params.R; n++) {
+                double x = (params.Lx/2)*pow(-1,i);
+                double y = -params.Ly/2 + n*params.R;
+                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
+                boundary.push_back(boundaryP);
+                boundarysize +=1;
+            }
+        }
+    }
+    if (params.bc_opt == "input") {
+//       TODO: Add in input from .txt and python
+        throw "Cannot accept input yet";
+    }
 }
 
 
@@ -50,9 +84,6 @@ void Simulation::initPopulation() {
         std::random_device rd;
         std::mt19937 gen(rd());
         gen.seed(params.initseed);
-
-        // default constructs N Particle objects into the vector
-        std::vector<Particle> tmp_vec;
 
         // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
         std::uniform_real_distribution<> disx(0.0, 1);
@@ -78,52 +109,15 @@ void Simulation::initPopulation() {
             } else {
                 ptype = 0;
             }
-
             Particle newP(i, ptype, {x, y}, theta, radius);
-            tmp_vec.push_back(newP);
+            particles.push_back(newP);
         }
-        particles = tmp_vec;
     }
     if (params.init_opt == "input") {
 //       TODO: Add in input from .txt and python
         throw "Cannot accept input yet";
     }
 }
-
-
-void Simulation::initBoundary() {
-    if (params.bc_opt == "bounded") {
-
-        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
-        std::uniform_real_distribution<> disx(0.0, 1);
-        std::uniform_real_distribution<> disy(0.0, 1);
-        std::uniform_real_distribution<> disr(0.0, 1);
-        std::uniform_real_distribution<> distheta(0.0, 1);
-
-        for (int i = 0; i < 2; i++) {
-            for (int n = 0; n <= params.Lx/params.R; n++) {
-
-                double x = -params.Lx/2 + n*params.R;
-                double y = (params.Ly/2)*pow(-1,i);
-                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
-                particles.push_back(boundaryP);
-                boundarysize +=1;
-            }
-            for (int n = 0; n <= params.Ly/params.R; n++) {
-                double x = (params.Lx/2)*pow(-1,i);
-                double y = -params.Ly/2 + n*params.R;
-                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
-                particles.push_back(boundaryP);
-                boundarysize +=1;
-            }
-        }
-    }
-    if (params.bc_opt == "input") {
-//       TODO: Add in input from .txt and python
-        throw "Cannot accept input yet";
-    }
-}
-
 // time stepping of the simulation
     void Simulation::move(void)
     {
@@ -151,8 +145,8 @@ void Simulation::initBoundary() {
         bool rebuild = domain.checkRebuild(particles, params.maxmove);
 
         if (rebuild){
-                    domain.makeNeighbourList(particles, params.cutoff, params.btype);
-                    neighbours = domain.NeighbourList;
+                domain.makeNeighbourList(particles, boundary, params.cutoff);
+                neighbours = domain.NeighbourList;
         }
     }
     // population dynamics here
@@ -192,7 +186,7 @@ void Simulation::initBoundary() {
 //        // now, at the end, stick the new particles at the end of the existing particle list
 //        particles.extend(addparticles)
         // and rebuild the neighbour list
-        domain.makeNeighbourList(particles, params.cutoff, params.btype);
+        domain.makeNeighbourList(particles, boundary, params.cutoff);
 
         // Now, separately, we will check for death
         std::vector<int> deleteparticles;
@@ -220,7 +214,7 @@ void Simulation::initBoundary() {
 //                pdel.deleteParticle()
 //        }
         // and do a neighbour list rebuild to get all the indices straightened out again
-        domain.makeNeighbourList(particles, params.cutoff, params.btype);
+        domain.makeNeighbourList(particles, boundary, params.cutoff);
         neighbours = domain.NeighbourList;
     }
 
@@ -245,6 +239,17 @@ std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int
     std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
     for (auto i : index) {
         Particle p = particles[i];
+        positions.push_back(p.getPosition());
+    }
+    return positions;
+}
+
+// return the boundary positions
+std::vector<std::vector<double>> Simulation::getBoundaryPosition(std::list<int> &index){
+
+    std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
+    for (auto i : index) {
+        Particle p = boundary[i];
         positions.push_back(p.getPosition());
     }
     return positions;

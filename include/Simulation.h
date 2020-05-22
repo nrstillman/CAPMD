@@ -29,7 +29,9 @@ class Simulation : virtual public Particle{
     public:
 
         std::vector<Particle> particles;
-        std::vector<std::list<int>> neighbours;
+        std::vector<Particle> boundary;
+
+    std::vector<std::list<int>> neighbours;
 
         // As container, has the different sub-pieces
         Domain domain;
@@ -75,6 +77,7 @@ class Simulation : virtual public Particle{
         Particle getParticle(int);
         std::list<int> getNeighbours(Particle);
         std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
+        std::vector<std::vector<double>> getBoundaryPosition(std::list<int> &index);
         std::vector<double> getPopulationRadius(std::list<int> &index);
 
         //  I/O for sim data
