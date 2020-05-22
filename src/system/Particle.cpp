@@ -8,12 +8,6 @@
 // Particle constructor
 Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, double pr)
 {
-    initParticle(pid, ptype, px, ptheta, pr);
-}
-
-// Particle member functions
-void Particle::initParticle(int pid, int ptype, std::vector<double> px, double ptheta, double pr)
-{
     age = 0;
     force = {0,0};
     id = pid;
@@ -21,6 +15,21 @@ void Particle::initParticle(int pid, int ptype, std::vector<double> px, double p
     position = px;
     theta = ptheta;
     radius = pr;
+}
+
+Particle::Particle(const Particle & rhs)
+{
+    this->setId(rhs.getId());
+    age = rhs.age;
+    force = rhs.force;
+    type = rhs.type;
+    position = rhs.position;
+    theta = rhs.theta;
+    radius = rhs.radius;
+}
+
+Particle::~Particle(){
+//    delete this;
 }
 
 std::ostream& operator<<(std::ostream& out,const Particle& p)
@@ -36,9 +45,5 @@ std::istream& operator>>(std::istream &in, const Particle &p)
     std::vector<std::string> tmpProperties;
     std::string token;
 
-//    in >> id;//>> id >> p.age >> p.position[0] >> p.position[1];
-//    std:: cout << id;
-//
-//    p.setId(id);
     return in;
 }

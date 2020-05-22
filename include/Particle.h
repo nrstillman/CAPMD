@@ -18,25 +18,28 @@ class Particle
         double theta;
         std::vector<double> force;
 
-        // assign default arguments to constructor
+        // default constructor
         Particle(int pid = 0, int ptype = 0, std::vector<double> px = {0,0},double ptheta = 0.,double  pr = 1.);
-        void initParticle(int,int, std::vector<double>, double, double);
+
+        Particle(const Particle &); // copy constructor
+
+        ~Particle(); // destructor
 
         // additional methods
         int getId() const { return id; }; //Accessor
-        void setId( int x) const {const int id = x;} // Mutator
+        void setId( int x) { id = x;} // Mutator
 
-        int getAge() { return age; }
-        void setAge( int x) const {int age = x;}
+        int getAge() { return age;}
+        void setAge( int x) { age = x;}
 
-        double getRadius() { return radius; }
-        void setRadius( double x) const {double radius = x;}
+        double getRadius() { return radius;}
+        void setRadius( double x) { radius = x;}
 
-        std::vector<double> getPosition() { return position; }
-        void setPosition(std::vector<double> x) const { std::vector<double> position = x; }
+        std::vector<double> getPosition() { return position;}
+        void setPosition(std::vector<double> x) { position = x;}
 
-        std::vector<double> getForce() { return force; }
-        void setForce(std::vector<double> x) { std::vector<double> force = x; }
+        std::vector<double> getForce() { return force;}
+        void setForce(std::vector<double> x)  { force = x;}
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);

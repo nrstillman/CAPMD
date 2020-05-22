@@ -2,32 +2,43 @@
 
 #define _USE_MATH_DEFINES
 
-Simulation::Simulation(void){
-    initSimulation(domain, population, params);
+Simulation::Simulation(){
+
+    std::cout<<"Simulation initialised" << std::endl;
 }
 
-void Simulation::initSimulation(Domain domain,Population population, Parameters params) {
-    // in a first instance, just transfer pointers of the other classes here
-    N = params.N;
-    cutoff = params.cutoff;
-    cutoffZ = params.cutoffZ;
-    dt = params.dt;
-    tau = params.tau;
-    maxmove = params.maxmove;
-    currentflag = 0;
+Simulation::Simulation(Parameters new_params){
+
+    params = new_params;
+}
+
+void Simulation::setParams(Parameters new_params){
+
+    params = new_params;
 }
 
 // initialise the system, including creating the particle vector and the first NeighbourList
 void Simulation::initialise() {
 
+    // check previous initialisaiton
+    if (currentflag == 1){
+        particles.clear();
+        neighbours.clear();
+    } // check if population is empty
+    else if (params.N == 0){
+        throw "No particles (N=0).";
+    }
+
+
     // create population of particles
     Simulation::initPopulation();
     // create the first neighbour list
-    domain.makeNeighbourList(particles, cutoff);
+    domain.makeNeighbourList(particles, params.cutoff);
 
     neighbours = domain.NeighbourList;
-
+    currentflag = 1;
 }
+
 
 void Simulation::initPopulation() {
     if (params.init_opt == "random_unif") {
@@ -45,7 +56,7 @@ void Simulation::initPopulation() {
         std::uniform_real_distribution<> disr(0.0, 1);
         std::uniform_real_distribution<> distheta(0.0, 1);
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < params.N; i++) {
 
             double x = (disx(gen) - 0.5) * params.Lx;
             double y = (disy(gen) - 0.5) * params.Ly;
@@ -71,8 +82,7 @@ void Simulation::initPopulation() {
     }
     if (params.init_opt == "input") {
 //       TODO: Add in input from .txt and python
-        std::cout << "Cannot accept input yet" << std::endl;
-        throw;
+        throw "Cannot accept input yet";
     }
 }
     // time stepping of the simulation
@@ -93,12 +103,12 @@ void Simulation::initPopulation() {
         }
         // using the forces, update the positions and angles
         for (Particle& p : particles) {
-            dynamics.step(p, dt); // dt in params
+            dynamics.step(p, params.dt);
         }
-        bool rebuild = domain.checkRebuild(particles, maxmove);
+        bool rebuild = domain.checkRebuild(particles, params.maxmove);
 
         if (rebuild){
-                    domain.makeNeighbourList(particles, cutoff);
+                    domain.makeNeighbourList(particles, params.cutoff);
                     neighbours = domain.NeighbourList;
         }
     }
@@ -139,13 +149,13 @@ void Simulation::initPopulation() {
 //        // now, at the end, stick the new particles at the end of the existing particle list
 //        particles.extend(addparticles)
         // and rebuild the neighbour list
-        domain.makeNeighbourList(particles, cutoff);
+        domain.makeNeighbourList(particles, params.cutoff);
 
         // Now, separately, we will check for death
         std::vector<int> deleteparticles;
         for (auto p : particles) {
                 // compute actual time elapsed since last division check
-                int timeint = Ndiv*dt;
+                int timeint = Ndiv*params.dt;
                 // TODO: compute probabilistic chance at division
 //                bool death = population.testDeath(p,timeint)
 //                if death {
@@ -167,7 +177,7 @@ void Simulation::initPopulation() {
 //                pdel.deleteParticle()
 //        }
         // and do a neighbour list rebuild to get all the indices straightened out again
-        domain.makeNeighbourList(particles, cutoff);
+        domain.makeNeighbourList(particles, params.cutoff);
         neighbours = domain.NeighbourList;
     }
 

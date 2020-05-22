@@ -46,15 +46,17 @@ class Simulation : virtual public Particle{
         double dt;
         // neighbour list total move threshold (should be of the order of 0.5)
         double maxmove;
-        // running counter on particle flags
+        // running counter on particle flags <- using this to check initialisation instead
         int currentflag;
         // correaltion time
         double tau;
 
         // Constructors:
         Simulation();
-        void initSimulation(Domain domain,Population population, Parameters params);
 
+        Simulation(Parameters);
+
+        void setParams(Parameters);
         // Methods to initialise the system, including creating the particle vector and the first NeighbourList
         void initialise();
         void initPopulation(); // Just to initialise a population
