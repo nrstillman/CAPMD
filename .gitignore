@@ -6,3 +6,7 @@ cmake-build-debug/
 CMakeFiles/
 build/
 pybind11/
+
+*.vtu
+*.pvd
+videos/
