@@ -71,13 +71,13 @@ class Simulation : virtual public Particle{
         void populationDynamics(int);
 
         // Methods for getting sim data
-        int popSize(void){ return particles.size();}
+        int popSize(void){ return particles.size() - boundarysize;}
         int boundarySize(void){ return boundarysize;}
 
         Particle getParticle(int);
         std::list<int> getNeighbours(Particle);
         std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
-        std::vector<std::vector<double>> getBoundaryPosition(std::list<int> &index);
+        std::vector<std::vector<double>> getBoundaryPosition();
         std::vector<double> getPopulationRadius(std::list<int> &index);
 
         //  I/O for sim data

@@ -37,8 +37,8 @@ class Domain
         double dist(Particle , Particle);
 
 
-        void makeNeighbourList(std::vector<Particle>, std::vector<Particle>, int);
-        bool checkRebuild(std::vector<Particle>, double);
+        void makeNeighbourList(std::vector<Particle>, int, int);
+        bool checkRebuild(std::vector<Particle>, double, int);
     };
 
 

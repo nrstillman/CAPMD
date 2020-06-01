@@ -20,10 +20,10 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
     std::vector<double> x = i.getPosition();
 
     if (i.type == params.btype){
-        kij[0] = 1000;
+        kij[0] = 10;
     }
     else if (j.type == params.btype){
-        kij[1] = 1000;
+        kij[1] = 10;
     }
     // compute vector distance between particles
     std::vector<double> dr = D.calc_dr(i.getPosition(),j.getPosition());

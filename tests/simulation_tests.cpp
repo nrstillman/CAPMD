@@ -64,7 +64,19 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
     }
 
     SECTION("3 -> moveParticle") {
+        Simulation sim = Simulation();
+        sim.initialise();
 
+        Particle p = sim.getParticle(0);
+        std::vector<double> x_t0 = p.getPosition();
+
+        for (int i = 0; i<100;i++){
+            std::cout << i << std::endl;
+            sim.move();
+        }
+
+        std::vector<double> x_t100 = p.getPosition();
+        REQUIRE(x_t0 != x_t100);
     }
 
     SECTION("4 -> particleInteraction") {

@@ -31,13 +31,13 @@ struct Parameters {
 
     //Population
     // Population size
-    int N = 1; //250
+    int N = 250;
     std::string init_opt = "random_unif";
     std::string bc_opt = "bounded";
 
     int NTA = 0;
     int Nstem = 0;
-    int btype = 5;  // type for bounded cells
+    int btype = 5;  // type for boundary cells
 
     //Particle
     int flag = 0;
@@ -53,7 +53,7 @@ struct Parameters {
     std::vector<double> pairatt = {0.2, 0.2}; //max limit
 
     //Dynamics (active parameters)
-    double factive = 10; // 0.1
+    double factive = 0.1; //0.1
     double zeta  = 1; //1
     double tau = 10; //10
 

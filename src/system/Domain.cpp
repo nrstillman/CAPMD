@@ -1,5 +1,7 @@
 #include "Domain.h"
 #include <cmath>
+#include <iterator>
+
 
 #define _USE_MATH_DEFINES
 
@@ -30,33 +32,28 @@ double Domain::dist(Particle i, Particle j)
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-void Domain::makeNeighbourList(std::vector<Particle> particles, std::vector<Particle> boundary,int cutoff){
+void Domain::makeNeighbourList(std::vector<Particle> particles, int boundarysize,int cutoff){
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
 
-    for (auto p : particles){
+    std::vector<Particle>::const_iterator start = particles.cbegin();
+    std::advance(start, boundarysize);
+
+    for (auto p = start; p != particles.cend(); ++p){
         int n = 0;
-            _PrevPositions.push_back(p.position);
+            _PrevPositions.push_back(p->position);
+
             std::list<int> pneighs;
             for (auto q: particles) {
-                if (p.getId() != q.getId()){
-                    double dist_pq = dist(p, q);
+                if (p->getId() != q.getId()){
+                    double dist_pq = dist(*p, q);
 
                     if (dist_pq < cutoff) {
                         pneighs.push_back(q.getId());
                     }
                 }
             }
-            ///TODO: the problem with boundary is indexing. Currently stored as two separate vectors...
-            for (auto q: boundary) {
-                    n +=1;
-                    double dist_pq = dist(p, q);
-
-                    if (dist_pq < cutoff) {
-                        pneighs.push_back(q.getId());
-                    }
-                }
             _NeighbourList.push_back(pneighs);
             pneighs.clear();
         }
@@ -65,7 +62,7 @@ void Domain::makeNeighbourList(std::vector<Particle> particles, std::vector<Part
 }
 
 //// check for a neighbour list rebuild based on max motion of particles
-bool Domain::checkRebuild(std::vector<Particle> particles, double maxmove) {
+bool Domain::checkRebuild(std::vector<Particle> particles, double maxmove, int boundarysize) {
     for (Particle& p : particles) {
         // this is not pretty
         std::vector<double> drmove = calc_dr(PrevPositions[p.getId()], p.getPosition());

@@ -37,7 +37,7 @@ void Simulation::initialise() {
 
 
     // create the first neighbour list
-    domain.makeNeighbourList(particles, boundary, params.cutoff);
+    domain.makeNeighbourList(particles, boundarysize, params.cutoff);
 
     neighbours = domain.NeighbourList;
     currentflag = 1;
@@ -54,19 +54,19 @@ void Simulation::initBoundary() {
         std::uniform_real_distribution<> distheta(0.0, 1);
 
         for (int i = 0; i < 2; i++) {
-            for (int n = 0; n <= params.Lx/params.R; n++) {
+            for (int n = 0; n <= params.Lx/params.R + params.R; n++) {
 
-                double x = -params.Lx/2 + n*params.R;
-                double y = (params.Ly/2)*pow(-1,i);
-                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
-                boundary.push_back(boundaryP);
+                double x = -(params.R + params.Lx/2) + n*params.R;
+                double y = (params.R + params.Ly/2)*pow(-1,i);
+                Particle boundaryP(boundarysize, params.btype, {x, y}, theta, radius);
+                particles.push_back(boundaryP);
                 boundarysize +=1;
             }
-            for (int n = 0; n <= params.Ly/params.R; n++) {
-                double x = (params.Lx/2)*pow(-1,i);
-                double y = -params.Ly/2 + n*params.R;
-                Particle boundaryP(i, params.btype, {x, y}, theta, radius);
-                boundary.push_back(boundaryP);
+            for (int n = 0; n <= params.Ly/params.R + params.R; n++) {
+                double x = (params.R + params.Lx/2)*pow(-1,i);
+                double y = -(params.R + params.Ly/2) + n*params.R;
+                Particle boundaryP(boundarysize, params.btype, {x, y}, theta, radius);
+                particles.push_back(boundaryP);
                 boundarysize +=1;
             }
         }
@@ -91,7 +91,7 @@ void Simulation::initPopulation() {
         std::uniform_real_distribution<> disr(0.0, 1);
         std::uniform_real_distribution<> distheta(0.0, 1);
 
-        for (int i = 0; i < params.N; i++) {
+        for (int i = boundarysize; i < boundarysize + params.N; i++) {
 
             double x = (disx(gen) - 0.5) * params.Lx;
             double y = (disy(gen) - 0.5) * params.Ly;
@@ -128,7 +128,7 @@ void Simulation::initPopulation() {
                 std::list<int> neighbours = Simulation::getNeighbours(p);
 
                 for (auto n : neighbours) {
-                    Particle pj = Simulation::getParticle(n);
+                    Particle pj = particles[n];
                     // use interaction to compute force
                     std::vector<double> interact = interaction.computeForce(p,pj,domain);
                     // add to previous force (ie force += interact)
@@ -142,10 +142,10 @@ void Simulation::initPopulation() {
                 dynamics.step(p, params.dt);
             }
         }
-        bool rebuild = domain.checkRebuild(particles, params.maxmove);
+        bool rebuild = domain.checkRebuild(particles, params.maxmove, boundarysize);
 
         if (rebuild){
-                domain.makeNeighbourList(particles, boundary, params.cutoff);
+                domain.makeNeighbourList(particles, boundarysize, params.cutoff);
                 neighbours = domain.NeighbourList;
         }
     }
@@ -186,7 +186,7 @@ void Simulation::initPopulation() {
 //        // now, at the end, stick the new particles at the end of the existing particle list
 //        particles.extend(addparticles)
         // and rebuild the neighbour list
-        domain.makeNeighbourList(particles, boundary, params.cutoff);
+        domain.makeNeighbourList(particles, boundarysize, params.cutoff);
 
         // Now, separately, we will check for death
         std::vector<int> deleteparticles;
@@ -214,23 +214,28 @@ void Simulation::initPopulation() {
 //                pdel.deleteParticle()
 //        }
         // and do a neighbour list rebuild to get all the indices straightened out again
-        domain.makeNeighbourList(particles, boundary, params.cutoff);
+        domain.makeNeighbourList(particles, boundarysize, params.cutoff);
         neighbours = domain.NeighbourList;
     }
 
 
-// Particle member functions
+// function to get particle in simulation (indexing starts from any boundary cells)
 Particle Simulation::getParticle(int i){
     if (i >= particles.size()){
         std::cout << "Error: index exceeds population size"  << std::endl;
         throw;
     }
-    return particles[i];
+    return particles[boundarysize + i];
 }
 
 // return the list of neighbours of particle i
+// cannot be used to get boundary cell neighbours (which aren't stored)
 std::list<int> Simulation::getNeighbours(Particle p) {
-    return neighbours[p.getId()];
+    if (p.getId() < boundarysize){
+        std::cout << "Error: cannot access boundary cell neighbour lists"  << std::endl;
+        throw;
+    }
+    return neighbours[p.getId() - boundarysize];
 }
 
 // return the population positions
@@ -245,11 +250,11 @@ std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int
 }
 
 // return the boundary positions
-std::vector<std::vector<double>> Simulation::getBoundaryPosition(std::list<int> &index){
+std::vector<std::vector<double>> Simulation::getBoundaryPosition(){
 
     std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
-    for (auto i : index) {
-        Particle p = boundary[i];
+    for (int i = 0; i< boundarysize; ++i) {
+        Particle p = particles[i];
         positions.push_back(p.getPosition());
     }
     return positions;
