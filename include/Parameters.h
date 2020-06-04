@@ -12,6 +12,9 @@ struct Parameters {
     // division death parameters
     // interaction parameters
 
+    // io
+    std::string filename = "test";
+
     // Random
     int initseed = 2020;
     int angseed = 2001;
@@ -44,16 +47,16 @@ struct Parameters {
     int type = 0;
 
     double R = 1;
-    double poly = 0.3; // 0.3
+    double poly = 0.;//0.3; // 0.3
 
     //Interaction
     int ntypes = 4;
     int fade = 0;
-    std::vector<double> pairstiff  = {1,1};
+    std::vector<double> pairstiff  = {1,1}; // support specify for boundary here
     std::vector<double> pairatt = {0.2, 0.2}; //max limit
 
     //Dynamics (active parameters)
-    double factive = 0.1; //0.1
+    double factive = 0.; //0.1
     double zeta  = 1; //1
     double tau = 10; //10
 

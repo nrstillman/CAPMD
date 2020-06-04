@@ -3,10 +3,15 @@
 //
 
 #include "Simulation.h"
+#include "Output.h"
 
 int main() {
 
     Simulation sim = Simulation();
+    Simulation *ptrSim;
+
+    ptrSim = &sim;
+
     sim.initialise();
     std::cout << sim.popSize() << std::endl;
 
@@ -21,23 +26,21 @@ int main() {
     std::cout<< x[0] << ", " << x[1] <<std::endl;
 
     std::list<int> n;
-    std::cout<< x[0] << ", " << x[1] <<std::endl;
-
 
     n = sim.getNeighbours(p);
     sim.getPopulationPosition(n);
+    Output out = Output(ptrSim);
 
+    for (int i = 0; i<151;i++){
 
-
-    for (int i = 0; i<100;i++){
-        std::cout << i << std::endl;
         sim.move();
+
+        if (i % 50 == 0){
+            std::cout << i << std::endl;
+            out.vtp(i, 151);
+        }
     }
-//    sim.getPopulationPosition(n);
-//    Particle p0 = sim.getParticle(0);
-//    x = p0.getPosition();
-//
-//    std::cout<< x[0] << ", " << x[1] <<std::endl;
+
 
 }
 

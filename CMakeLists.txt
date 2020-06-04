@@ -3,21 +3,30 @@
 cmake_minimum_required(VERSION 3.13)  # CMake version check
 project(capmd)                        # Create project "capmd"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
+set(VTK_DIR "/usr/local/Cellar/vtk/8.2.0_10") #include VTK for outputting
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
 
 # Add main.cpp file of project root directory as source file
-file(GLOB SOURCE_FILES src/main.cpp src/system/*.cpp include/*.h )
+file(GLOB SOURCE_FILES src/main.cpp src/system/*.cpp src/io/*.cpp include/*.h )
 
 #find_library(PARTICLE_LIBRARY particle_library lib)
-add_library(simulation_library STATIC src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp)
+add_library(simulation_library STATIC src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/io/Output.cpp)
 
 # Add additonal directories
 include_directories(src/system)
+include_directories(src/io)
 include_directories(include)
+
 # testing subdir
 add_subdirectory(tests)
 
-add_subdirectory(pybind11 [../pybind11])
-pybind11_add_module(capmd_py src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/bindings.cpp include/Simulation.h include/Particle.h include/Population.h include/Domain.h include/Dynamics.h include/Interaction.h)
+#add_subdirectory(pybind11 [../pybind11])
+#pybind11_add_module(capmd src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/bindings.cpp include/Simulation.h include/Particle.h include/Population.h include/Domain.h include/Dynamics.h include/Interaction.h)
 
 # Add executable target with source files listed in SOURCE_FILES variable
 add_executable(capmd ${SOURCE_FILES})
+
+# Link capmd against the VTK libraries.
+target_link_libraries(capmd ${VTK_LIBRARIES})
+

@@ -54,17 +54,17 @@ void Simulation::initBoundary() {
         std::uniform_real_distribution<> distheta(0.0, 1);
 
         for (int i = 0; i < 2; i++) {
-            for (int n = 0; n <= params.Lx/params.R + params.R; n++) {
+            for (int n = 0; n <= params.Lx/params.R; n++) {
 
-                double x = -(params.R + params.Lx/2) + n*params.R;
-                double y = (params.R + params.Ly/2)*pow(-1,i);
+                double x = -params.Lx/2 + n*params.R;
+                double y = (params.Ly/2)*pow(-1,i);
                 Particle boundaryP(boundarysize, params.btype, {x, y}, theta, radius);
                 particles.push_back(boundaryP);
                 boundarysize +=1;
             }
-            for (int n = 0; n <= params.Ly/params.R + params.R; n++) {
-                double x = (params.R + params.Lx/2)*pow(-1,i);
-                double y = -(params.R + params.Ly/2) + n*params.R;
+            for (int n = 0; n <= params.Ly/params.R; n++) {
+                double x = (params.Lx/2)*pow(-1,i);
+                double y = -(params.Ly/2) + n*params.R;
                 Particle boundaryP(boundarysize, params.btype, {x, y}, theta, radius);
                 particles.push_back(boundaryP);
                 boundarysize +=1;
@@ -93,8 +93,9 @@ void Simulation::initPopulation() {
 
         for (int i = boundarysize; i < boundarysize + params.N; i++) {
 
-            double x = (disx(gen) - 0.5) * params.Lx;
-            double y = (disy(gen) - 0.5) * params.Ly;
+            // (subtracting radius to avoid initialising on boundary)
+            double x = (disx(gen) - 0.5) * (params.Lx - params.R);
+            double y = (disy(gen) - 0.5) * (params.Ly - params.R);
             double theta = distheta(gen) * 2 * M_PI;
 
             // radius chosen from a uniform distribution with mean R and polydispersity poly

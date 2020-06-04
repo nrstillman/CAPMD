@@ -15,17 +15,23 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
     position = px;
     theta = ptheta;
     radius = pr;
+    numneigh = 0;
+
+//    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
 
 Particle::Particle(const Particle & rhs)
 {
     this->setId(rhs.getId());
+
+//    std::cout << "Particle " << rhs.getId() <<" Initialised" << std::endl;
     age = rhs.age;
     force = rhs.force;
     type = rhs.type;
     position = rhs.position;
     theta = rhs.theta;
     radius = rhs.radius;
+    numneigh = rhs.numneigh;
 }
 
 Particle::~Particle(){

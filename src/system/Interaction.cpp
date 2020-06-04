@@ -21,9 +21,11 @@ std::vector<double> Interaction::computeForce(Particle i,Particle j, Domain D) {
 
     if (i.type == params.btype){
         kij[0] = 10;
+        epsij[0] = 0;
     }
     else if (j.type == params.btype){
         kij[1] = 10;
+        epsij[1] = 0;
     }
     // compute vector distance between particles
     std::vector<double> dr = D.calc_dr(i.getPosition(),j.getPosition());
