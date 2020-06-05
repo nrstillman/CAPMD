@@ -1,5 +1,5 @@
 //
-// Silke Henkes 26.04.2020
+// Created by N.R. Stillman on 2020-04-20.
 
 #ifndef CAPMD_INTERACTION_H
 #define CAPMD_INTERACTION_H
@@ -23,17 +23,18 @@ private:
     int ntypes;
 
     // what are their relative stiffnesses ... (k_ij)
-    std::vector<double> pairstiff;
+    std::vector<std::vector<double>> pairstiff;
     // ... and their relative attraction strengths (epsilon_ij)
-    std::vector <double> pairatt;
+    std::vector<std::vector<double>> pairatt;
+
     // fade-in (or out) time for particle interactions
     double fade;
 
 public:
-    Interaction();
+    Interaction(Parameters);
 
     // compute the mechanical force between particles
-    std::vector<double> computeForce(std::shared_ptr<Particle>, std::shared_ptr<Particle>, Domain);
+    std::vector<double> computeForce(std::shared_ptr<Particle>, std::shared_ptr<Particle>, Domain*);
 };
 
 #endif //CAPMD_INTERACTION_H

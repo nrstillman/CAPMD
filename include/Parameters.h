@@ -14,7 +14,7 @@ struct Parameters {
 
     // io
     std::string filename = "test";
-
+    std::string outputfolder = "vtp/";
     // Random
     int initseed = 2020;
     int angseed = 2001;
@@ -40,7 +40,7 @@ struct Parameters {
 
     int NTA = 0;
     int Nstem = 0;
-    int btype = 5;  // type for boundary cells
+    int btype = 0;  // type for boundary cells
 
     //Particle
     int flag = 0;
@@ -50,13 +50,22 @@ struct Parameters {
     double poly = 0.3; // 0.3
 
     //Interaction
-    int ntypes = 4;
+    int ntypes = 2;
     int fade = 0;
-    std::vector<double> pairstiff  = {1,1}; // support specify for boundary here
-    std::vector<double> pairatt = {0.2, 0.2}; //max limit
+
+    std::vector<std::vector<double>> pairstiff =
+        {
+            {10, 10},
+            {10, 1},
+        };
+    std::vector<std::vector<double>> pairatt =
+        {
+            { 0, 0},
+            { 0, 0.2},
+        };
 
     //Dynamics (active parameters)
-    double factive = 0.; //0.1
+    double factive = 0.1; //0.1
     double zeta  = 1; //1
     double tau = 10; //10
 

@@ -22,7 +22,7 @@ class Dynamics {
         double tau;
     public:
         //Constructor
-        Dynamics();
+        Dynamics(Parameters);
 
         // also needs a random number generator for the angular dynamics
         int rng;

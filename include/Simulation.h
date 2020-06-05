@@ -7,6 +7,7 @@
 #include "Dynamics.h"
 #include "Interaction.h"
 #include "Particle.h"
+#include "Output.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,18 +28,15 @@ class Simulation : virtual public Particle{
     private:
         Parameters params;
 
+        // As container, has the different sub-pieces
+        Domain *domain;
+        Dynamics *dynamics;
+        Interaction *interaction;
+        Output *output;
+
     public:
 
         std::vector<std::shared_ptr<Particle>> particles;
-        std::vector<std::shared_ptr<Particle>> boundary;
-
-    std::vector<std::list<int>> neighbours;
-
-        // As container, has the different sub-pieces
-        Domain domain;
-        Population population;
-        Dynamics dynamics;
-        Interaction interaction;
 
         // Members (taken from parameters but included incase changing through python script)
         // Number of particles
@@ -57,7 +55,7 @@ class Simulation : virtual public Particle{
         int boundarysize = 0;
 
         // Constructors:
-        Simulation();
+//        Simulation();
 
         Simulation(Parameters);
 
@@ -81,8 +79,6 @@ class Simulation : virtual public Particle{
         // Methods for particle data
         Particle getParticle(int);
         Particle getAllParticles(int);
-        std::list<int> getNeighbours(std::shared_ptr<Particle>);
-        std::list<int> getNeighbours(Particle);
         std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
         std::vector<std::vector<double>> getBoundaryPosition();
         std::vector<double> getPopulationRadius(std::list<int> &index);
@@ -90,6 +86,8 @@ class Simulation : virtual public Particle{
         //  I/O for sim data
         void savePopulation(std::string);
         void loadPopulation(std::string);
+        void saveVTP(int, int);
+
 };
 
 

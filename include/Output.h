@@ -9,22 +9,23 @@
 #include <vtkPoints.h>
 #include <vtkPointData.h>
 
-#include "Simulation.h"
 #include "Parameters.h"
+#include "Particle.h"
 
-struct Output {
-
-private:
-    Simulation *ptrSim;           // Pointer to the simulation
+class Output{
 
 public:
-        /// Constructor
-//        Output(){};
-        Output(Simulation *);
 
-        /// Destructor
-//        ~Output();
+    /// Constructor
+    Output(Parameters, int, std::vector<std::shared_ptr<Particle>>);
 
-        void vtp(int, int);
+    std::string file_name;
+    std::string output_folder;
+    int N;
+    int NB;
+    std::vector<std::shared_ptr<Particle>> particles;
+
+
+    void vtp(int, int);
 };
 #endif //CAPMD_OUTPUT_H

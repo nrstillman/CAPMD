@@ -43,14 +43,11 @@ class Particle
         double getTheta() { return theta;}
         void setTheta( double x) { theta = x;}
 
-        double getNumNeigh() { return numneigh;}
+        int getNumNeigh() { return numneigh;}
         void setNumNeigh( int x) { numneigh= x;}
 
         std::vector<double> getPosition() { return position;}
-        std::vector<double> getPosition() const { return position;}
-
         void setPosition(std::vector<double> x) { position = x;}
-
 
         std::vector<double> getForce() { return force;}
         void setForce(std::vector<double> x)  { force = x;}

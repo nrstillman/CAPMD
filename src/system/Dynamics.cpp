@@ -7,7 +7,7 @@
 
 #define _USE_MATH_DEFINES
 
-Dynamics::Dynamics() {
+Dynamics::Dynamics(Parameters params) {
     // set active parameters here
     factive = params.factive;
     zeta = params.zeta;
@@ -29,7 +29,6 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     // get particle posn
     std::vector<double> x = p->getPosition();
     std::vector<double> f = p->getForce();
-
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
     std::vector<double> unit = {cos(theta),sin(theta)};

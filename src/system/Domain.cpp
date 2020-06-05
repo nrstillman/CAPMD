@@ -6,11 +6,11 @@
 #define _USE_MATH_DEFINES
 
 // Domain constructor
-Domain::Domain()
-{
-//    std::vector<std::list<int>> _NeighbourList = {};
-//    std::vector<std::vector<double>> PrevPositions = {};
+Domain::Domain(Parameters params){
+    cutoff = params.cutoff;
+    maxmove = params.maxmove;
 }
+
 // vector between two particles
 std::vector<double> Domain::calc_dr(std::vector<double>  xi, std::vector<double> xj)
 {
@@ -40,14 +40,11 @@ double Domain::dist(double i, double j)
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles, int boundarysize,int cutoff){
+void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
 
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
-//
-//    std::vector<Particle*>::const_iterator start = particles.cbegin();
-//    std::advance(start, boundarysize);
 
     for (int i = boundarysize; i< particles.size(); ++i) {
 
@@ -66,9 +63,8 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles,
                 }
             }
             _NeighbourList.push_back(pneighs);
-            ///TODO: check updating number of neighbours
-//            std::cout << pneighs.size();
-//            *particles[i]->setNumNeigh(numneighs);
+
+            particles[i]->setNumNeigh(numneighs);
             pneighs.clear();
         }
     NeighbourList = _NeighbourList;
@@ -76,7 +72,7 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles,
 }
 
 //// check for a neighbour list rebuild based on max motion of particles
-bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles, double maxmove, int boundarysize) {
+bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles) {
     for  (int i = boundarysize; i< particles.size(); ++i)  {
         // this is not pretty
         std::vector<double> drmove = calc_dr(PrevPositions[particles[i-boundarysize]->getId()], particles[i]->getPosition());
@@ -85,3 +81,11 @@ bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles, doub
     }
     return false;
 }
+
+// return the list of neighbours of particle i
+// cannot be used to get boundary cell neighbours (which aren't stored)
+std::list<int> Domain::getNeighbours(int i) {
+
+    return NeighbourList[i];
+}
+
