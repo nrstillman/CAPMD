@@ -47,7 +47,7 @@ struct Parameters {
     int type = 0;
 
     double R = 1;
-    double poly = 0.;//0.3; // 0.3
+    double poly = 0.3; // 0.3
 
     //Interaction
     int ntypes = 4;

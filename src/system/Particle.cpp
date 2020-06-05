@@ -17,14 +17,13 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
     radius = pr;
     numneigh = 0;
 
-//    std::cout << "Particle " << pid <<" Initialised" << std::endl;
+    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
 
 Particle::Particle(const Particle & rhs)
 {
     this->setId(rhs.getId());
-
-//    std::cout << "Particle " << rhs.getId() <<" Initialised" << std::endl;
+    std::cout << "particle copied " << std::endl;
     age = rhs.age;
     force = rhs.force;
     type = rhs.type;

@@ -11,8 +11,9 @@ Output::Output(Simulation *_ptrSim){
 //! Dump meshes into VTP output
 void Output::vtp(int step, int finalstep)
 {
-    std::string file_name = "vtp/"+ptrSim->getFileName()+"_" + std::to_string(step) + ".vtp";
-    std::string pvdfilename = "vtp/"+ptrSim->getFileName()+ ".pvd";
+    std::string output_folder = "vtp/";
+    std::string file_name = output_folder +ptrSim->getFileName()+"_" + std::to_string(step) + ".vtp";
+    std::string pvdfilename = output_folder +ptrSim->getFileName()+ ".pvd";
 
     //polydata for particle attributes
     vtkSmartPointer<vtkPolyData> polydata =  vtkSmartPointer<vtkPolyData>::New();
@@ -21,6 +22,7 @@ void Output::vtp(int step, int finalstep)
     vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
 
     int N = ptrSim->popSize();
+    int NB = ptrSim->getBoundarySize();
 
     vtkSmartPointer<vtkIntArray> ids =  vtkSmartPointer<vtkIntArray>::New();
     ids->SetName("Id");
@@ -42,10 +44,10 @@ void Output::vtp(int step, int finalstep)
     force->SetName("Force");
     force->SetNumberOfComponents(3);
 
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < N + NB; i++)
     {
-        Particle p = ptrSim->getParticle(i);
 
+        Particle p = ptrSim->getAllParticles(i);
         points->InsertNextPoint (p.position[0], p.position[1], 0.0);
 
         double f[3] = {p.force[0], p.force[1], 0};
@@ -81,20 +83,24 @@ void Output::vtp(int step, int finalstep)
 
     // create .pvd (is this best way?) <- move to separate method either way
     ofstream pvdfile;
-    pvdfile.open(pvdfilename.c_str(), std::ios_base::app);
     if (step == 0){
+        pvdfile.open(pvdfilename.c_str());
         pvdfile << "<?xml version=\"1.0\"?>" << std::endl;
         pvdfile << "<VTKFile type=\"Collection\" version=\"0.1\"" << std::endl;
         pvdfile << "\t byte_order=\"LittleEndian\"" << std::endl;
         pvdfile << "\t compressor=\"vtkZLibDataCompressor\">" << std::endl;
         pvdfile << "<Collection>" << std::endl;
     }
-    pvdfile << "\t<DataSet timestep=\"" << step << "\" group=\"\" part=\"0\" \n \t\tfile=\""<< file_name<< "\"/>" << endl;
+    else{
+        pvdfile.open(pvdfilename.c_str(), std::ios_base::app);
+    }
+    pvdfile << "\t<DataSet timestep=\"" << step << "\" group=\"\" part=\"0\" \n"
+               " \t\tfile=\""<< ptrSim->getFileName()+"_" + std::to_string(step) + ".vtp"<< "\"/>" << endl;
 
     if (step == finalstep) {
         pvdfile << "</Collection>\n          </VTKFile>" << std::endl;
     }
     pvdfile.close();
 
-}
 
+}

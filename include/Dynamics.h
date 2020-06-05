@@ -28,7 +28,7 @@ class Dynamics {
         int rng;
 
         // move a particle according to the force law, and add active motion
-        void step(Particle &, double);
+        void step(std::shared_ptr<Particle> , double);
 };
 
 #endif //CAPMD_DYNAMICS_H

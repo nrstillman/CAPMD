@@ -21,10 +21,18 @@ std::vector<double> Domain::calc_dr(std::vector<double>  xi, std::vector<double>
 }
 
 // distance between two particles
-double Domain::dist(Particle i, Particle j)
+double Domain::dist(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j)
 {
-    std::vector<double> dr = calc_dr(i.position,j.position);
+    std::vector<double> dr = calc_dr(i->position,j->position);
     double dist = sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
+    return dist;
+}
+
+// distance between two particles
+double Domain::dist(double i, double j)
+{
+    double dr = j - i;
+    double dist = sqrt(dr*dr);
     return dist;
 }
 
@@ -32,29 +40,35 @@ double Domain::dist(Particle i, Particle j)
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-void Domain::makeNeighbourList(std::vector<Particle> particles, int boundarysize,int cutoff){
+void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles, int boundarysize,int cutoff){
+
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
+//
+//    std::vector<Particle*>::const_iterator start = particles.cbegin();
+//    std::advance(start, boundarysize);
 
-    std::vector<Particle>::const_iterator start = particles.cbegin();
-    std::advance(start, boundarysize);
+    for (int i = boundarysize; i< particles.size(); ++i) {
 
-    for (auto p = start; p != particles.cend(); ++p){
-        int n = 0;
-            _PrevPositions.push_back(p->position);
-
+            _PrevPositions.push_back(particles[i]->getPosition());
             std::list<int> pneighs;
-            for (auto q: particles) {
-                if (p->getId() != q.getId()){
-                    double dist_pq = dist(*p, q);
+            int numneighs = 0;
+            for (int j = 0; j< particles.size(); ++j) {
+
+                if (particles[i]->getId() != particles[j]->getId() ){
+                    double dist_pq = dist(particles[i], particles[j]);
 
                     if (dist_pq < cutoff) {
-                        pneighs.push_back(q.getId());
+                        pneighs.push_back(particles[j]->getId());
+                        numneighs += 1;
                     }
                 }
             }
             _NeighbourList.push_back(pneighs);
+            ///TODO: check updating number of neighbours
+//            std::cout << pneighs.size();
+//            *particles[i]->setNumNeigh(numneighs);
             pneighs.clear();
         }
     NeighbourList = _NeighbourList;
@@ -62,10 +76,10 @@ void Domain::makeNeighbourList(std::vector<Particle> particles, int boundarysize
 }
 
 //// check for a neighbour list rebuild based on max motion of particles
-bool Domain::checkRebuild(std::vector<Particle> particles, double maxmove, int boundarysize) {
-    for (Particle& p : particles) {
+bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles, double maxmove, int boundarysize) {
+    for  (int i = boundarysize; i< particles.size(); ++i)  {
         // this is not pretty
-        std::vector<double> drmove = calc_dr(PrevPositions[p.getId()], p.getPosition());
+        std::vector<double> drmove = calc_dr(PrevPositions[particles[i-boundarysize]->getId()], particles[i]->getPosition());
         double distmove = sqrt(drmove[0]*drmove[0] + drmove[1]*drmove[1]);
         if (distmove > maxmove) return true;
     }

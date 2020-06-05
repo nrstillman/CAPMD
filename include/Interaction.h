@@ -33,7 +33,7 @@ public:
     Interaction();
 
     // compute the mechanical force between particles
-    std::vector<double> computeForce(Particle,Particle, Domain);
+    std::vector<double> computeForce(std::shared_ptr<Particle>, std::shared_ptr<Particle>, Domain);
 };
 
 #endif //CAPMD_INTERACTION_H

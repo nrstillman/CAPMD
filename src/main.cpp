@@ -17,30 +17,28 @@ int main() {
 
     Particle p = sim.getParticle(0);
 
-    Particle p0;
-    std::cout << p0.getId() << std::endl;
+    std::cout << p.getId() << std::endl;
 
     Particle p1(2, 2, std::vector<double> {5,2}, 2, 2);
     p1.setPosition( std::vector<double>  {4,10});
     std::vector<double> x = p1.getPosition();
     std::cout<< x[0] << ", " << x[1] <<std::endl;
 
-    std::list<int> n;
+    std::list<int> n = sim.getNeighbours(p);
+    std::cout << n.size() << std::endl;
 
-    n = sim.getNeighbours(p);
-    sim.getPopulationPosition(n);
+//    sim.getPopulationPosition(n);
+
     Output out = Output(ptrSim);
-
-    for (int i = 0; i<151;i++){
-
+    int t_final = 1;
+    for (int i = 0; i<= t_final; i++){
+        std::cout << i << std::endl;
         sim.move();
-
-        if (i % 50 == 0){
-            std::cout << i << std::endl;
-            out.vtp(i, 151);
-        }
+        std::cout << "---------" << std::endl;
+//
+//        if (i % 10 == 0){
+        out.vtp(i, t_final);
+//        }
     }
-
-
 }
 

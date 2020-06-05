@@ -14,6 +14,7 @@
 #include <list>
 #include <string>
 #include <sstream>
+#include <memory> // For std::shared_ptr
 
 
 #ifndef CAPMD_SIMULATION_H
@@ -28,8 +29,8 @@ class Simulation : virtual public Particle{
 
     public:
 
-        std::vector<Particle> particles;
-        std::vector<Particle> boundary;
+        std::vector<std::shared_ptr<Particle>> particles;
+        std::vector<std::shared_ptr<Particle>> boundary;
 
     std::vector<std::list<int>> neighbours;
 
@@ -79,6 +80,8 @@ class Simulation : virtual public Particle{
 
         // Methods for particle data
         Particle getParticle(int);
+        Particle getAllParticles(int);
+        std::list<int> getNeighbours(std::shared_ptr<Particle>);
         std::list<int> getNeighbours(Particle);
         std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
         std::vector<std::vector<double>> getBoundaryPosition();

@@ -4,6 +4,7 @@
 #define CAPMD_PARTICLE_H
 
 #include <vector>
+#include <iostream>
 
 class Particle
     {
@@ -28,7 +29,7 @@ class Particle
 
         // additional methods
         int getId() const { return id; }; //Accessor
-        void setId( int x) { id = x;} // Mutator
+        void setId( int x) {std::cout << "id changed "<< std::endl; id = x;} // Mutator
 
         int getType() const { return type; };
         void setType( int x) { type = x;}
@@ -39,11 +40,17 @@ class Particle
         double getRadius() { return radius;}
         void setRadius( double x) { radius = x;}
 
+        double getTheta() { return theta;}
+        void setTheta( double x) { theta = x;}
+
         double getNumNeigh() { return numneigh;}
-        void setNumNeigh( double x) { numneigh= x;}
+        void setNumNeigh( int x) { numneigh= x;}
 
         std::vector<double> getPosition() { return position;}
+        std::vector<double> getPosition() const { return position;}
+
         void setPosition(std::vector<double> x) { position = x;}
+
 
         std::vector<double> getForce() { return force;}
         void setForce(std::vector<double> x)  { force = x;}
