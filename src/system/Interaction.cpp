@@ -14,21 +14,20 @@ Interaction::Interaction(Parameters params){
 }
 
 std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j, Domain* D) {
-    // get pair parameters
-    std::vector<double> x = i->getPosition();
 
+    // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
 
     // compute vector distance between particles
     std::vector<double> dr = D->calc_dr(i->getPosition(),j->getPosition());
     // compute distance
-    double dist = D->dist(i,j);
+    double dist = D->dist(i->getPosition(),j->getPosition());
 
     // actual force computation according to our potential
     // several lines since piecewise defined
     std::vector<double> force;
-    double bij = i->radius + j->radius;
+    double bij = i->getRadius()+ j->getRadius();
     if (dist < bij*(1 + eps)) {
         for (int n = 0;n<2; n++){
         force.push_back(-kij*(bij - dist)*dr[n]/dist);
@@ -43,10 +42,8 @@ std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::
         force = {0,0};
     }
 
-    ///TODO: update force and pos with coordinates
     // add force
-    std::vector<double> f = {force[0] + i->getForce()[0], force[1] + i->getForce()[1]};
-    i->setForce(f);
+    i->setForce({force[0] + i->getForce()[0], force[1] + i->getForce()[1]});
 
 //    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
 //    // used for particle fade-in post division.

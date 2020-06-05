@@ -12,28 +12,16 @@ Domain::Domain(Parameters params){
 }
 
 // vector between two particles
-std::vector<double> Domain::calc_dr(std::vector<double>  xi, std::vector<double> xj)
+std::vector<double> Domain::calc_dr(std::vector<double> xi, std::vector<double> xj)
 {
-    std::vector<double> dr;
-
-    std::transform(xj.begin(), xj.end(), xi.begin(), std::back_inserter(dr), std::minus<double>());
-    return dr;
+    return {xj[0] - xi[0], xj[1] - xi[1]};
 }
 
 // distance between two particles
-double Domain::dist(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j)
+double Domain::dist(std::vector<double> i, std::vector<double> j)
 {
-    std::vector<double> dr = calc_dr(i->position,j->position);
-    double dist = sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
-    return dist;
-}
-
-// distance between two particles
-double Domain::dist(double i, double j)
-{
-    double dr = j - i;
-    double dist = sqrt(dr*dr);
-    return dist;
+    std::vector<double> dr = calc_dr(i,j);
+    return sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
 }
 
 // create the neighbour list
@@ -54,7 +42,7 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
             for (int j = 0; j< particles.size(); ++j) {
 
                 if (particles[i]->getId() != particles[j]->getId() ){
-                    double dist_pq = dist(particles[i], particles[j]);
+                    double dist_pq = dist(particles[i]->getPosition(), particles[j]->getPosition());
 
                     if (dist_pq < cutoff) {
                         pneighs.push_back(particles[j]->getId());

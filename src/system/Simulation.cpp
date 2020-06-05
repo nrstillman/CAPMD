@@ -163,6 +163,10 @@ void Simulation::initPopulation() {
     {
         // compute forces
         for (int i = boundarysize; i< particles.size(); ++i) {
+
+            //TODO: check if this is correct (otherwise where is the decay?
+            particles[i]->setForce({0,0});
+
             // get neighbours of p out of neighbour list
             std::list<int> neighbours = domain->getNeighbours(i - boundarysize);
 
@@ -170,6 +174,7 @@ void Simulation::initPopulation() {
                 // use interaction to compute force
                 interaction->computeForce(particles[i],particles[n],domain);
             }
+//            std::cout << particles[i]->getForce()[0];
         }
         // using the forces, update the positions and angles
         for (int i = boundarysize; i< particles.size(); ++i) {

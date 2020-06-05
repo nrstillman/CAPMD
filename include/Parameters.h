@@ -65,7 +65,7 @@ struct Parameters {
         };
 
     //Dynamics (active parameters)
-    double factive = 0.1; //0.1
+    double factive = 0; //0.1
     double zeta  = 1; //1
     double tau = 10; //10
 

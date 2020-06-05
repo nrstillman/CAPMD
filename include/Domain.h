@@ -37,11 +37,10 @@ class Domain
         //  Domain(parameters.boundary);
 
         // vector between two particles
-        std::vector<double> calc_dr(std::vector<double> , std::vector<double> );
+        std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
 
         // distance between two particles or doubles
-        double dist(std::shared_ptr<Particle>, std::shared_ptr<Particle>);
-        double dist(double , double);
+        double dist(std::vector<double>, std::vector<double> );
 
         void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);

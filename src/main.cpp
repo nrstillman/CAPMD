@@ -12,13 +12,14 @@ int main() {
 
     std::cout << sim.popSize() << std::endl;
 
-    int t_final = 250;
+    int t_final = 10000;
     for (int i = 0; i<= t_final; i++){
-        std::cout << i << std::endl;
         sim.move();
-        std::cout << "---------" << std::endl;
-
-        sim.saveVTP(i, t_final);
+        if (i % 100 == 0){
+            std::cout << "---------" << std::endl;
+            std::cout << i << std::endl;
+            sim.saveVTP(i, t_final);
+        }
     }
 }
 

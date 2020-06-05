@@ -36,9 +36,7 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise
-
     for (int i = 0; i<2; i++){
-
         x[i] += (factvector[i] + f[i])/zeta*dt;
     }
 
