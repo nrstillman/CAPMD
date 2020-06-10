@@ -13,13 +13,11 @@ Dynamics::Dynamics(Parameters params) {
     zeta = params.zeta;
     tau = params.tau;
 
+    /// TODO: double check angular random num gen still works
     gen = Engine(params.angseed);
     dist = Distribution(0,1);
-
-//    std::normal_distribution<double> theta_rng {0,1};
 }
 
-// pass by reference here
 // move a particle according to the force law, and add active motion
 void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
@@ -38,15 +36,11 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     for (int i = 0; i<2; i++){
         x[i] += (factvector[i] + f[i])/zeta*dt;
     }
-
     p->setPosition(x);
-
-    std::vector<double> x2 = p->getPosition();
 
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
-//    double r = rng(gen);
     theta += 2.0/tau*sqrt(dt)*dist(gen);
 
     p->setTheta(theta);

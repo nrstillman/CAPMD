@@ -25,7 +25,7 @@ double Interaction::dist(std::vector<double> i, std::vector<double> j)
     return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
-std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
+void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
@@ -58,7 +58,4 @@ std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::
 
 //    double multiplier = multi*multj;
 //    std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
-
-    // output is inter-particle force
-    return force;
 }

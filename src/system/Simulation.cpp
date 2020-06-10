@@ -1,28 +1,6 @@
 #include "Simulation.h"
 
 #define _USE_MATH_DEFINES
-//
-//Simulation::Simulation(){
-//
-//    std::cout<<"Simulation initialised" << std::endl;
-//
-//    params = Parameters();
-//    domain = Domain(params.cutoff);
-//    interaction = Interaction(params); // add in parameters
-//    dynamics = Dynamics(params);
-//
-//    // create population of boundary particles <- must happen first
-//    Simulation::initBoundary();
-//
-//    // create population of particles
-//    Simulation::initPopulation();
-//
-//
-//    // create the first neighbour list
-//    domain.makeNeighbourList(particles, boundarysize);
-//
-//    currentflag = 1;
-//}
 
 Simulation::Simulation(Parameters _params){
 
@@ -52,13 +30,12 @@ void Simulation::setParams(Parameters new_params){
     params = new_params;
 }
 
-// initialise the system, including creating the particle vector and the first NeighbourList
+// initialise the system, including wiping previous particle vector
 void Simulation::initialise() {
 
     // check previous initialisaiton
     if (currentflag == 1){
         particles.clear();
-//       Domain.NeighbourList.clear();
     } // check if population is empty
     else if (params.N == 0){
         throw "No particles (N=0).";
@@ -69,7 +46,6 @@ void Simulation::initialise() {
 
     // create population of particles
     Simulation::initPopulation();
-
 
     // create the first neighbour list
     domain->makeNeighbourList(particles);
@@ -127,6 +103,7 @@ void Simulation::initPopulation() {
         gen.seed(params.initseed);
 
         // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
+        // (these could better be moved to class defn but only initialised once so leave here for now)
         std::uniform_real_distribution<> disx(0.0, 1);
         std::uniform_real_distribution<> disy(0.0, 1);
         std::uniform_real_distribution<> disr(0.0, 1);
@@ -163,9 +140,9 @@ void Simulation::initPopulation() {
     void Simulation::move()
     {
         // compute forces
+        #pragma omp simd // vectorized operation (does this speed up?)
         for (int i = boundarysize; i< particles.size(); ++i) {
 
-            //TODO: check if this is correct (otherwise where is the decay?
             particles[i]->setForce({0,0});
 
             // get neighbours of p out of neighbour list
@@ -178,7 +155,7 @@ void Simulation::initPopulation() {
         }
 
         // using the forces, update the positions and angles
-//        #pragma omp simd //<- vectorize this list?
+        #pragma omp simd // vectorized operation (does this speed up?)
         for (int i = boundarysize; i< particles.size(); ++i) {
             dynamics->step(particles[i], params.dt);
         }
@@ -239,7 +216,7 @@ void Simulation::initPopulation() {
 //                };
         }
         // now, actually get rid of them
-        // TODO: check this
+        // TODO: include
         std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
         for (auto i = deleteparticles.rbegin(); i != deleteparticles.rend(); ++ i)
         {
@@ -328,27 +305,11 @@ void Simulation::savePopulation(std::string filepath)
     fb.close();
 }
 
-//TODO: Check this
+//TODO: allow for preloaded population posn
 void Simulation::loadPopulation(std::string filepath)
 {
     std::cout << "offline" <<std::endl;
-//    std::string line;
-//    std::ifstream in(filepath);
-//    getline(in,line);
-//    std::cout << line;
-//    int i = 0;
-//    while(getline(in, l
-//    {
-//        std::stringstream linestream;
-//        std::string data;
-//
-//        std::getline(linestream, data, '\t');
-//        Particle temp;
-//        linestream >> temp;
-//        ParticleList[i] = temp;
-//        i += 1;
-//
-//    }
+
 }
 
 
