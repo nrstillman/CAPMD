@@ -1,22 +1,20 @@
-## Running CAPMD with python scripts
+# CAPMD
 
-To build and instal CAPMD: 
+## Build instructions
+
+Dependencies:
+
+* [CMake](https://cmake.org)
+* [VTK](https://vtk.org)
+* [PROJ](https://proj.org)
+* [PDAL](https://pdal.io)
+* [unixODBC](http://www.unixodbc.org)
 
 ```
 git clone https://github.com/nrstillman/CAPMD.git
-```
-
-To run capmd with python:
-
-```
+cd CAPMD
 mkdir build
 cd build
 cmake ..
 make
-```
-
-then add following to bashrc:
-
-```
-export PYTHONPATH="user/path/to/capmd/build":"${PYTHONPATH}"
 ```
