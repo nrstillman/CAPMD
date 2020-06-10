@@ -6,6 +6,8 @@
 
 #include "Particle.h"
 #include "Parameters.h"
+
+#include <memory>
 #include <random>
 
 // handles self-propulsion and overdamped motion

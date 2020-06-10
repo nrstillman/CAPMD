@@ -5,11 +5,12 @@
 #ifndef CAPMD_DOMAIN_H
 #define CAPMD_DOMAIN_H
 
-#include <vector>
-#include <list>
-#include <iostream>
 #include <algorithm>    // std::transform
-#include <functional> // std::minus
+#include <functional>   // std::minus
+#include <iostream>
+#include <list>
+#include <memory>
+#include <vector>
 
 #include "Particle.h"
 #include "Parameters.h"
