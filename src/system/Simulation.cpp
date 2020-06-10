@@ -27,9 +27,10 @@
 Simulation::Simulation(Parameters _params){
 
     params = _params;
-    domain = new Domain(params);
-    interaction = new Interaction(params); // add in parameters
-    dynamics = new Dynamics(params);
+
+    domain = std::make_shared<Domain>(params);
+    interaction = std::make_shared<Interaction>(params);
+    dynamics = std::make_shared<Dynamics>(params);
 
     // create population of boundary particles <- must happen first
     Simulation::initBoundary();
@@ -41,7 +42,8 @@ Simulation::Simulation(Parameters _params){
     // create the first neighbour list
     domain->makeNeighbourList(particles);
 
-    output = new Output(params, boundarysize, particles);
+    output = std::make_shared<Output>(params, boundarysize, particles);
+
     currentflag = 1;
 }
 
@@ -86,7 +88,7 @@ void Simulation::initBoundary() {
         std::uniform_real_distribution<> distheta(0.0, 1);
 
         for (int i = 0; i < 2; i++) {
-            double b_rho = 0.75; // <- density of particle boundaries
+            double b_rho = 1; // <- density of particle boundaries
             for (int n = 0; n <= params.Lx/params.R/b_rho; n++) {
 
                 double x = -params.Lx/2 + n*params.R*b_rho;
@@ -103,7 +105,6 @@ void Simulation::initBoundary() {
                 double x = (params.Lx/2)*pow(-1,i);
                 double y = -(params.Ly/2) + n*params.R*b_rho;
 
-                // why a unique pointer? to keep particles within simulation object
                 std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
 
                 particles.push_back(std::move(pntrP));
@@ -134,8 +135,8 @@ void Simulation::initPopulation() {
         std::cout << boundarysize << std::endl;
         for (int i = boundarysize; i < boundarysize + params.N; i++) {
             // (subtracting radius to avoid initialising on boundary)
-            double x = (disx(gen) - 0.5) * (params.Lx - 4*params.R);
-            double y = (disy(gen) - 0.5) * (params.Ly - 4*params.R);
+            double x = (disx(gen) - 0.5) * (params.Lx - params.R);
+            double y = (disy(gen) - 0.5) * (params.Ly - params.R);
             double theta = distheta(gen) * 2 * M_PI;
 
             // radius chosen from a uniform distribution with mean R and polydispersity poly
@@ -172,11 +173,12 @@ void Simulation::initPopulation() {
 
             for (auto n : neighbours) {
                 // use interaction to compute force
-                interaction->computeForce(particles[i],particles[n],domain);
+                interaction->computeForce(particles[i],particles[n]);
             }
-//            std::cout << particles[i]->getForce()[0];
         }
+
         // using the forces, update the positions and angles
+//        #pragma omp simd //<- vectorize this list?
         for (int i = boundarysize; i< particles.size(); ++i) {
             dynamics->step(particles[i], params.dt);
         }

@@ -6,6 +6,7 @@
 
 #include "Particle.h"
 #include "Parameters.h"
+#include <random>
 
 // handles self-propulsion and overdamped motion
 class Dynamics {
@@ -20,12 +21,20 @@ class Dynamics {
         double  zeta;
         // correlation time of the active driving
         double tau;
+
+        std::random_device rd;
+        typedef std::mt19937 Engine;
+        typedef std::normal_distribution<double> Distribution;
+
+        Engine gen;
+        Distribution dist;
+
     public:
         //Constructor
         Dynamics(Parameters);
 
-        // also needs a random number generator for the angular dynamics
-        int rng;
+//        // also needs a random number generator for the angular dynamics
+//        double rng;
 
         // move a particle according to the force law, and add active motion
         void step(std::shared_ptr<Particle> , double);

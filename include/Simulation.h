@@ -29,10 +29,10 @@ class Simulation : virtual public Particle{
         Parameters params;
 
         // As container, has the different sub-pieces
-        Domain *domain;
-        Dynamics *dynamics;
-        Interaction *interaction;
-        Output *output;
+        std::shared_ptr<Domain> domain;
+        std::shared_ptr<Dynamics> dynamics;
+        std::shared_ptr<Interaction> interaction;
+        std::shared_ptr<Output> output;
 
     public:
 

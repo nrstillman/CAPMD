@@ -9,6 +9,7 @@
 Domain::Domain(Parameters params){
     cutoff = params.cutoff;
     maxmove = params.maxmove;
+    std::cout << "Initialised Domain" << std::endl;
 }
 
 // vector between two particles

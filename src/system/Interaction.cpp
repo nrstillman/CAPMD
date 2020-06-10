@@ -13,35 +13,39 @@ Interaction::Interaction(Parameters params){
     fade = params.fade;
 }
 
-std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j, Domain* D) {
+// vector between two particles
+std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<double> xj)
+{
+    return {xj[0] - xi[0], xj[1] - xi[1]};
+}
+
+// distance between two particles
+double Interaction::dist(std::vector<double> i, std::vector<double> j)
+{
+    return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+}
+
+std::vector<double> Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
 
     // compute vector distance between particles
-    std::vector<double> dr = D->calc_dr(i->getPosition(),j->getPosition());
+    std::vector<double> dr = calc_dr(i->getPosition(),j->getPosition());
     // compute distance
-    double dist = D->dist(i->getPosition(),j->getPosition());
+    double dx = dist(i->getPosition(), j->getPosition());
 
     // actual force computation according to our potential
     // several lines since piecewise defined
-    std::vector<double> force;
+    std::vector<double> force = {0,0};
     double bij = i->getRadius()+ j->getRadius();
-    if (dist < bij*(1 + eps)) {
-        for (int n = 0;n<2; n++){
-        force.push_back(-kij*(bij - dist)*dr[n]/dist);
-        }
+    if (dx < bij*(1 + eps)) {
+        force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
     }
-    else if(dist < bij*(1 + 2*eps)){
-        for (int n = 0;n<2; n++){
-        force.push_back(kij*(bij - dist - 2*eps)*dr[n]/dist);
-        }
+    else if(dx < bij*(1 + 2*eps)){
+        force = {kij*(bij - dx - 2*eps)*dr[0]/dx, kij*(bij - dx - 2*eps)*dr[1]/dx};
     }
-    else{
-        force = {0,0};
-    }
-
     // add force
     i->setForce({force[0] + i->getForce()[0], force[1] + i->getForce()[1]});
 

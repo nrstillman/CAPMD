@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hh"
 #include "Simulation.h"
+#include "Parameters.h"
+#include "Output.h"
 
 TEST_CASE( "Check particle class", "[ParticleTests]" ) {
 
@@ -42,12 +44,12 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
 
     SECTION("0 -> initSim") {
         // initialise simulation from loaded parameters
-        Simulation sim = Simulation();
+        Parameters params;
+        Simulation sim(params);
         sim.initialise();
         CHECK(sim.popSize() == 50);
 
         // new parameters with updated parameters
-        Parameters params;
         params.N = 10;
         sim.setParams(params);
         sim.initialise();
@@ -64,7 +66,8 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
     }
 
     SECTION("3 -> moveParticle") {
-        Simulation sim = Simulation();
+        Parameters params;
+        Simulation sim = Simulation(params);
         sim.initialise();
 
         Particle p = sim.getParticle(0);

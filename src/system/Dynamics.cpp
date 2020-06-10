@@ -12,6 +12,11 @@ Dynamics::Dynamics(Parameters params) {
     factive = params.factive;
     zeta = params.zeta;
     tau = params.tau;
+
+    gen = Engine(params.angseed);
+    dist = Distribution(0,1);
+
+//    std::normal_distribution<double> theta_rng {0,1};
 }
 
 // pass by reference here
@@ -19,12 +24,6 @@ Dynamics::Dynamics(Parameters params) {
 void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
     double theta = p->getTheta();
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    //TODO: check rng
-    std::normal_distribution<double> rng(0.0, 1);
 
     // get particle posn
     std::vector<double> x = p->getPosition();
@@ -47,8 +46,8 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
-    double r = rng(gen);
-    theta += 2.0/tau*sqrt(dt)*r;
+//    double r = rng(gen);
+    theta += 2.0/tau*sqrt(dt)*dist(gen);
 
     p->setTheta(theta);
 

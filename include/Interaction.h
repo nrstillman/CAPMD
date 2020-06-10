@@ -9,7 +9,6 @@
 
 #include "Particle.h"
 #include "Parameters.h"
-#include "Domain.h"
 
 // Stores and computes interactions between particles of different types
 // Doing this without derived classes, as we are nailing down the interaction potential once and for all
@@ -33,8 +32,15 @@ private:
 public:
     Interaction(Parameters);
 
+    // vector between two particles
+    std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
+
+    // distance between two particles or doubles
+    double dist(std::vector<double>, std::vector<double> );
+
+
     // compute the mechanical force between particles
-    std::vector<double> computeForce(std::shared_ptr<Particle>, std::shared_ptr<Particle>, Domain*);
+    std::vector<double> computeForce(std::shared_ptr<Particle>, std::shared_ptr<Particle>);
 };
 
 #endif //CAPMD_INTERACTION_H

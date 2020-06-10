@@ -3,7 +3,6 @@
 //
 
 #include "Simulation.h"
-#include "Output.h"
 #include "Parameters.h"
 
 int main() {
@@ -12,13 +11,13 @@ int main() {
 
     std::cout << sim.popSize() << std::endl;
 
-    int t_final = 10000;
+    int t_final = 1000;
     for (int i = 0; i<= t_final; i++){
         sim.move();
         if (i % 100 == 0){
             std::cout << "---------" << std::endl;
-            std::cout << i << std::endl;
-            sim.saveVTP(i, t_final);
+            std::cout << "timestep: "<< i << std::endl;
+//            sim.saveVTP(i, t_final);
         }
     }
 }
