@@ -34,7 +34,7 @@ Particle::Particle(const Particle & rhs)
 }
 
 Particle::~Particle(){
-//    delete this;
+    delete this;
 }
 
 std::ostream& operator<<(std::ostream& out,const Particle& p)

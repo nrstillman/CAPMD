@@ -68,6 +68,10 @@ struct Parameters {
     double zeta  = 1; //1
     double tau = 10; //10
 
+    // Division/death rates
+    double deathrate = 0;
+
+    double divrate = 0;
 };
 
 #endif //CAPMD_PARAMS_H

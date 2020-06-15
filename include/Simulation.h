@@ -31,6 +31,7 @@ class Simulation : virtual public Particle{
         // As container, has the different sub-pieces
         std::shared_ptr<Domain> domain;
         std::shared_ptr<Dynamics> dynamics;
+        std::shared_ptr<Population> population;
         std::shared_ptr<Interaction> interaction;
         std::shared_ptr<Output> output;
 
@@ -42,7 +43,7 @@ class Simulation : virtual public Particle{
         // Number of particles
         int N;
         // Neighbour list (cutoff) and contact cutoff range (cutoffZ)
-        double cutoff, cutoffZ;
+        double cutoffZ;
         // time step
         double dt;
         // neighbour list total move threshold (should be of the order of 0.5)

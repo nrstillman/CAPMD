@@ -9,6 +9,7 @@ Simulation::Simulation(Parameters _params){
     domain = std::make_shared<Domain>(params);
     interaction = std::make_shared<Interaction>(params);
     dynamics = std::make_shared<Dynamics>(params);
+    population = std::make_shared<Population>(params);
 
     // create population of boundary particles <- must happen first
     Simulation::initBoundary();
@@ -140,7 +141,6 @@ void Simulation::initPopulation() {
     void Simulation::move()
     {
         // compute forces
-        #pragma omp simd // vectorized operation (does this speed up?)
         for (int i = boundarysize; i< particles.size(); ++i) {
 
             particles[i]->setForce({0,0});
@@ -155,7 +155,6 @@ void Simulation::initPopulation() {
         }
 
         // using the forces, update the positions and angles
-        #pragma omp simd // vectorized operation (does this speed up?)
         for (int i = boundarysize; i< particles.size(); ++i) {
             dynamics->step(particles[i], params.dt);
         }
@@ -166,41 +165,47 @@ void Simulation::initPopulation() {
         }
     }
     // population dynamics here
-    // For a density dependent divison rate:
     // First division, then death, else new particles will appear in the just vacated holes ...
     void Simulation::populationDynamics(int Ndiv) {
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        gen.seed(params.initseed);
+
+        std::uniform_real_distribution<> disr(0.0, 1);
+        std::uniform_real_distribution<> distheta(0.0, 1);
+
         // check for divisions
         // modify the particles list only after everybody has been checked
-        std::vector<Particle> addparticles;
-        //
-//////TODO: Check below -> change to append directly to neighbour list
-//        for (auto p : particles) {
-//                // compute number of contacting neighbours
-//                z = space.countZ(p,cutoffZ)
-//                // and actual time elapsed since last division check
-//                timeint = Ndiv*dt
-//                // compute probabilistic chance at division
-//                bool divide = population.testDivide(p,z,timeint)
-//                if divide {
-//                    // create a new particle in the same spot
-//                    // index will be set by the neighbour list rebuild
-//                    // flag is set here
-//                    currentflag +=1
-//                    // note: setting the new particle to the same radius as the old will
-//                    // have unintended consequences (selecting for large particles)
-//                    double radius = inicond.R*(1+poly*(rng.uniform(0,1)-0.5))
-//                    // also, random orientation for similar reasons
-//                    double theta = rng.uniform(0,1)*2*pi
-//                    pnew = Particle(0,currentflag,p.type,p.position,theta,radius)
-//                    // add to the list of new particles
-//                    addparticles.append(pnew)
-//                    // the clock of the old particle needs to be set back
-//                    // This also triggers the fade-in effect between both
-//                    p.age = 0.0
-//                }
-//        }
-//        // now, at the end, stick the new particles at the end of the existing particle list
-//        particles.extend(addparticles)
+        std::vector<std::shared_ptr<Particle>> newparticles;
+        for (auto p : particles) {
+                // compute number of contacting neighbours
+                int z = domain->countZ(p,cutoffZ);
+                // and actual time elapsed since last division check
+                double timeint = Ndiv*dt;
+                // compute probabilistic chance at division
+                bool divide = population->testDivide(p->getType(),z,timeint);
+                if (divide) {
+                    // create a new particle in the same spot
+                    // index will be set by the neighbour list rebuild
+                    // flag is set here
+//                    currentflag +=1; // not needed
+                    // note: setting the new particle to the same radius as the old will
+                    // have unintended consequences (selecting for large particles)
+                    double radius = params.R * (1 + params.poly * (disr(gen) - 0.5));
+                    // also, random orientation for similar reasons
+                    double theta = distheta(gen) * 2 * M_PI;
+
+                    std::shared_ptr<Particle> pntrP(new Particle(0,p->getType(),p->getPosition(),theta,radius));
+                    // add to the list of new particles
+                    newparticles.push_back(std::move(pntrP));
+                    // the clock of the old particle needs to be set back
+                    // This also triggers the fade-in effect between both
+                    p->setAge(0.0);
+                }
+        }
+        // now, at the end, stick the new particles at the end of the existing particle list
+        particles.insert(particles.end(), newparticles.begin(), newparticles.end());
         // and rebuild the neighbour list
         domain->makeNeighbourList(particles);
 
@@ -209,28 +214,23 @@ void Simulation::initPopulation() {
         for (auto p : particles) {
                 // compute actual time elapsed since last division check
                 int timeint = Ndiv*params.dt;
-                // TODO: compute probabilistic chance at division
-//                bool death = population.testDeath(p,timeint)
-//                if death {
-//                    deleteparticles.append(p.getId())
-//                };
+                bool death = population->testDeath(p->getType(),timeint);
+                if (death) {
+                    deleteparticles.append(p->getId());
+                };
         }
-        // now, actually get rid of them
-        // TODO: include
-        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
-        for (auto i = deleteparticles.rbegin(); i != deleteparticles.rend(); ++ i)
-        {
-            particles.erase(particles.begin() + *i);
-        }
-//Old way
-//        for (auto pdel : deletparticles){
-//                // throw out of particle list, addressed by pointer
-//                particles.erase(pdel)
-//                // delete the thing itself
-//                pdel.deleteParticle()
+//        // now, actually get rid of them
+//        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
+//
+//        for (auto pdel : deleteparticles){
+//
+//                // delete the particle
+//                delete *particles[pdel];
+//                // get rid of the the pointer in the particle list
+//                particles.erase(pdel);
 //        }
-        // and do a neighbour list rebuild to get all the indices straightened out again
-        domain->makeNeighbourList(particles);
+//        // and do a neighbour list rebuild to get all the indices straightened out again
+//        domain->makeNeighbourList(particles);
     }
 
 

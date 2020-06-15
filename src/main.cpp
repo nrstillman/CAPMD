@@ -11,7 +11,7 @@ int main() {
 
 
     std::vector<int> L = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    std::vector<int> N = {30, 125, 285, 500, 800, 11150, 1560, 2000, 2500, 3200};
+    std::vector<int> N = {30, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
 
     for (int i = 0; i < 10; i++){
         auto start = std::chrono::high_resolution_clock::now();

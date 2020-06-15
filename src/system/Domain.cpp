@@ -8,6 +8,7 @@
 // Domain constructor
 Domain::Domain(Parameters params){
     cutoff = params.cutoff;
+    cutoffZ = params.cutoffZ;
     maxmove = params.maxmove;
     std::cout << "Initialised Domain" << std::endl;
 }
@@ -23,6 +24,19 @@ double Domain::dist(std::vector<double> i, std::vector<double> j)
 {
     std::vector<double> dr = calc_dr(i,j);
     return sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
+}
+
+// compute the actual number of neighbours here, based on the interaction range
+// The cutoffZ here is *mandatorily* smaller than the neighbour list cutoff
+int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
+    int z = 0;
+    // get the particles which are in the local neighbour list
+    std::list <int> neighs = NeighbourList[i];
+    for (auto n : neighs) {
+            double dist_ip = dist(particles[i]->getPosition(), particles[n]->getPosition());
+            if (dist_ip <cutoffZ) z+=1;
+    }
+    return z;
 }
 
 // create the neighbour list

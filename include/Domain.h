@@ -26,6 +26,7 @@ class Domain
     public:
 
         double cutoff;
+        double cutoffZ;
         int boundarysize;
         double maxmove;
 
@@ -42,6 +43,7 @@ class Domain
         // distance between two particles or doubles
         double dist(std::vector<double>, std::vector<double> );
 
+        int countZ(std::vector<std::shared_ptr<Particle>>, int);
         void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
 
