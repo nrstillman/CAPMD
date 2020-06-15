@@ -30,7 +30,7 @@ double Domain::dist(std::vector<double> i, std::vector<double> j)
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
 void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
-
+//    std::cout << "Neighbour List Calculated" << std::endl;
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
@@ -74,7 +74,5 @@ bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles) {
 // return the list of neighbours of particle i
 // cannot be used to get boundary cell neighbours (which aren't stored)
 std::list<int> Domain::getNeighbours(int i) {
-
     return NeighbourList[i];
 }
-

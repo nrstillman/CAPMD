@@ -23,8 +23,8 @@ struct Parameters {
     // Simulation
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
-    int maxmove = 1;
-    double cutoff = 2.5;
+    double maxmove = 0.25;
+    double cutoff = 3;
     double cutoffZ = 2.5;
 
     //Domain
@@ -33,7 +33,7 @@ struct Parameters {
     int Ly = 30; //30
 
     //Population
-    int N = 250;   // Population size
+    int N = 300; // Population size
     std::string init_opt = "random_unif";
     std::string bc_opt = "bounded";
 
@@ -60,7 +60,7 @@ struct Parameters {
     std::vector<std::vector<double>> pairatt =
         {
             { 0, 0},
-            { 0, 0.2},
+            { 0, 0}, //max 0.2
         };
 
     //Dynamics (active parameters)

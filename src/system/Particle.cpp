@@ -17,7 +17,7 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
     radius = pr;
     numneigh = 0;
 
-    std::cout << "Particle " << pid <<" Initialised" << std::endl;
+//    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
 
 Particle::Particle(const Particle & rhs)
