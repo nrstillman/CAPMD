@@ -4,6 +4,12 @@
 
 Simulation::Simulation(Parameters _params){
 
+    gen = Engine(params.initseed);
+    disx = Distribution(0,1);
+    disy = Distribution(0,1);
+    distheta = Distribution(0,1);
+    disr = Distribution(0,1);
+
     params = _params;
 
     domain = std::make_shared<Domain>(params);
@@ -58,11 +64,7 @@ void Simulation::initialise() {
 void Simulation::initBoundary() {
     if (params.bc_opt == "bounded") {
 
-        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
-        std::uniform_real_distribution<> disx(0.0, 1);
-        std::uniform_real_distribution<> disy(0.0, 1);
-        std::uniform_real_distribution<> disr(0.0, 1);
-        std::uniform_real_distribution<> distheta(0.0, 1);
+        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles < in class defn
 
         for (int i = 0; i < 2; i++) {
             double b_rho = 1; // <- density of particle boundaries
@@ -99,16 +101,6 @@ void Simulation::initBoundary() {
 void Simulation::initPopulation() {
     if (params.init_opt == "random_unif") {
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        gen.seed(params.initseed);
-
-        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles
-        // (these could better be moved to class defn but only initialised once so leave here for now)
-        std::uniform_real_distribution<> disx(0.0, 1);
-        std::uniform_real_distribution<> disy(0.0, 1);
-        std::uniform_real_distribution<> disr(0.0, 1);
-        std::uniform_real_distribution<> distheta(0.0, 1);
 
         std::cout << boundarysize << std::endl;
         for (int i = boundarysize; i < boundarysize + params.N; i++) {
@@ -138,8 +130,9 @@ void Simulation::initPopulation() {
     }
 }
 // time stepping of the simulation
-    void Simulation::move()
+    void Simulation::move(int t)
     {
+        double timeint = t*params.dt;
         // compute forces
         for (int i = boundarysize; i< particles.size(); ++i) {
 
@@ -153,7 +146,6 @@ void Simulation::initPopulation() {
                 interaction->computeForce(particles[i],particles[n]);
             }
         }
-
         // using the forces, update the positions and angles
         for (int i = boundarysize; i< particles.size(); ++i) {
             dynamics->step(particles[i], params.dt);
@@ -168,24 +160,19 @@ void Simulation::initPopulation() {
     // First division, then death, else new particles will appear in the just vacated holes ...
     void Simulation::populationDynamics(int Ndiv) {
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        gen.seed(params.initseed);
-
-        std::uniform_real_distribution<> disr(0.0, 1);
-        std::uniform_real_distribution<> distheta(0.0, 1);
-
         // check for divisions
         // modify the particles list only after everybody has been checked
         std::vector<std::shared_ptr<Particle>> newparticles;
-        for (auto p : particles) {
-                // compute number of contacting neighbours
-                int z = domain->countZ(p,cutoffZ);
+        bool rebuild  = false;
+        for (int i = boundarysize; i< particles.size(); ++i) {
+
+                /// note: have moved countZ into makeNeighbourList and made z a attribute of particles
                 // and actual time elapsed since last division check
-                double timeint = Ndiv*dt;
+                double timeint = Ndiv*params.dt;
                 // compute probabilistic chance at division
-                bool divide = population->testDivide(p->getType(),z,timeint);
+                bool divide = population->testDivide(particles[i]->getType(),particles[i]->getZ(),timeint);
                 if (divide) {
+                    std::cout<<"cell division"<<std::endl;
                     // create a new particle in the same spot
                     // index will be set by the neighbour list rebuild
                     // flag is set here
@@ -196,29 +183,31 @@ void Simulation::initPopulation() {
                     // also, random orientation for similar reasons
                     double theta = distheta(gen) * 2 * M_PI;
 
-                    std::shared_ptr<Particle> pntrP(new Particle(0,p->getType(),p->getPosition(),theta,radius));
+                    std::shared_ptr<Particle> pntrP(new Particle(particles.size(),particles[i]->getType(),particles[i]->getPosition(),theta,radius));
                     // add to the list of new particles
-                    newparticles.push_back(std::move(pntrP));
+                    particles.push_back(std::move(pntrP));
                     // the clock of the old particle needs to be set back
                     // This also triggers the fade-in effect between both
-                    p->setAge(0.0);
+                    particles[i]->setAge(0.0);
+                    rebuild = true;
                 }
         }
         // now, at the end, stick the new particles at the end of the existing particle list
-        particles.insert(particles.end(), newparticles.begin(), newparticles.end());
+//        particles.insert(particles.end(), newparticles.begin(), newparticles.end());
         // and rebuild the neighbour list
-        domain->makeNeighbourList(particles);
+        if (rebuild) domain->makeNeighbourList(particles);
 
-        // Now, separately, we will check for death
-        std::vector<int> deleteparticles;
-        for (auto p : particles) {
-                // compute actual time elapsed since last division check
-                int timeint = Ndiv*params.dt;
-                bool death = population->testDeath(p->getType(),timeint);
-                if (death) {
-                    deleteparticles.append(p->getId());
-                };
-        }
+//
+//        // Now, separately, we will check for death
+//        std::vector<int> deleteparticles;
+//        for (auto p : particles) {
+//                // compute actual time elapsed since last division check
+//                int timeint = Ndiv*params.dt;
+//                bool death = population->testDeath(p->getType(),timeint);
+//                if (death) {
+//                    deleteparticles.append(p->getId());
+//                };
+    }
 //        // now, actually get rid of them
 //        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
 //
@@ -231,7 +220,7 @@ void Simulation::initPopulation() {
 //        }
 //        // and do a neighbour list rebuild to get all the indices straightened out again
 //        domain->makeNeighbourList(particles);
-    }
+//}
 
 
 // function to get particle in simulation (indexing starts from any boundary cells)
@@ -287,6 +276,7 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
 
 void Simulation::saveVTP(int step, int finalstep)
 {
+    output->setParticles(particles);
     output->vtp(step, finalstep);
 }
 

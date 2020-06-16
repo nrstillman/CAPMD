@@ -15,16 +15,22 @@ private:
     // number of types
     int ntypes;
     // division rate
-    int divrates;
+    double divrates;
     // death rate
-    int deathrates;
+    double deathrates;
     // maximum density at division (in units of particle neighbours)
-    int cutoffZ;
-    int seed;
+    int maxZ;
+
+    std::random_device rd;
+    typedef std::mt19937 Engine;
+    typedef std::uniform_real_distribution<double> Distribution;
+
+    Engine gen;
+    Distribution dist;
 
 public:
         Population(Parameters);
-        bool testDivide(int, int, double);
+        bool testDivide(int, double, double);
 
         bool testDeath(int, double);
 

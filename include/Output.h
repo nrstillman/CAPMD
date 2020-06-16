@@ -27,5 +27,7 @@ public:
 
 
     void vtp(int, int);
+
+    void setParticles(std::vector<std::shared_ptr<Particle>> x) { particles = x;}
 };
 #endif //CAPMD_OUTPUT_H

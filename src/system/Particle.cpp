@@ -16,6 +16,7 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
     theta = ptheta;
     radius = pr;
     numneigh = 0;
+    z = 0;
 
 //    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
@@ -31,10 +32,11 @@ Particle::Particle(const Particle & rhs)
     theta = rhs.theta;
     radius = rhs.radius;
     numneigh = rhs.numneigh;
+    z = rhs.z;
 }
 
 Particle::~Particle(){
-    delete this;
+//    delete this;
 }
 
 std::ostream& operator<<(std::ostream& out,const Particle& p)

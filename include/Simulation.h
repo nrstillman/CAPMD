@@ -35,6 +35,17 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Interaction> interaction;
         std::shared_ptr<Output> output;
 
+
+//        std::random_device rd;
+        typedef std::mt19937 Engine;
+        typedef std::uniform_real_distribution<double> Distribution;
+
+        Engine gen;
+        Distribution disx;
+        Distribution disy;
+        Distribution disr;
+        Distribution distheta;
+
     public:
 
         std::vector<std::shared_ptr<Particle>> particles;
@@ -67,7 +78,7 @@ class Simulation : virtual public Particle{
         void initBoundary(); //  To create the boundary
 
         // Methods for particle dynamics
-        void move(void);
+        void move(int);
         void populationDynamics(int);
 
         // Methods for getting sim data

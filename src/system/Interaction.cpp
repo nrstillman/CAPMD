@@ -22,7 +22,7 @@ std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<dou
 // distance between two particles
 double Interaction::dist(std::vector<double> i, std::vector<double> j)
 {
-    return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+    if (i == j) return 0; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
@@ -36,26 +36,36 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     // compute distance
     double dx = dist(i->getPosition(), j->getPosition());
 
+    /// How to calculate for division?
     // actual force computation according to our potential
     // several lines since piecewise defined
     std::vector<double> force = {0,0};
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
-        force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
+        if (dr[0] != 0 & dx != 0) force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
+        else force = {-kij*bij,-kij*bij};
     }
-    else if(dx < bij*(1 + 2*eps)){
+    else if (dx < bij*(1 + 2*eps)){
         force = {kij*(bij - dx - 2*eps)*dr[0]/dx, kij*(bij - dx - 2*eps)*dr[1]/dx};
     }
-    // add force
-    i->setForce({force[0] + i->getForce()[0], force[1] + i->getForce()[1]});
 
 //    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
 //    // used for particle fade-in post division.
-//    double multi = 1.0;
-//    if (i->age<fade) {multi = i->age/fade;}
-//    double multj = 1.0;
-//    if (j->age<fade) {multj = j->age/fade;}
+    /// How to treat boundary cells?
+    if (j->getType() != params.btype){
 
-//    double multiplier = multi*multj;
-//    std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
+        double multi = 1.0;
+        if (i->getAge()<fade) {multi = i->getAge()/fade;}
+        double multj = 1.0;
+        if (j->getAge()<fade) {multj = j->getAge()/fade;}
+
+        double multiplier = multi*multj;
+
+        std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
+    }
+
+//    std::cout << force[0]<<","<<force[1]<<std::endl;
+
+    // add force
+    i->setForce({force[0] + i->getForce()[0], force[1] + i->getForce()[1]});
 }

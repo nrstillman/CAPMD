@@ -40,6 +40,10 @@ void Output::vtp(int t, int finalstep)
     numneigh->SetName("NumNeigh");
     numneigh->SetNumberOfComponents(1);
 
+    vtkSmartPointer<vtkIntArray> numcontact =  vtkSmartPointer<vtkIntArray>::New();
+    numcontact->SetName("NumContact");
+    numcontact->SetNumberOfComponents(1);
+
     vtkSmartPointer<vtkDoubleArray> force =  vtkSmartPointer<vtkDoubleArray>::New();
     force->SetName("Force");
     force->SetNumberOfComponents(3);
@@ -55,6 +59,7 @@ void Output::vtp(int t, int finalstep)
         types->InsertNextValue((*p)->getType());
         radii->InsertNextValue((*p)->getRadius());
         numneigh -> InsertNextValue((*p)->getNumNeigh());
+        numcontact -> InsertNextValue((*p)->getZ());
 
         force->InsertNextTuple(f);
 
@@ -63,6 +68,7 @@ void Output::vtp(int t, int finalstep)
         polydata->GetPointData()->AddArray(types);
         polydata->GetPointData()->AddArray(radii);
         polydata->GetPointData()->AddArray(numneigh);
+        polydata->GetPointData()->AddArray(numcontact);
 
         polydata->GetPointData()->AddArray(force);
 

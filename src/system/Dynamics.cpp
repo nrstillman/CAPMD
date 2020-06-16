@@ -44,6 +44,7 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     theta += 2.0/tau*sqrt(dt)*dist(gen);
 
     p->setTheta(theta);
+    p->setAge(p->getAge() + dt);
 
     /// more general form if some form of torque or alignment is present:
     // p.theta += alignmentTorque*dt + 2.0/tau[p.type]*sqrt(dt)*rng(gen);

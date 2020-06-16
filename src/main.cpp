@@ -10,10 +10,10 @@
 int main() {
 
 
-    std::vector<int> L = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    std::vector<int> N = {30, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
+    std::vector<int> L = {10};//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    std::vector<int> N = {10};//, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
 
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 1; i++){
         auto start = std::chrono::high_resolution_clock::now();
 
         Parameters params;
@@ -24,12 +24,15 @@ int main() {
         params.filename = "Run_" + std::to_string(i) + "_N_" + std::to_string(params.N);
         Simulation sim = Simulation(params);
 
-        int t_final = 50000;
+        int t_final = 10000;
         for (int t = 0; t<= t_final; t++){
-            sim.move();
-            if (t % 1000 == 0){
-//                std::cout << "---------" << std::endl;
-//                std::cout << "timestep: "<< t << std::endl;
+            sim.move(t);
+            if (t % 10 == 0){
+                sim.populationDynamics(t);
+            }
+            if (t % 100 == 0){
+                std::cout << "---------" << std::endl;
+                std::cout << "timestep: "<< t << std::endl;
                 sim.saveVTP(t, t_final);
             }
         }

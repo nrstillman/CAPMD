@@ -25,7 +25,6 @@ struct Parameters {
     int dim = 2;
     double maxmove = 0.25;
     double cutoff = 3;
-    double cutoffZ = 2.5;
 
     //Domain
     // x and y length
@@ -35,7 +34,7 @@ struct Parameters {
     //Population
     int N = 300; // Population size
     std::string init_opt = "random_unif";
-    std::string bc_opt = "bounded";
+    std::string bc_opt = "none"//"bounded";
 
     int NTA = 0;
     int Nstem = 0;
@@ -50,7 +49,7 @@ struct Parameters {
 
     //Interaction
     int ntypes = 2;
-    int fade = 0;
+    double fade = 3;
 
     std::vector<std::vector<double>> pairstiff =
         {
@@ -70,8 +69,9 @@ struct Parameters {
 
     // Division/death rates
     double deathrate = 0;
-
-    double divrate = 0;
+    double divrate = 0.001;
+    double cutoffZ = 2.5; // 2.5
+    double maxZ = 10; // 2.5
 };
 
 #endif //CAPMD_PARAMS_H
