@@ -33,9 +33,9 @@ double Domain::dist(std::vector<double> i, std::vector<double> j)
 int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
     int z = 0;
     // get the particles which are in the local neighbour list
-    std::list <int> neighs = NeighbourList[i];
+    std::list <std::shared_ptr<Particle>> neighs = NeighbourList[i];
     for (auto n : neighs) {
-            double dist_ip = dist(particles[i]->getPosition(), particles[n]->getPosition());
+            double dist_ip = dist(particles[i]->getPosition(), n->getPosition());
             if (dist_ip <cutoffZ) z+=1;
     }
     return z;
@@ -46,15 +46,16 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
 void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
+//
 //    std::cout << "Neighbour List Calculated" << std::endl;
-    std::vector<std::list<int>> _NeighbourList;
+    NeighbourList.clear();
     //vector of previous positions of particle (used in rebuild)
-    std::vector<std::vector<double>> _PrevPositions;
+    PrevPositions.clear();
 
     for (int i = boundarysize; i< particles.size(); ++i) {
 
-            _PrevPositions.push_back(particles[i]->getPosition());
-            std::list<int> pneighs;
+            PrevPositions.push_back(particles[i]->getPosition());
+            std::list<std::shared_ptr<Particle>> pneighs;
             int numneighs = 0;
             for (int j = 0; j< particles.size(); ++j) {
 
@@ -62,19 +63,17 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
                     double dist_pq = dist(particles[i]->getPosition(), particles[j]->getPosition());
 
                     if (dist_pq < cutoff) {
-                        pneighs.push_back(particles[j]->getId());
+                        pneighs.push_back(particles[j]);
                         numneighs += 1;
                     }
                 }
             }
-            _NeighbourList.push_back(pneighs);
+            NeighbourList.push_back(pneighs);
 
             particles[i]->setNumNeigh(numneighs);
 //            particles[i]->setZ(z);
             pneighs.clear();
         }
-    NeighbourList = _NeighbourList;
-    PrevPositions = _PrevPositions;
 }
 
 //// check for a neighbour list rebuild based on max motion of particles
@@ -90,6 +89,6 @@ bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles) {
 
 // return the list of neighbours of particle i
 // cannot be used to get boundary cell neighbours (which aren't stored)
-std::list<int> Domain::getNeighbours(int i) {
+std::list<std::shared_ptr<Particle>> Domain::getNeighbours(int i) {
     return NeighbourList[i];
 }

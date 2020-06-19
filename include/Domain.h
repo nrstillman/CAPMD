@@ -20,7 +20,7 @@
 class Domain
     {
     private:
-        std::vector<std::list<int>> NeighbourList;
+        std::vector<std::list<std::shared_ptr<Particle>>> NeighbourList;
         std::vector<std::vector<double>> PrevPositions;
 
     public:
@@ -47,7 +47,7 @@ class Domain
         void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
 
-        std::list<int> getNeighbours(int);
+        std::list<std::shared_ptr<Particle>> getNeighbours(int);
 
         void setBoundarySize( int x) { boundarysize = x;}
 };

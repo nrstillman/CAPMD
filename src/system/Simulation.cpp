@@ -139,11 +139,11 @@ void Simulation::initPopulation() {
             particles[i]->setForce({0,0});
 
             // get neighbours of p out of neighbour list
-            std::list<int> neighbours = domain->getNeighbours(i - boundarysize);
+            std::list<std::shared_ptr<Particle>> neighbours = domain->getNeighbours(i - boundarysize);
             particles[i] ->setZ(0);
             for (auto n : neighbours) {
                 // use interaction to compute force
-                interaction->computeForce(particles[i],particles[n]);
+                interaction->computeForce(particles[i],n);
             }
 //            std::cout << particles[i]->getZ() << std::endl;
         }
