@@ -47,14 +47,16 @@ class Particle
         int getNumNeigh() { return numneigh;}
         void setNumNeigh( int x) { numneigh= x;}
 
-        int getZ() { return z;}
+        int getZ() {return z;}
         void setZ( int x) { z= x;}
+        void addZ(int);
 
         std::vector<double> getPosition() { return position;}
         void setPosition(std::vector<double> x) { position = x;}
 
         std::vector<double> getForce() { return force;}
         void setForce(std::vector<double> x)  { force = x;}
+        void addForce(std::vector<double>);
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);

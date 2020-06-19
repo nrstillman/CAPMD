@@ -5,6 +5,8 @@
 
 #define _USE_MATH_DEFINES
 
+double TOL = 1E-6;
+
 Interaction::Interaction(Parameters params){
     // read out number of types, pair stiffnesses and pair attractions
     ntypes = params.ntypes;
@@ -22,7 +24,7 @@ std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<dou
 // distance between two particles
 double Interaction::dist(std::vector<double> i, std::vector<double> j)
 {
-    if (i == j) return 0; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+    if (i == j) return params.eps; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
@@ -36,22 +38,22 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     // compute distance
     double dx = dist(i->getPosition(), j->getPosition());
 
-    /// How to calculate for division?
     // actual force computation according to our potential
     // several lines since piecewise defined
     std::vector<double> force = {0,0};
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
-        if (dr[0] != 0 & dx != 0) force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
-        else force = {-kij*bij,-kij*bij};
+        force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
     }
     else if (dx < bij*(1 + 2*eps)){
         force = {kij*(bij - dx - 2*eps)*dr[0]/dx, kij*(bij - dx - 2*eps)*dr[1]/dx};
     }
+    if (dx < params.cutoffZ*bij){
+        i ->addZ(1);
+    }
 
 //    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
 //    // used for particle fade-in post division.
-    /// How to treat boundary cells?
     if (j->getType() != params.btype){
 
         double multi = 1.0;
@@ -67,5 +69,5 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
 //    std::cout << force[0]<<","<<force[1]<<std::endl;
 
     // add force
-    i->setForce({force[0] + i->getForce()[0], force[1] + i->getForce()[1]});
+    i->addForce(force);
 }

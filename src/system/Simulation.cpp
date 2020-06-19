@@ -140,11 +140,12 @@ void Simulation::initPopulation() {
 
             // get neighbours of p out of neighbour list
             std::list<int> neighbours = domain->getNeighbours(i - boundarysize);
-
+            particles[i] ->setZ(0);
             for (auto n : neighbours) {
                 // use interaction to compute force
                 interaction->computeForce(particles[i],particles[n]);
             }
+//            std::cout << particles[i]->getZ() << std::endl;
         }
         // using the forces, update the positions and angles
         for (int i = boundarysize; i< particles.size(); ++i) {
@@ -166,13 +167,14 @@ void Simulation::initPopulation() {
         bool rebuild  = false;
         for (int i = boundarysize; i< particles.size(); ++i) {
 
-                /// note: have moved countZ into makeNeighbourList and made z a attribute of particles
+                /// note: have moved countZ into interaction calculation (must be called after step)
                 // and actual time elapsed since last division check
                 double timeint = Ndiv*params.dt;
                 // compute probabilistic chance at division
                 bool divide = population->testDivide(particles[i]->getType(),particles[i]->getZ(),timeint);
                 if (divide) {
-                    std::cout<<"cell division"<<std::endl;
+
+//                    std::cout<<"cell division"<<std::endl;
                     // create a new particle in the same spot
                     // index will be set by the neighbour list rebuild
                     // flag is set here
@@ -182,8 +184,8 @@ void Simulation::initPopulation() {
                     double radius = params.R * (1 + params.poly * (disr(gen) - 0.5));
                     // also, random orientation for similar reasons
                     double theta = distheta(gen) * 2 * M_PI;
-
-                    std::shared_ptr<Particle> pntrP(new Particle(particles.size(),particles[i]->getType(),particles[i]->getPosition(),theta,radius));
+                    std::vector<double> x =  { particles[i]->getPosition()[0] + disx(gen)*params.eps, particles[i]->getPosition()[1] + disx(gen)*params.eps};
+                    std::shared_ptr<Particle> pntrP(new Particle(particles.size(),particles[i]->getType(), x,theta,radius));
                     // add to the list of new particles
                     particles.push_back(std::move(pntrP));
                     // the clock of the old particle needs to be set back

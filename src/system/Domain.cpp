@@ -28,6 +28,8 @@ double Domain::dist(std::vector<double> i, std::vector<double> j)
 
 // compute the actual number of neighbours here, based on the interaction range
 // The cutoffZ here is *mandatorily* smaller than the neighbour list cutoff
+
+// This is now done with each interaction calculation
 int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
     int z = 0;
     // get the particles which are in the local neighbour list
@@ -44,7 +46,7 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
 void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
-    std::cout << "Neighbour List Calculated" << std::endl;
+//    std::cout << "Neighbour List Calculated" << std::endl;
     std::vector<std::list<int>> _NeighbourList;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<double>> _PrevPositions;
@@ -54,7 +56,6 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
             _PrevPositions.push_back(particles[i]->getPosition());
             std::list<int> pneighs;
             int numneighs = 0;
-            int z = 0;
             for (int j = 0; j< particles.size(); ++j) {
 
                 if (particles[i]->getId() != particles[j]->getId() ){
@@ -64,13 +65,12 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
                         pneighs.push_back(particles[j]->getId());
                         numneighs += 1;
                     }
-                    if (dist_pq <cutoffZ) z+=1;
                 }
             }
             _NeighbourList.push_back(pneighs);
 
             particles[i]->setNumNeigh(numneighs);
-            particles[i]->setZ(z);
+//            particles[i]->setZ(z);
             pneighs.clear();
         }
     NeighbourList = _NeighbourList;

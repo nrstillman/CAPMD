@@ -15,16 +15,18 @@ struct Parameters {
     // io
     std::string filename = "test";
     std::string outputfolder = "vtp/";
+
     // Random
     int initseed = 2020;
     int angseed = 2001;
-    int deathseed = 2021;
+    int popseed = 2021;
 
     // Simulation
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
     double maxmove = 0.25;
     double cutoff = 3;
+    double eps = 1E-3;
 
     //Domain
     // x and y length
@@ -32,9 +34,9 @@ struct Parameters {
     int Ly = 30; //30
 
     //Population
-    int N = 300; // Population size
+    int N = 200; // Population size
     std::string init_opt = "random_unif";
-    std::string bc_opt = "none"//"bounded";
+    std::string bc_opt = "none";//"bounded";
 
     int NTA = 0;
     int Nstem = 0;
@@ -45,7 +47,7 @@ struct Parameters {
     int type = 0;
 
     double R = 1;
-    double poly = 0.; // 0.3
+    double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
 
     //Interaction
     int ntypes = 2;
@@ -68,10 +70,10 @@ struct Parameters {
     double tau = 10; //10
 
     // Division/death rates
-    double deathrate = 0;
-    double divrate = 0.001;
-    double cutoffZ = 2.5; // 2.5
-    double maxZ = 10; // 2.5
+    double deathrate = 0.01;
+    double divrate = 0.1;
+    double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
+    double maxZ = 4;
 };
 
 #endif //CAPMD_PARAMS_H

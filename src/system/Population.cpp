@@ -22,8 +22,7 @@ Population::Population(Parameters params) {
     maxZ = params.maxZ;
 
 // it has its own random number generator
-    /// TODO: does this need another seed?
-    gen = Engine(params.angseed);
+    gen = Engine(params.popseed);
     dist = Distribution(0,1);
 }
 

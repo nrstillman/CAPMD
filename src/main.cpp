@@ -21,14 +21,14 @@ int main() {
         params.Lx = L[i];
         params.Ly = L[i];
         params.N = N[i]; // Population size
-        params.filename = "Run_" + std::to_string(i) + "_N_" + std::to_string(params.N);
+        params.filename = "Division_" + std::to_string(i) + "_N_" + std::to_string(params.N) +"_L_" + std::to_string(params.Lx) ;
         Simulation sim = Simulation(params);
 
-        int t_final = 10000;
+        int t_final = 100000;
         for (int t = 0; t<= t_final; t++){
             sim.move(t);
-            if (t % 10 == 0){
-                sim.populationDynamics(t);
+            if (t % 100 == 0){
+                sim.populationDynamics(100);
             }
             if (t % 100 == 0){
                 std::cout << "---------" << std::endl;
