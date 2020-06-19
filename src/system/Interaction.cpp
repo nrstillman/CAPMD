@@ -38,6 +38,7 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     // compute distance
     double dx = dist(i->getPosition(), j->getPosition());
 
+//    std::cout << i->getId() << std::endl;
     // actual force computation according to our potential
     // several lines since piecewise defined
     std::vector<double> force = {0,0};

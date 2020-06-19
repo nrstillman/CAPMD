@@ -59,7 +59,7 @@ class Simulation : virtual public Particle{
         double dt;
         // neighbour list total move threshold (should be of the order of 0.5)
         double maxmove;
-        // running counter on particle flags <- using this to check initialisation instead
+        // running counter on particle flags
         int currentflag;
         // correlation time
         double tau;
