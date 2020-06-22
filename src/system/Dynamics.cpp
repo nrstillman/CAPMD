@@ -1,9 +1,8 @@
 #include "Dynamics.h"
 
 #include <cmath>
-#include <random>
-
 #include <iostream>
+#include <random>
 
 #define _USE_MATH_DEFINES
 

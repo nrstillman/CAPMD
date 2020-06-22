@@ -1,32 +1,44 @@
-# Will rewrite this clunky cmake file later on
-
 cmake_minimum_required(VERSION 3.13)  # CMake version check
 project(capmd)                        # Create project "capmd"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
-set(VTK_DIR "/usr/local/Cellar/vtk/8.2.0_10") #include VTK for outputting
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
-# Add main.cpp file of project root directory as source file
-file(GLOB SOURCE_FILES src/main.cpp src/system/*.cpp src/io/*.cpp include/*.h )
+add_library(
+    capmd
+    STATIC
+    ${CMAKE_SOURCE_DIR}/src/system/Simulation.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/Particle.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/Population.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/Domain.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/Interaction.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/Dynamics.cpp
+    ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
+)
 
-#find_library(PARTICLE_LIBRARY particle_library lib)
-add_library(simulation_library STATIC src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/io/Output.cpp)
-
-# Add additonal directories
+# Add additonal directories.
 include_directories(src/system)
 include_directories(src/io)
 include_directories(include)
 
-# testing subdir
+# Add the testing subdir.
 add_subdirectory(tests)
 
-#add_subdirectory(pybind11 [../pybind11])
-#pybind11_add_module(capmd src/main.cpp src/system/Simulation.cpp src/system/Particle.cpp src/system/Population.cpp src/system/Domain.cpp src/system/Interaction.cpp src/system/Dynamics.cpp src/bindings.cpp include/Simulation.h include/Particle.h include/Population.h include/Domain.h include/Dynamics.h include/Interaction.h)
+# Add executable target for library demo.
+add_executable(
+    capmd_demo
+    ${CMAKE_SOURCE_DIR}/src/main.cpp
+)
 
-# Add executable target with source files listed in SOURCE_FILES variable
-add_executable(capmd ${SOURCE_FILES})
+# Link the CAPMD demo against libcapmd and the VTK libraries.
+target_link_libraries(
+    capmd_demo
+    capmd
+    ${VTK_LIBRARIES}
+)
 
-# Link capmd against the VTK libraries.
-target_link_libraries(capmd ${VTK_LIBRARIES})
-
+#add_subdirectory(pybind11 ${CMAKE_SOURCE_DIR}/pybind11)
+#pybind11_add_module(
+#    pycapmd
+#    ${CMAKE_SOURCE_DIR}/src/bindings.cpp
+#)

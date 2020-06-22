@@ -4,8 +4,9 @@
 #ifndef CAPMD_INTERACTION_H
 #define CAPMD_INTERACTION_H
 
-#include <vector>
 #include <array>
+#include <memory>
+#include <vector>
 
 #include "Particle.h"
 #include "Parameters.h"
