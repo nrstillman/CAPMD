@@ -1,5 +1,5 @@
-// Python Bindings for Particle Class
-//
+// Python Bindings for CAPMD
+// Created by N.R. Stillman & S. Henkes 2020
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>

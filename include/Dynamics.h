@@ -1,5 +1,4 @@
-//
-// Silke Henkes 26.04.2020
+// Created by N.R. Stillman & S. Henkes 2020
 
 #ifndef CAPMD_DYNAMICS_H
 #define CAPMD_DYNAMICS_H

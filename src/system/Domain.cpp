@@ -1,3 +1,5 @@
+// Created by N.R. Stillman & S. Henkes 2020
+//
 #include "Domain.h"
 #include <cmath>
 #include <iterator>

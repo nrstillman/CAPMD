@@ -1,4 +1,4 @@
-
+// Created by N.R. Stillman & S. Henkes 2020
 //
 #ifndef CAPMD_POPULATION_H
 #define CAPMD_POPULATION_H

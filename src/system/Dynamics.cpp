@@ -1,5 +1,6 @@
+// Created by N.R. Stillman & S. Henkes 2020
+//
 #include "Dynamics.h"
-
 #include <cmath>
 #include <iostream>
 #include <random>

@@ -1,6 +1,4 @@
-// Silke Henkes 26.04.2020
-// N. R. Stillman 29.04.2020
-
+// Created by N.R. Stillman & S. Henkes 2020
 
 #ifndef CAPMD_DOMAIN_H
 #define CAPMD_DOMAIN_H

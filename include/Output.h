@@ -1,3 +1,5 @@
+// Created by N.R. Stillman & S. Henkes 2020
+//
 #ifndef CAPMD_OUTPUT_H
 #define CAPMD_OUTPUT_H
 

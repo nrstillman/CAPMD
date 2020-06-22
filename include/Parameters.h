@@ -1,3 +1,5 @@
+// Created by N.R. Stillman & S. Henkes 2020
+
 #ifndef CAPMD_PARAMS_H
 #define CAPMD_PARAMS_H
 

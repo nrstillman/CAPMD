@@ -1,3 +1,5 @@
+// Created by N.R. Stillman & S. Henkes 2020
+//
 #include "Simulation.h"
 
 #define _USE_MATH_DEFINES

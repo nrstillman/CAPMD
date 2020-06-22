@@ -1,6 +1,5 @@
+// Created by N.R. Stillman & S. Henkes 2020
 //
-// Created by N.R. Stillman on 2020-04-20.
-
 #ifndef CAPMD_INTERACTION_H
 #define CAPMD_INTERACTION_H
 
