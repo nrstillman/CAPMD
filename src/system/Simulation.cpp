@@ -41,13 +41,11 @@ void Simulation::setParams(Parameters new_params){
 // initialise the system, including wiping previous particle vector
 void Simulation::initialise() {
 
-    // check previous initialisaiton
-    if (currentflag == 1){
-        particles.clear();
-    } // check if population is empty
-    else if (params.N == 0){
+    if (params.N == 0){
         throw "No particles (N=0).";
     }
+
+    currentflag = 0;
 
     // create population of boundary particles <- must happen first
     Simulation::initBoundary();
@@ -58,7 +56,7 @@ void Simulation::initialise() {
     // create the first neighbour list
     domain->makeNeighbourList(particles);
 
-//    currentflag = 0;
+
 }
 
 
@@ -150,7 +148,6 @@ void Simulation::initPopulation() {
                 interaction->computeForce((*p),n);
             }
             ++p; // onto the next particle
-//            std::cout << (*p)->getZ() << std::endl;
         }
         // using the forces, update the positions and angles
         for (int i = boundarysize; i< particles.size(); ++i) {
@@ -208,29 +205,32 @@ void Simulation::initPopulation() {
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
 
-//        // Now, separately, we will check for death
-//        std::vector<int> deleteparticles;
-//        for (auto p : particles) {
-//                // compute actual time elapsed since last division check
-//                int timeint = Ndiv*params.dt;
-//                bool death = population->testDeath(p->getType(),timeint);
-//                if (death) {
-//                    deleteparticles.append(p->getId());
-//                };
-    }
-//        // now, actually get rid of them
-//        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
-//
-//        for (auto pdel : deleteparticles){
-//
-//                // delete the particle
-//                delete *particles[pdel];
-//                // get rid of the the pointer in the particle list
+        // Now, separately, we will check for death
+        p = particles.begin();
+        std::advance(p, boundarysize);
+        std::vector<std::shared_ptr<Particle>> deleteparticles;
+
+        while (p != particles.end()) {
+                // compute actual time elapsed since last division check
+                int timeint = Ndiv*params.dt;
+                bool death = population->testDeath((*p)->getType(),timeint);
+                if (death) {
+                    std::cout << "death" << std::endl;
+                    deleteparticles.push_back((*p));
+                }
+                ++p;
+        }
+        // now, actually get rid of them
+        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
+
+        // delete the particle
+        particles.erase(deleteparticles.begin(), deleteparticles.end());
+                // get rid of the the pointer in the particle list
 //                particles.erase(pdel);
 //        }
-//        // and do a neighbour list rebuild to get all the indices straightened out again
-//        domain->makeNeighbourList(particles);
-//}
+//        and do a neighbour list rebuild to get all the indices straightened out again
+        domain->makeNeighbourList(particles);
+}
 
 
 // function to get particle in simulation (indexing starts from any boundary cells)

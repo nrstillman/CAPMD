@@ -26,7 +26,7 @@ class Particle
 
         Particle(const Particle &); // copy constructor
 
-        ~Particle(); // destructor
+//        ~Particle(); // destructor
 
         // additional methods
         int getId() const { return id; }; //Accessor

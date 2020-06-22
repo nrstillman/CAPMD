@@ -35,9 +35,9 @@ Particle::Particle(const Particle & rhs)
     z = rhs.z;
 }
 
-Particle::~Particle(){
-//    delete this;
-}
+//Particle::~Particle(){
+////    delete this;
+//}
 
 void Particle::addZ(int i){
     z += i;
