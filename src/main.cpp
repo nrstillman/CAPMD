@@ -9,7 +9,7 @@ int main() {
 
 
     int L = 20;
-    int N = 30;
+    int N = 130;
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -18,7 +18,7 @@ int main() {
     params.Lx = L;// Population size
     params.Ly = L;
     params.N = N; // Population size
-    params.filename = "Run_w_params_N_" + std::to_string(params.N) + "L_ " + std::to_string(params.L);
+    params.filename = "Run_w_params_N_" + std::to_string(params.N) + "L_ " + std::to_string(params.Lx);
     Simulation sim = Simulation(params);
 
     int t_final = 50000;
