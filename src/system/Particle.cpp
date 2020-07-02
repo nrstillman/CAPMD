@@ -16,6 +16,7 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
     theta = ptheta;
     radius = pr;
     numneigh = 0;
+    z = 0;
 
 //    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
@@ -31,12 +32,21 @@ Particle::Particle(const Particle & rhs)
     theta = rhs.theta;
     radius = rhs.radius;
     numneigh = rhs.numneigh;
+    z = rhs.z;
 }
 
-Particle::~Particle(){
-//    delete this;
+//Particle::~Particle(){
+////    delete this;
+//}
+
+void Particle::addZ(int i){
+    z += i;
 }
 
+void Particle::addForce(std::vector<double> f){
+    force[0] += f[0];
+    force[1] += f[1];
+}
 std::ostream& operator<<(std::ostream& out,const Particle& p)
 {
     return out << p.getId() << '\t' << p.type << '\t' << p.age << '\t' << std::setprecision(4)
