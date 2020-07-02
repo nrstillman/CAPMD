@@ -10,3 +10,10 @@ pybind11/
 *.vtu
 *.pvd
 videos/
+
+.ipynb_checkpoints/
+__pycache__/
+lib/
+testing_pybind.ipynb
+trajectory.p
+vtp/
