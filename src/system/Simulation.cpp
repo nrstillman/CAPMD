@@ -207,31 +207,32 @@ void Simulation::initPopulation() {
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
 
-        // Now, separately, we will check for death
-        p = particles.begin();
-        std::advance(p, boundarysize);
-        std::vector<std::shared_ptr<Particle>> deleteparticles;
-
-        while (p != particles.end()) {
-                // compute actual time elapsed since last division check
-                int timeint = Ndiv*params.dt;
-                bool death = population->testDeath((*p)->getType(),timeint);
-                if (death) {
-                    std::cout << "death" << std::endl;
-                    deleteparticles.push_back((*p));
-                }
-                ++p;
-        }
-        // now, actually get rid of them
-        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
-
-        // delete the particle
-        particles.erase(deleteparticles.begin(), deleteparticles.end());
-                // get rid of the the pointer in the particle list
-//                particles.erase(pdel);
+///TODO: Include death of particles
+//        // Now, separately, we will check for death
+//        p = particles.begin();
+//        std::advance(p, boundarysize);
+//        std::vector<std::shared_ptr<Particle>> deleteparticles;
+//
+//        while (p != particles.end()) {
+//                // compute actual time elapsed since last division check
+//                int timeint = Ndiv*params.dt;
+//                bool death = population->testDeath((*p)->getType(),timeint);
+//                if (death) {
+//                    std::cout << "death" << std::endl;
+//                    deleteparticles.push_back((*p));
+//                }
+//                ++p;
 //        }
-//        and do a neighbour list rebuild to get all the indices straightened out again
-        domain->makeNeighbourList(particles);
+//        // now, actually get rid of them
+//        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
+//
+//        // delete the particle
+//        particles.erase(deleteparticles.begin(), deleteparticles.end());
+//                // get rid of the the pointer in the particle list
+////                particles.erase(pdel);
+////        }
+////        and do a neighbour list rebuild to get all the indices straightened out again
+//        domain->makeNeighbourList(particles);
 }
 
 
