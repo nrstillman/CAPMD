@@ -75,7 +75,7 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
 
         for (int i = 0; i<100;i++){
             std::cout << i << std::endl;
-            sim.move();
+//            sim.move();
         }
 
         std::vector<double> x_t100 = p.getPosition();

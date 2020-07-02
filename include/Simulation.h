@@ -67,8 +67,7 @@ class Simulation : virtual public Particle{
         int boundarysize = 0;
 
         // Constructors:
-//        Simulation();
-
+        Simulation();
         Simulation(Parameters);
 
         void setParams(Parameters);

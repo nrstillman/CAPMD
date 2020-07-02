@@ -26,7 +26,7 @@ int main() {
             if (t % 100 == 0){
                 sim.populationDynamics(100);
             }
-            if (t % 100 == 0){
+            if (t % 1000 == 0){
                 std::cout << "---------" << std::endl;
                 std::cout << "timestep: "<< t << std::endl;
                 sim.saveVTP(t, t_final);
