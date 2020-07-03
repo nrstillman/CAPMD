@@ -23,9 +23,8 @@ class Dynamics {
         // correlation time of the active driving
         double tau;
 
-        std::random_device rd;
         typedef std::mt19937 Engine;
-        typedef std::normal_distribution<double> Distribution;
+        typedef std::uniform_real_distribution<double> Distribution;
 
         Engine gen;
         Distribution dist;

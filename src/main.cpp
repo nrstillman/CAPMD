@@ -7,34 +7,37 @@
 
 int main() {
 
-
-    int L = 20;
-    int N = 130;
-
+    std::vector<int> L = {10};//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    std::vector<int> N = {10};//, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
     auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 1; i++){
 
-    Parameters params;
+        Parameters params;
 
-    params.Lx = L;// Population size
-    params.Ly = L;
-    params.N = N; // Population size
-    params.filename = "Run_w_params_N_" + std::to_string(params.N) + "L_ " + std::to_string(params.Lx);
-    Simulation sim = Simulation(params);
+        params.Lx = L[i];
+        params.Ly = L[i];
+        params.N = N[i]; // Population size
+        params.filename = "Division_" + std::to_string(i) + "_N_" + std::to_string(params.N) +"_L_" + std::to_string(params.Lx) ;
+        Simulation sim = Simulation(params);
 
-    int t_final = 50000;
-    for (int t = 0; t<= t_final; t++){
-        sim.move();
-        if (t % 1000 == 0){
-            std::cout << "---------" << std::endl;
-            std::cout << "timestep: "<< t << std::endl;
-            sim.saveVTP(t, t_final);
+        int t_final = 10000;
+        for (int t = 0; t<= t_final; t++){
+            sim.move(t);
+            if (t % 100 == 0){
+                sim.populationDynamics(100);
+            }
+            if (t % 1000 == 0){
+                std::cout << "---------" << std::endl;
+                std::cout << "timestep: "<< t << std::endl;
+                sim.saveVTP(t, t_final);
+            }
         }
     }
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
 
-    cout << "Run_0: Time taken is " << duration.count() << endl;
+    std::cout << "Run_0: Time taken is " << duration.count() << std::endl;
 
 }
 

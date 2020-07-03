@@ -17,27 +17,23 @@ namespace py = pybind11;
 
 PYBIND11_MAKE_OPAQUE(std::vector<int>);
 
-PYBIND11_MODULE(capmd, m) {
-    //Main simulation happens here
+PYBIND11_MODULE(pycapmd, m) {
+//    //Main simulation happens here
     py::class_<Simulation>(m, "simulation")
         .def(py::init<>())
         .def_readwrite("N", &Simulation::N) // parameters to be set in python
-        .def_readwrite("cutoff", &Simulation::cutoff)
+        .def_readwrite("cutoffZ", &Simulation::cutoffZ)
         .def_readwrite("dt", &Simulation::dt)
         .def_readwrite("tau", &Simulation::tau)
-        .def("initialise", &Simulation::initialise)
         .def("initPopulation", &Simulation::initPopulation)
         .def("initBoundary", &Simulation::initBoundary)
         .def("move", &Simulation::move)
         .def("popSize", &Simulation::popSize)
-        .def("boundarySize", &Simulation::boundarySize)
+        .def("getBoundarySize", &Simulation::getBoundarySize)
         .def("getParticle", &Simulation::getParticle)
-        .def("getNeighbours", &Simulation::getNeighbours)
         .def("getPopulationPosition", &Simulation::getPopulationPosition)
         .def("getBoundaryPosition", &Simulation::getBoundaryPosition)
-
-        .def("getPopulationRadius", &Simulation::getPopulationRadius)
-        .def("savePopulation", &Simulation::savePopulation);
+        .def("getPopulationRadius", &Simulation::getPopulationRadius);
 
     //Additional info for specific particles (useful for tracking and targeting particles)
     py::class_<Particle>(m, "particle")
