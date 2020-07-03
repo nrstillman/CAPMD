@@ -2,7 +2,8 @@
 //
 #include "Simulation.h"
 
-#define _USE_MATH_DEFINES
+//#define _USE_MATH_DEFINES
+#define M_PI 3.141592
 
 Simulation::Simulation(Parameters _params){
 

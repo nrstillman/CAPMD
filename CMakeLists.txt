@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)  # CMake version check
 project(capmd)                        # Create project "capmd"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
+set(VTK_DIR "C:/MyProjects/VTK/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
