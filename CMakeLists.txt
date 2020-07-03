@@ -29,15 +29,22 @@ add_executable(
     capmd_demo
     ${CMAKE_SOURCE_DIR}/src/main.cpp
 )
-add_subdirectory(pybind11 ${CMAKE_SOURCE_DIR}/pybind11)
-pybind11_add_module(
-    pycapmd
-    ${CMAKE_SOURCE_DIR}/src/bindings.cpp
-)
-
 # Link the CAPMD demo against libcapmd and the VTK libraries.
 target_link_libraries(
         capmd_demo
         capmd
         ${VTK_LIBRARIES}
 )
+# Add pybind11 folder and make python module (called pycapmd)
+add_subdirectory(pybind11 ${CMAKE_SOURCE_DIR}/pybind11)
+pybind11_add_module(
+    pycapmd
+    ${CMAKE_SOURCE_DIR}/src/bindings.cpp
+)
+# Link vtk libraries to python module
+target_link_libraries(
+        pycapmd PRIVATE
+        capmd
+        ${VTK_LIBRARIES}
+)
+

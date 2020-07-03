@@ -71,6 +71,7 @@ class Simulation : virtual public Particle{
         Simulation(Parameters);
 
         void setParams(Parameters);
+
         // Methods to initialise the system, including creating the particle vector and the first NeighbourList
         void initialise();
         void initPopulation(); //  To initialise a population
@@ -85,7 +86,6 @@ class Simulation : virtual public Particle{
         int getN(void){ return particles.size();}
         int getBoundarySize(void){ return boundarysize;}
         std::string getFileName(){return params.filename;};
-
 
         // Methods for particle data
         Particle getParticle(int);

@@ -4,6 +4,36 @@
 
 #define _USE_MATH_DEFINES
 
+
+Simulation::Simulation(){
+
+    gen = Engine(params.initseed);
+    disx = Distribution(0,1);
+    disy = Distribution(0,1);
+    distheta = Distribution(0,1);
+    disr = Distribution(0,1);
+
+    domain = std::make_shared<Domain>(params);
+    interaction = std::make_shared<Interaction>(params);
+    dynamics = std::make_shared<Dynamics>(params);
+    population = std::make_shared<Population>(params);
+
+    // particle counter for divison and death.
+    currentflag = 0;
+
+    // create population of boundary particles <- must happen first
+    Simulation::initBoundary();
+    // update boundary size
+    domain->setBoundarySize(boundarysize);
+
+    // create population of particles
+    Simulation::initPopulation();
+    // create the first neighbour list
+    domain->makeNeighbourList(particles);
+
+    output = std::make_shared<Output>(params, boundarysize, particles);
+}
+
 Simulation::Simulation(Parameters _params){
 
     params = _params;
