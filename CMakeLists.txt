@@ -19,7 +19,8 @@ add_library(
 # Add additonal directories.
 include_directories(src/system)
 include_directories(src/io)
-include_directories(include)
+include_directories(src/bindings)
+include_directories(include/CAPMD)
 
 # Add the testing subdir.
 add_subdirectory(tests)
@@ -36,11 +37,12 @@ target_link_libraries(
         ${VTK_LIBRARIES}
 )
 # Add pybind11 folder and make python module (called pycapmd)
-add_subdirectory(pybind11 ${CMAKE_SOURCE_DIR}/pybind11)
+add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
 pybind11_add_module(
     pycapmd
-    ${CMAKE_SOURCE_DIR}/src/bindings.cpp
+    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
 )
+
 # Link vtk libraries to python module
 target_link_libraries(
         pycapmd PRIVATE
