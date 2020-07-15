@@ -95,12 +95,12 @@ void Simulation::initBoundary() {
         currentflag += boundarysize;
     }
     if (params.bc_opt == "input") {
-//       TODO: Add in input from .txt and python
         throw "Cannot accept input yet";
     }
 }
 
 void Simulation::initPopulation() {
+    std::cout<<"Initialise Population" << std::endl;
     if (params.init_opt == "random_unif") {
 
         std::cout << "N of boundary particles is " << boundarysize << std::endl;
@@ -126,8 +126,7 @@ void Simulation::initPopulation() {
         }
     }
     if (params.init_opt == "input") {
-//       TODO: Add in input from .txt and python
-        throw "Cannot accept input yet";
+        loadPopulation("test.txt");
     }
 }
 // time stepping of the simulation
@@ -293,26 +292,41 @@ void Simulation::saveVTP(int step, int finalstep)
     output->vtp(step, finalstep);
 }
 
-
 void Simulation::savePopulation(std::string filepath)
 {
     std::filebuf fb;
-    fb.open (filepath,std::ios::app);
+    fb.open (filepath, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
     std::ostream out(&fb);
     out << particles.size();
     out << '\n';
 
     for (auto p : particles) {
-        out << p;
+        out << (*p);
     }
     fb.close();
 }
 
-//TODO: allow for preloaded population posn
 void Simulation::loadPopulation(std::string filepath)
 {
-    std::cout << "offline" <<std::endl;
+    ifstream inFile;
+    inFile.open(filepath);
+    if (!inFile) {
+        cout << "Unable to open file";
+        exit(1);
+    }
+    int N;
+    inFile >> N;
+    std::cout << N << std::endl;
+    std::string line;
 
+    while (std::getline(inFile, line)) {
+        if (line.size() > 0) {
+            std::shared_ptr<Particle> pntrP(new Particle(line));
+            particles.push_back(std::move(pntrP));
+            currentflag += 1;
+        }
+    }
+    inFile.close();
 }
 
 

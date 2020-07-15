@@ -36,7 +36,8 @@ PYBIND11_MODULE(capmd, m) {
 //        .def("getPopulationRadius", &Simulation::getPopulationRadius);
 //        .def("savePopulation", &Simulation::savePopulation);
 //
-//    //Additional info for specific particles (useful for tracking and targeting particles)
+
+//Additional info for specific particles (useful for tracking and targeting particles)
 //    py::class_<Particle>(m, "particle")
 //            .def(py::init<int, int, std::vector<double>, double, double>())
 //            .def("setId", &Particle::setId)

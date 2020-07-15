@@ -5,6 +5,10 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <iomanip>      // std::setprecision
+#include <iterator>     // for reading txt
+#include <sstream>      // for reading txt
 
 class Particle
     {
@@ -25,6 +29,8 @@ class Particle
         Particle(int pid = 0, int ptype = 0, std::vector<double> px = {0,0},double ptheta = 0.,double  pr = 1.);
 
         Particle(const Particle &); // copy constructor
+
+        Particle(std::string); // copy constructor
 
 //        ~Particle(); // destructor
 
@@ -60,7 +66,9 @@ class Particle
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);
-    };
+
+        static void split(const std::string &s, char delim, std::vector<double> &elems);
+};
 
 
 #endif //CAPMD_PARTICLE_H

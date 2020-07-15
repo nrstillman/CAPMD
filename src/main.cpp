@@ -20,16 +20,17 @@ int main() {
         params.filename = "Division_" + std::to_string(i) + "_N_" + std::to_string(params.N) +"_L_" + std::to_string(params.Lx) ;
         Simulation sim = Simulation(params);
 
-        int t_final = 10000;
+        int t_final = 1000;
         for (int t = 0; t<= t_final; t++){
             sim.move(t);
-            if (t % 100 == 0){
+            if (t % 100== 0){
                 sim.populationDynamics(100);
             }
-            if (t % 1000 == 0){
+            if (t % 1000 == 0) {
                 std::cout << "---------" << std::endl;
-                std::cout << "timestep: "<< t << std::endl;
-                sim.saveVTP(t, t_final);
+                std::cout << "timestep: " << t << std::endl;
+                std::cout << "# of cells: " << sim.popSize() << std::endl;
+                sim.savePopulation("test.txt");
             }
         }
     }

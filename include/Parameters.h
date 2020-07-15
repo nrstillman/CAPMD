@@ -37,7 +37,7 @@ struct Parameters {
 
     //Population
     int N = 200; // Population size
-    std::string init_opt = "random_unif";
+    std::string init_opt = "random_unif"; //"random_unif";
     std::string bc_opt = "none";//"bounded";
 
     int NTA = 0;
