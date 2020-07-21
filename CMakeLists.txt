@@ -14,13 +14,14 @@ add_library(
     ${CMAKE_SOURCE_DIR}/src/system/Interaction.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Dynamics.cpp
     ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
-)
+    ${CMAKE_SOURCE_DIR}/src/bindings/Interface.cpp
+    ${CMAKE_SOURCE_DIR}/src/bindings/Measure.cpp)
 
 # Add additonal directories.
+include_directories(include/capmd)
 include_directories(src/system)
 include_directories(src/io)
 include_directories(src/bindings)
-include_directories(include/CAPMD)
 
 # Add the testing subdir.
 add_subdirectory(tests)

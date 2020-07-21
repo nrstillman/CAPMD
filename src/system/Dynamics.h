@@ -33,9 +33,6 @@ class Dynamics {
         //Constructor
         Dynamics(Parameters);
 
-//        // also needs a random number generator for the angular dynamics
-//        double rng;
-
         // move a particle according to the force law, and add active motion
         void step(std::shared_ptr<Particle> , double);
 };

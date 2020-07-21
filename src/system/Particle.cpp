@@ -7,13 +7,17 @@ Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, do
 {
     age = 0;
     force = {0,0};
+    prevposition = {0,0};
     id = pid;
+
     type = ptype;
     position = px;
     theta = ptheta;
     radius = pr;
     numneigh = 0;
     z = 0;
+
+    idx = 0;
 
 //    std::cout << "Particle " << pid <<" Initialised" << std::endl;
 }
@@ -26,6 +30,7 @@ Particle::Particle(const Particle & rhs)
     force = rhs.force;
     type = rhs.type;
     position = rhs.position;
+    prevposition = rhs.prevposition;
     theta = rhs.theta;
     radius = rhs.radius;
     numneigh = rhs.numneigh;
@@ -51,7 +56,7 @@ Particle::Particle(std::string line)
 }
 
 //Particle::~Particle(){
-////    delete this;
+//    delete this;
 //}
 
 void Particle::addZ(int i){

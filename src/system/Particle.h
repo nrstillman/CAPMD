@@ -14,6 +14,10 @@ class Particle
     {
     private:
         int id;
+        int idx;
+        std::vector<double> prevposition;
+        int numneigh;
+        double z; // must be double for division check later on
 
     public:
         double radius;
@@ -22,8 +26,6 @@ class Particle
         std::vector<double> position;
         double theta;
         std::vector<double> force;
-        int numneigh;
-        double z; // must be double for division check later on
 
         // default constructor
         Particle(int pid = 0, int ptype = 0, std::vector<double> px = {0,0},double ptheta = 0.,double  pr = 1.);
@@ -31,12 +33,15 @@ class Particle
         Particle(const Particle &); // copy constructor
 
         Particle(std::string); // copy constructor
-
+//
 //        ~Particle(); // destructor
 
         // additional methods
         int getId() const { return id; }; //Accessor
-        void setId( int x) {std::cout << "id changed "<< std::endl; id = x;} // Mutator
+        void setId( int x) {std::cout << "attempted id change!"<< std::endl;} // Mutator
+
+        int getIndex() const { return idx; }; //Accessor
+        void setIndex( int x) {idx = x;} // Mutator
 
         int getType() const { return type; };
         void setType( int x) { type = x;}
@@ -59,6 +64,9 @@ class Particle
 
         std::vector<double> getPosition() { return position;}
         void setPosition(std::vector<double> x) { position = x;}
+
+        std::vector<double> getPrevPosition() { return prevposition;}
+        void setPrevPosition() { prevposition = position;}
 
         std::vector<double> getForce() { return force;}
         void setForce(std::vector<double> x)  { force = x;}

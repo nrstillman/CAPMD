@@ -4,9 +4,7 @@
 
 #define _USE_MATH_DEFINES
 
-
 Simulation::Simulation(){
-
     gen = Engine(params.initseed);
     disx = Distribution(0,1);
     disy = Distribution(0,1);
@@ -35,6 +33,7 @@ Simulation::Simulation(){
 }
 
 Simulation::Simulation(Parameters _params){
+    std::cout << "Initialised Simulation w Parameters" << std::endl;
 
     params = _params;
 
@@ -87,8 +86,6 @@ void Simulation::initialise() {
 
     // create the first neighbour list
     domain->makeNeighbourList(particles);
-
-
 }
 
 
@@ -154,9 +151,8 @@ void Simulation::initPopulation() {
             particles.push_back(std::move(pntrP));
             currentflag += 1;
         }
-    }
-    if (params.init_opt == "input") {
-        loadPopulation("test.txt");
+        std::cout << "N of free particles is " << params.N << std::endl;
+        std::cout << "Total N of particles is " << totalSize() << std::endl;
     }
 }
 // time stepping of the simulation
@@ -172,7 +168,7 @@ void Simulation::initPopulation() {
             (*p)->setForce({0,0});
             (*p)->setZ(0);
             // get neighbours of p out of neighbour list
-            std::list<std::shared_ptr<Particle>> neighbours = domain->getNeighbours((*p)->getId() - boundarysize);
+            std::list<std::shared_ptr<Particle>> neighbours = domain->getNeighbours((*p)->getIndex());
 
             for (auto n : neighbours) {
                 // use interaction to compute force
@@ -192,21 +188,21 @@ void Simulation::initPopulation() {
     }
     // population dynamics here
     // First division, then death, else new particles will appear in the just vacated holes ...
-    void Simulation::populationDynamics(int Ndiv) {
+    void Simulation::populationDynamics(double Ndiv) {
         // check for divisions
         // modify the particles list only after everybody has been checked
         std::vector<std::shared_ptr<Particle>> newparticles;
         bool rebuild  = false;
         auto p = particles.begin();
         std::advance(p, boundarysize);
+        double timeint = Ndiv*params.dt;
 
         while (p != particles.end()) {
                 // actual time elapsed since last division check
-                double timeint = Ndiv*params.dt;
                 // compute probabilistic chance at division
                 bool divide = population->testDivide((*p)->getType(),(*p)->getZ(),timeint);
                 if (divide) {
-
+                    std::cout << "division" << std::endl;
                     // note: setting the new particle to the same radius as the old will
                     // have unintended consequences (selecting for large particles)
                     double radius = params.R * (1 + params.poly * (disr(gen) - 0.5));
@@ -235,53 +231,33 @@ void Simulation::initPopulation() {
 
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
-
-///TODO: Include death of particles
-//        // Now, separately, we will check for death
-//        p = particles.begin();
-//        std::advance(p, boundarysize);
-//        std::vector<std::shared_ptr<Particle>> deleteparticles;
-//
-//        while (p != particles.end()) {
-//                // compute actual time elapsed since last division check
-//                int timeint = Ndiv*params.dt;
-//                bool death = population->testDeath((*p)->getType(),timeint);
-//                if (death) {
-//                    std::cout << "death" << std::endl;
-//                    deleteparticles.push_back((*p));
-//                }
-//                ++p;
-//        }
-//        // now, actually get rid of them
-//        std::sort(deleteparticles.begin(), deleteparticles.end());  // Make sure the container is sorted
-//
-//        // delete the particle
-//        particles.erase(deleteparticles.begin(), deleteparticles.end());
-//                // get rid of the the pointer in the particle list
-////                particles.erase(pdel);
-////        }
-////        and do a neighbour list rebuild to get all the indices straightened out again
-//        domain->makeNeighbourList(particles);
-}
-
-
-// function to get particle in simulation (indexing starts from any boundary cells)
-Particle Simulation::getParticle(int i){
-    if (i >= particles.size()){
-        std::cout << "Error: index exceeds population size"  << std::endl;
-        throw;
+        // Now, separately, we will check for death
+        for (auto p = particles.begin() + boundarysize; p != particles.end(); ){
+            bool death = population->testDeath((*p)->getType(),timeint);
+            // get rid of the particle
+            if (death) {p = particles.erase(p); std::cout << "death" << std::endl;}
+            // or continue the loop
+            else{++p;}
+        }
+        //do a neighbour list rebuild to get all the indices straightened out again
+        domain->makeNeighbourList(particles);
     }
 
-    return *particles[boundarysize + i];
+// function to remove particle in simulation (using id -> idx map in domain)
+void Simulation::removeParticle(int i){
+    int idx = domain->getIdx(i);
+    if (idx == -1){std::cout << "No particle with that id detected" << std::endl;}
+    else {
+        particles.erase(particles.begin() + idx);
+        domain->makeNeighbourList(particles);
+    }
 }
 
-// function to get particle in simulation (indexing starts from any boundary cells)
-Particle Simulation::getAllParticles(int i){
-    if (i >= particles.size()){
-        std::cout << "Error: index exceeds population size"  << std::endl;
-        throw;
-    }
-    return *particles[i];
+// function to access particle in particle list (using id -> idx map in domain)
+std::shared_ptr<Particle> Simulation::getParticle(int i){
+    int idx = domain->getIdx(i);
+    std::cout << idx << std::endl;
+    return particles[idx];
 }
 
 // return the population positions

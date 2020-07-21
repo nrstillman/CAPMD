@@ -9,6 +9,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include <map> // for idx to id map
 
 #include "Particle.h"
 #include "Parameters.h"
@@ -21,6 +22,7 @@ class Domain
     private:
         std::vector<std::list<std::shared_ptr<Particle>>> NeighbourList;
         std::vector<std::vector<double>> PrevPositions;
+        std::map<int,int> idxmap;
 
     public:
 
@@ -47,6 +49,8 @@ class Domain
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
 
         std::list<std::shared_ptr<Particle>> getNeighbours(int);
+
+        int getIdx(int x){ return idxmap[x];}
 
         void setBoundarySize( int x) { boundarysize = x;}
 };
