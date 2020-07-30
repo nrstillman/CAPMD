@@ -49,7 +49,6 @@ void Output::vtp(int t, int finalstep)
     force->SetNumberOfComponents(3);
 
     for(auto p = particles.begin(); p != particles.end(); p++){
-
         points->InsertNextPoint ((*p)->getPosition()[0], (*p)->getPosition()[1], 0.0);
 
         double f[3] = {(*p)->getForce()[0], (*p)->getForce()[1], 0};

@@ -1,7 +1,5 @@
 // Created by N.R. Stillman & S. Henkes 2020
 //
-#include "Parameters.h"
-
 #include "Population.h"
 #include "Domain.h"
 #include "Dynamics.h"
@@ -16,7 +14,6 @@
 #include <string>
 #include <sstream>
 #include <memory> // For std::shared_ptr
-
 
 #ifndef CAPMD_SIMULATION_H
 #define CAPMD_SIMULATION_H
@@ -35,8 +32,6 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Interaction> interaction;
         std::shared_ptr<Output> output;
 
-
-//        std::random_device rd;
         typedef std::mt19937 Engine;
         typedef std::uniform_real_distribution<double> Distribution;
 
@@ -47,8 +42,36 @@ class Simulation : virtual public Particle{
         Distribution distheta;
 
     public:
-
+        // Access through interface (should make these protected)
         std::vector<std::shared_ptr<Particle>> particles;
+
+        // Setting parameters
+        void setParams(Parameters);
+
+        // Methods for particle dynamics
+        void move(int);
+        void populationDynamics(double);
+
+        // Methods for getting sim data
+        int popSize(void){ return particles.size() - boundarysize;}
+        int totalSize(void){ return particles.size();}
+        int getBoundarySize(void){ return boundarysize;}
+        std::string getFileName(){return params.filename;};
+
+        // Methods for particle data
+        std::shared_ptr<Particle> getParticle(int);
+        void removeParticle(int);
+        std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
+        std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
+        std::vector<std::vector<double>> getBoundaryPosition();
+        std::vector<double> getPopulationRadius(std::list<int> &index);
+
+        //  I/O for sim data
+        void savePopulation(std::string);
+        void loadPopulation(std::string);
+        void saveVTP(int, int);
+
+        // Access through other classes
 
         // Members (taken from parameters but included incase changing through python script)
         // Number of particles
@@ -70,35 +93,10 @@ class Simulation : virtual public Particle{
         Simulation();
         Simulation(Parameters);
 
-        void setParams(Parameters);
-
         // Methods to initialise the system, including creating the particle vector and the first NeighbourList
         void initialise();
         void initPopulation(); //  To initialise a population
         void initBoundary(); //  To create the boundary
-
-        // Methods for particle dynamics
-        void move(int);
-        void populationDynamics(int);
-
-        // Methods for getting sim data
-        int popSize(void){ return particles.size() - boundarysize;}
-        int getN(void){ return particles.size();}
-        int getBoundarySize(void){ return boundarysize;}
-        std::string getFileName(){return params.filename;};
-
-        // Methods for particle data
-        Particle getParticle(int);
-        Particle getAllParticles(int);
-        std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
-        std::vector<std::vector<double>> getBoundaryPosition();
-        std::vector<double> getPopulationRadius(std::list<int> &index);
-
-        //  I/O for sim data
-        void savePopulation(std::string);
-        void loadPopulation(std::string);
-        void saveVTP(int, int);
-
 };
 
 

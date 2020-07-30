@@ -15,11 +15,11 @@ struct Parameters {
     // interaction parameters
 
     // io
-    std::string filename = "test";
+    std::string filename = "death";
     std::string outputfolder = "vtp/";
 
     // Random
-    int initseed = 2020;
+    int initseed = 2022;
     int angseed = 2001;
     int popseed = 2021;
 
@@ -36,9 +36,9 @@ struct Parameters {
     int Ly = 30; //30
 
     //Population
-    int N = 200; // Population size
-    std::string init_opt = "random_unif";
-    std::string bc_opt = "none";//"bounded";
+    int N = 10; // Population size
+    std::string init_opt = "random_unif"; //"random_unif";
+    std::string bc_opt = "bounded";//"bounded";
 
     int NTA = 0;
     int Nstem = 0;
@@ -72,7 +72,7 @@ struct Parameters {
     double tau = 10; //10
 
     // Division/death rates
-    double deathrate = 0.01;
+    double deathrate = 0;
     double divrate = 0.1;
     double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
     double maxZ = 4;

@@ -15,12 +15,14 @@ add_library(
     ${CMAKE_SOURCE_DIR}/src/system/Interaction.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Dynamics.cpp
     ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
-)
+    ${CMAKE_SOURCE_DIR}/src/bindings/Interface.cpp
+    ${CMAKE_SOURCE_DIR}/src/bindings/Measure.cpp)
 
 # Add additonal directories.
+include_directories(include/capmd)
 include_directories(src/system)
 include_directories(src/io)
-include_directories(include)
+include_directories(src/bindings)
 
 # Add the testing subdir.
 add_subdirectory(tests)
@@ -37,11 +39,12 @@ target_link_libraries(
         ${VTK_LIBRARIES}
 )
 # Add pybind11 folder and make python module (called pycapmd)
-add_subdirectory(pybind11 ${CMAKE_SOURCE_DIR}/pybind11)
+add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
 pybind11_add_module(
     pycapmd
-    ${CMAKE_SOURCE_DIR}/src/bindings.cpp
+    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
 )
+
 # Link vtk libraries to python module
 target_link_libraries(
         pycapmd PRIVATE
