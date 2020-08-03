@@ -33,10 +33,10 @@ public:
     Interaction(Parameters);
 
     // vector between two particles
-    std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
+    std::array<double,2> calc_dr(std::array<double,2>, std::array<double,2> );
 
     // distance between two particles or doubles
-    double dist(std::vector<double>, std::vector<double> );
+    double dist(std::array<double,2>, std::array<double,2> );
 
 
     // compute the mechanical force between particles

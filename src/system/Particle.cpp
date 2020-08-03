@@ -3,7 +3,7 @@
 #include <Particle.h>
 
 // Particle constructor
-Particle::Particle(int pid, int ptype, std::vector<double> px, double ptheta, double pr)
+Particle::Particle(int pid, int ptype, std::array<double,2> px, double ptheta, double pr)
 {
     age = 0;
     force = {0,0};
@@ -55,15 +55,11 @@ Particle::Particle(std::string line)
     z = 0;
 }
 
-//Particle::~Particle(){
-//    delete this;
-//}
-
 void Particle::addZ(int i){
     z += i;
 }
 
-void Particle::addForce(std::vector<double> f){
+void Particle::addForce(std::array<double,2> f){
     force[0] += f[0];
     force[1] += f[1];
 }

@@ -9,13 +9,14 @@
 
 int main() {
 
-    std::vector<int> L = {30};//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    int L = 60;//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 //    std::vector<int> N = {10};//, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
-    int N = 128;
+    int N = 1150;
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 1; i++){
 
         Parameters params;
+        params.Lx = L; params.Ly = L;
         params.N = N; // Population size
         params.filename = "MSD";
 

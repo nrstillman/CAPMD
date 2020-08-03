@@ -202,7 +202,7 @@ void Simulation::initPopulation() {
                     // also, random orientation for similar reasons
                     double theta = distheta(gen) * 2 * M_PI;
 
-                    std::vector<double> x =  {(*p)->getPosition()[0] + disx(gen)*params.eps, (*p)->getPosition()[1] + disx(gen)*params.eps};
+                    std::array<double,2> x =  {(*p)->getPosition()[0] + disx(gen)*params.eps, (*p)->getPosition()[1] + disx(gen)*params.eps};
                     // create a new particle in the same spot
                     std::shared_ptr<Particle> pntrP(new Particle(currentflag, (*p)->getType(), x,theta,radius));
                     // flag is set here
@@ -254,9 +254,9 @@ std::shared_ptr<Particle> Simulation::getParticle(int i){
 }
 
 // return the population positions
-std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int> &index){
+std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<int> &index){
 
-    std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
+    std::vector<std::array<double,2>> positions;
     for (auto i : index) {
         Particle p = *particles[i];
         positions.push_back(p.getPosition());
@@ -265,11 +265,11 @@ std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int
 }
 
 // return the boundary positions
-std::vector<std::vector<double>> Simulation::getBoundaryPosition(){
+std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 
-    std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
-    for (int i = 0; i< boundarysize; ++i) {
-        Particle p = *particles[i];
+    std::vector<std::array<double,2>> positions;
+    for (int n = 0; n< boundarysize; ++n) {
+        Particle p = *particles[n];
         positions.push_back(p.getPosition());
     }
     return positions;

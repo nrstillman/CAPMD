@@ -27,7 +27,6 @@ void Output::log(int t){
     std::cout << "Total runtime: "
               << elapsed
               << " seconds\n";
-
     last_log = current_time;
 }
 

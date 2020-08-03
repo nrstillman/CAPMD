@@ -4,6 +4,7 @@
 #define CAPMD_PARTICLE_H
 
 #include <vector>
+#include <array>
 #include <iostream>
 #include <fstream>
 #include <iomanip>      // std::setprecision
@@ -15,7 +16,7 @@ class Particle
     private:
         int id;
         int idx;
-        std::vector<double> prevposition;
+        std::array<double,2> prevposition;
         int numneigh;
         double z; // must be double for division check later on
 
@@ -23,12 +24,12 @@ class Particle
         double radius;
         double age;
         int type;
-        std::vector<double> position;
+        std::array<double,2> position;
         double theta;
-        std::vector<double> force;
+        std::array<double,2> force;
 
         // default constructor
-        Particle(int pid = 0, int ptype = 0, std::vector<double> px = {0,0},double ptheta = 0.,double  pr = 1.);
+        Particle(int pid = 0, int ptype = 0, std::array<double,2> px = {0,0},double ptheta = 0.,double  pr = 1.);
 
         Particle(const Particle &); // copy constructor
 
@@ -62,15 +63,15 @@ class Particle
         void setZ( int x) { z= x;}
         void addZ(int);
 
-        std::vector<double> getPosition() { return position;}
-        void setPosition(std::vector<double> x) { position = x;}
+        std::array<double,2> getPosition() { return position;}
+        void setPosition(std::array<double,2> x) { position = x;}
 
-        std::vector<double> getPrevPosition() { return prevposition;}
+        std::array<double,2> getPrevPosition() { return prevposition;}
         void setPrevPosition() { prevposition = position;}
 
-        std::vector<double> getForce() { return force;}
-        void setForce(std::vector<double> x)  { force = x;}
-        void addForce(std::vector<double>);
+        std::array<double,2> getForce() { return force;}
+        void setForce(std::array<double,2> x)  { force = x;}
+        void addForce(std::array<double,2>);
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);

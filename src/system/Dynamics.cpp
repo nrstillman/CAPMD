@@ -28,8 +28,8 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     double theta = p->getTheta();
 
     // get particle posn
-    std::vector<double> x = p->getPosition();
-    std::vector<double> f = p->getForce();
+    std::array<double,2> x = p->getPosition();
+    std::array<double,2> f = p->getForce();
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
     std::vector<double> unit = {cos(theta),sin(theta)};

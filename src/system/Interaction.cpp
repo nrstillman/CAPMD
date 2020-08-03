@@ -16,33 +16,33 @@ Interaction::Interaction(Parameters params){
 }
 
 // vector between two particles
-std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<double> xj)
+std::array<double,2> Interaction::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
 {
     return {xj[0] - xi[0], xj[1] - xi[1]};
 }
 
 // distance between two particles
-double Interaction::dist(std::vector<double> i, std::vector<double> j)
+double Interaction::dist(std::array<double,2> i, std::array<double,2> j)
 {
     if (i == j) return TOL; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
-    std::vector<double> ix = i->getPosition();
-    std::vector<double> jx = j->getPosition();
+    std::array<double,2> ix = i->getPosition();
+    std::array<double,2> jx = j->getPosition();
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
 
     // compute vector distance between particles
-    std::vector<double> dr = calc_dr(ix,jx);
+    std::array<double,2> dr = calc_dr(ix,jx);
     // compute distance
     double dx = dist(ix, jx);
 
     // actual force computation according to our potential
     // several lines since piecewise defined
-    std::vector<double> force = {0,0};
+    std::array<double,2> force = {0,0};
 
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
@@ -54,7 +54,6 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     if (dx < params.cutoffZ*bij){
         i ->addZ(1);
     }
-
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     // used for particle fade-in post division.
     if (j->getType() != params.btype){

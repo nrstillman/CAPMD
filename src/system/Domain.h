@@ -37,13 +37,13 @@ class Domain
         Domain(Parameters);
 
         // vector between two particles
-        std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
+        std::array<double,2> calc_dr(std::array<double,2>, std::array<double,2> );
 
         // distance between two particles or doubles
-        double dist(std::vector<double>, std::vector<double> );
+        double dist(std::array<double,2>, std::array<double,2> );
 
         int countZ(std::vector<std::shared_ptr<Particle>>, int);
-        void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
+        int makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
 
         std::list<std::shared_ptr<Particle>> getNeighbours(int);

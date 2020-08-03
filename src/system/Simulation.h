@@ -63,8 +63,8 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Particle> getParticle(int);
         void removeParticle(int);
         std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
-        std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
-        std::vector<std::vector<double>> getBoundaryPosition();
+        std::vector<std::array<double,2>> getPopulationPosition(std::list<int> &index);
+        std::vector<std::array<double,2>> getBoundaryPosition();
         std::vector<double> getPopulationRadius(std::list<int> &index);
 
         //  I/O for sim data
