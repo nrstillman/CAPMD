@@ -1,15 +1,48 @@
 #include <stdlib.h>     /* atoi */
 #include <iostream>
 #include "Output.h"
+
 //
 //
 Output::Output(Parameters params, int boundarysize, std::vector<std::shared_ptr<Particle>> _particles){
-
+        double elapsed = 0.;
         file_name = params.filename;
         output_folder = params.outputfolder;
         N = params.N;
         NB = boundarysize;
         particles = _particles;
+}
+
+void Output::log(int t){
+    auto current_time = std::chrono::steady_clock::now();
+    elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_log).count()/1000.;
+    if (isnan(elapsed)){elapsed = 0;}
+
+    std::cout << "---------" << std::endl;
+    std::cout << "timestep: " << t << std::endl;
+    std::cout << "# of cells: " << particles.size() << std::endl;
+    std::cout << "Since last log: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(current_time-last_log).count()/1000.
+              << " seconds\n";
+    std::cout << "Total runtime: "
+              << elapsed
+              << " seconds\n";
+
+    last_log = current_time;
+}
+
+void Output::savePopulation(std::string filepath)
+{
+    std::filebuf fb;
+    fb.open (filepath, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
+    std::ostream out(&fb);
+    out << particles.size();
+    out << '\n';
+
+    for (auto p : particles) {
+        out << (*p);
+    }
+    fb.close();
 }
 
 //! Dump meshes into VTP output

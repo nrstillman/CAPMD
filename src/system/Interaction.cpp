@@ -24,24 +24,26 @@ std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<dou
 // distance between two particles
 double Interaction::dist(std::vector<double> i, std::vector<double> j)
 {
-    if (i == j) return params.eps; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+    if (i == j) return TOL; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
+    std::vector<double> ix = i->getPosition();
+    std::vector<double> jx = j->getPosition();
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
 
     // compute vector distance between particles
-    std::vector<double> dr = calc_dr(i->getPosition(),j->getPosition());
+    std::vector<double> dr = calc_dr(ix,jx);
     // compute distance
-    double dx = dist(i->getPosition(), j->getPosition());
+    double dx = dist(ix, jx);
 
-//    std::cout << i->getId() << std::endl;
     // actual force computation according to our potential
     // several lines since piecewise defined
     std::vector<double> force = {0,0};
+
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
         force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
@@ -53,8 +55,8 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
         i ->addZ(1);
     }
 
-//    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
-//    // used for particle fade-in post division.
+    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
+    // used for particle fade-in post division.
     if (j->getType() != params.btype){
 
         double multi = 1.0;
@@ -66,8 +68,6 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
 
         std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
     }
-
-//    std::cout << force[0]<<","<<force[1]<<std::endl;
 
     // add force
     i->addForce(force);

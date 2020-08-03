@@ -21,7 +21,8 @@ Simulation::Simulation(){
     currentflag = 0;
 
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
+
     // update boundary size
     domain->setBoundarySize(boundarysize);
 
@@ -53,7 +54,7 @@ Simulation::Simulation(Parameters _params){
     currentflag = 0;
 
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
     // update boundary size
     domain->setBoundarySize(boundarysize);
 
@@ -76,11 +77,9 @@ void Simulation::initialise() {
     if (params.N == 0){
         throw "No particles (N=0).";
     }
-
     currentflag = 0;
-
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
 
     // create population of particles
     Simulation::initPopulation();
@@ -89,42 +88,35 @@ void Simulation::initialise() {
     domain->makeNeighbourList(particles);
 }
 
-
 void Simulation::initBoundary() {
-    if (params.bc_opt == "bounded") {
+    // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles < in class defn
 
-        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles < in class defn
+    for (int i = 0; i < 2; i++) {
+        double b_rho = 1; // <- density of particle boundaries
+        for (int n = 0; n <= params.Lx/params.R/b_rho; n++) {
 
-        for (int i = 0; i < 2; i++) {
-            double b_rho = 1; // <- density of particle boundaries
-            for (int n = 0; n <= params.Lx/params.R/b_rho; n++) {
+            double x = -params.Lx/2. + n*params.R*b_rho;
+            double y = (params.Ly/2.)*pow(-1,i);
 
-                double x = -params.Lx/2. + n*params.R*b_rho;
-                double y = (params.Ly/2.)*pow(-1,i);
+            // initialise  a unique pointer to a new particle
+            std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
+            // move into vector of pointers
+            particles.push_back(std::move(pntrP));
 
-                // initialise  a unique pointer to a new particle
-                std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
-                // move into vector of pointers
-                particles.push_back(std::move(pntrP));
-
-                boundarysize +=1;
-            }
-            for (int n = 0; n <= params.Ly/params.R/b_rho; n++) {
-                double x = (params.Lx/2.)*pow(-1,i);
-                double y = -(params.Ly/2.) + n*params.R*b_rho;
-
-                std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
-
-                particles.push_back(std::move(pntrP));
-
-                boundarysize +=1;
-            }
+            boundarysize +=1;
         }
-        currentflag += boundarysize;
+        for (int n = 0; n <= params.Ly/params.R/b_rho; n++) {
+            double x = (params.Lx/2.)*pow(-1,i);
+            double y = -(params.Ly/2.) + n*params.R*b_rho;
+
+            std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
+
+            particles.push_back(std::move(pntrP));
+
+            boundarysize +=1;
+        }
     }
-    if (params.bc_opt == "input") {
-        throw "Cannot accept input yet";
-    }
+    currentflag += boundarysize;
 }
 
 void Simulation::initPopulation() {
@@ -291,26 +283,6 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
         radii.push_back(p.getRadius());
     }
     return radii;
-}
-
-void Simulation::saveVTP(int step, int finalstep)
-{
-    output->setParticles(particles);
-    output->vtp(step, finalstep);
-}
-
-void Simulation::savePopulation(std::string filepath)
-{
-    std::filebuf fb;
-    fb.open (filepath, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
-    std::ostream out(&fb);
-    out << particles.size();
-    out << '\n';
-
-    for (auto p : particles) {
-        out << (*p);
-    }
-    fb.close();
 }
 
 void Simulation::loadPopulation(std::string filepath)

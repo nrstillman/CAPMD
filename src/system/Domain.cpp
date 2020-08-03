@@ -12,13 +12,24 @@ Domain::Domain(Parameters params){
     cutoff = params.cutoff;
     cutoffZ = params.cutoffZ;
     maxmove = params.maxmove;
+    Lx = params.Lx;
+    Ly = params.Ly;
+    if (params.bc_opt == "periodic"){periodic = true;}
     std::cout << "Initialised Domain" << std::endl;
 }
 
 // vector between two particles
 std::vector<double> Domain::calc_dr(std::vector<double> xi, std::vector<double> xj)
 {
-    return {xj[0] - xi[0], xj[1] - xi[1]};
+    double x = xj[0] - xi[0];
+    double y = xj[1] - xi[1];
+    if (periodic){
+        if (x>Lx/2){x-=Lx/2;}
+        else if (x<-Lx/2){x+=Lx/2;}
+        else if (y>Ly/2){y-=Ly/2;}
+        else if (y<-Ly/2){y+=Ly/2;}
+    }
+    return {x, y};
 }
 
 // distance between two particles
@@ -47,7 +58,6 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
 void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
-//    std::cout << "Neighbour List Calculated" << std::endl;
     NeighbourList.clear();
     //vector of previous positions of particle (used in rebuild)
     auto p = particles.begin();
@@ -78,6 +88,7 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         ++p;
         idx += 1;
     }
+    std::cout << "Neighbour List Calculated" << std::endl;
 }
 
 // check for a neighbour list rebuild based on max motion of particles

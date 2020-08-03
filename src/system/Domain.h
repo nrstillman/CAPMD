@@ -30,13 +30,11 @@ class Domain
         double cutoffZ;
         int boundarysize;
         double maxmove;
+        double Lx, Ly;
+        bool periodic;
 
         // Constructors
         Domain(Parameters);
-
-        // apply periodic boundary conditions here if applicable
-        // TODO: create boundary from parameters
-        //  Domain(parameters.boundary);
 
         // vector between two particles
         std::vector<double> calc_dr(std::vector<double>, std::vector<double> );

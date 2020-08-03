@@ -70,15 +70,13 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
         Simulation sim = Simulation(params);
         sim.initialise();
 
-        Particle p = sim.getParticle(0);
-        std::vector<double> x_t0 = p.getPosition();
+        std::vector<double> x_t0 = sim.getParticle(0)->getPosition();
 
-        for (int i = 0; i<100;i++){
-            std::cout << i << std::endl;
-//            sim.move();
+        for (int t = 0; t<100;t++){
+            sim.move(t);
         }
 
-        std::vector<double> x_t100 = p.getPosition();
+        std::vector<double> x_t100 = sim.getParticle(0)->getPosition();
         REQUIRE(x_t0 != x_t100);
     }
 

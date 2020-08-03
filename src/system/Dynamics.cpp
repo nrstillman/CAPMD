@@ -12,8 +12,12 @@ Dynamics::Dynamics(Parameters params) {
     factive = params.factive;
     zeta = params.zeta;
     tau = params.tau;
+    Lx = params.Lx;
+    Ly = params.Ly;
 
-    /// TODO: double check angular random num gen still works
+    // change to periodic bc if chosen
+    if (params.bc_opt == "periodic"){periodic = true;}
+
     gen = Engine(params.angseed);
     dist = Distribution(0,1);
 }
@@ -36,13 +40,18 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     for (int i = 0; i<2; i++){
         x[i] += (factvector[i] + f[i])/zeta*dt;
     }
+    if (periodic){
+        if (x[0]>Lx/2){x[0]-=Lx/2;}
+        else if (x[0]<-Lx/2){x[0]+=Lx/2;}
+        else if (x[1]>Ly/2){x[1]-=Ly/2;}
+        else if (x[1]<-Ly/2){x[1]+=Ly/2;}
+    }
     p->setPosition(x);
 
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
     theta += 2.0/tau*sqrt(dt)*dist(gen);
-
     p->setTheta(theta);
     p->setAge(p->getAge() + dt);
 

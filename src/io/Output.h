@@ -10,25 +10,34 @@
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
 #include <vtkPointData.h>
+#include <chrono>
 
 #include "Parameters.h"
 #include "Particle.h"
 
 class Output{
 
-public:
+    typedef std::chrono::steady_clock Clock;
 
+private:
+    double elapsed;
+
+public:
     /// Constructor
+    std::chrono::time_point<Clock>  last_log = std::chrono::steady_clock::now();
+
     Output(Parameters, int, std::vector<std::shared_ptr<Particle>>);
 
     std::string file_name;
     std::string output_folder;
+
     int N;
     int NB;
     std::vector<std::shared_ptr<Particle>> particles;
 
-
+    void log(int);
     void vtp(int, int);
+    void savePopulation(std::string);
 
     void setParticles(std::vector<std::shared_ptr<Particle>> x) { particles = x;}
 };

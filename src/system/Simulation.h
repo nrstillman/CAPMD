@@ -30,7 +30,6 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Dynamics> dynamics;
         std::shared_ptr<Population> population;
         std::shared_ptr<Interaction> interaction;
-        std::shared_ptr<Output> output;
 
         typedef std::mt19937 Engine;
         typedef std::uniform_real_distribution<double> Distribution;
@@ -42,7 +41,9 @@ class Simulation : virtual public Particle{
         Distribution distheta;
 
     public:
-        // Access through interface (should make these protected)
+        std::shared_ptr<Output> output;
+
+    // Access through interface (should make these protected)
         std::vector<std::shared_ptr<Particle>> particles;
 
         // Setting parameters
@@ -67,9 +68,7 @@ class Simulation : virtual public Particle{
         std::vector<double> getPopulationRadius(std::list<int> &index);
 
         //  I/O for sim data
-        void savePopulation(std::string);
         void loadPopulation(std::string);
-        void saveVTP(int, int);
 
         // Access through other classes
 

@@ -23,8 +23,13 @@ class Dynamics {
         // correlation time of the active driving
         double tau;
 
+        // bool condition for periodic bc
+        bool periodic = false;
+        double Lx;
+        double Ly;
+
         typedef std::mt19937 Engine;
-        typedef std::uniform_real_distribution<double> Distribution;
+        typedef std::normal_distribution<double> Distribution;
 
         Engine gen;
         Distribution dist;
