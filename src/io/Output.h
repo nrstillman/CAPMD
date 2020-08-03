@@ -35,6 +35,7 @@ public:
     int NB;
     std::vector<std::shared_ptr<Particle>> particles;
 
+    void update(Parameters, int, std::vector<std::shared_ptr<Particle>>);
     void log(int);
     void vtp(int, int);
     void savePopulation(std::string);

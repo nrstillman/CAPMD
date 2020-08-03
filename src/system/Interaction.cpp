@@ -13,12 +13,23 @@ Interaction::Interaction(Parameters params){
     pairstiff = params.pairstiff;
     pairatt= params.pairatt;
     fade = params.fade;
+    Lx = params.Lx;
+    Ly = params.Ly;
+    if (params.bc_opt == "periodic"){periodic = true;}
 }
 
 // vector between two particles
 std::array<double,2> Interaction::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
 {
-    return {xj[0] - xi[0], xj[1] - xi[1]};
+    double x = xj[0] - xi[0];
+    double y = xj[1] - xi[1];
+    if (periodic){
+        if (x>Lx/2){x-=Lx;}
+        else if (x<-Lx/2){x+=Lx;}
+        else if (y>Ly/2){y-=Ly;}
+        else if (y<-Ly/2){y+=Ly;}
+    }
+    return {x, y};
 }
 
 // distance between two particles

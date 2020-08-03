@@ -96,6 +96,8 @@ class Simulation : virtual public Particle{
         void initialise();
         void initPopulation(); //  To initialise a population
         void initBoundary(); //  To create the boundary
+
+        void updateOutput(); //  To create the boundary
 };
 
 

@@ -285,6 +285,10 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
     return radii;
 }
 
+void Simulation::updateOutput(){
+    output->update(params, boundarysize, particles);
+}
+
 void Simulation::loadPopulation(std::string filepath)
 {
     ifstream inFile;
@@ -307,5 +311,6 @@ void Simulation::loadPopulation(std::string filepath)
     }
     inFile.close();
 }
+
 
 

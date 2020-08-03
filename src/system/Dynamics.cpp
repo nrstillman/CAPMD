@@ -41,10 +41,10 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
         x[i] += (factvector[i] + f[i])/zeta*dt;
     }
     if (periodic){
-        if (x[0]>Lx/2){x[0]-=Lx/2;}
-        else if (x[0]<-Lx/2){x[0]+=Lx/2;}
-        else if (x[1]>Ly/2){x[1]-=Ly/2;}
-        else if (x[1]<-Ly/2){x[1]+=Ly/2;}
+        if (x[0]>Lx/2){x[0]-=Lx;}
+        else if (x[0]<-Lx/2){x[0]+=Lx;}
+        else if (x[1]>Ly/2){x[1]-=Ly;}
+        else if (x[1]<-Ly/2){x[1]+=Ly;}
     }
     p->setPosition(x);
 

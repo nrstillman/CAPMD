@@ -23,10 +23,10 @@ std::array<double,2> Domain::calc_dr(std::array<double,2> xi, std::array<double,
     double x = xj[0] - xi[0];
     double y = xj[1] - xi[1];
     if (periodic){
-        if (x>Lx/2){x-=Lx/2;}
-        else if (x<-Lx/2){x+=Lx/2;}
-        else if (y>Ly/2){y-=Ly/2;}
-        else if (y<-Ly/2){y+=Ly/2;}
+        if (x>Lx/2){x-=Lx;}
+        else if (x<-Lx/2){x+=Lx;}
+        else if (y>Ly/2){y-=Ly;}
+        else if (y<-Ly/2){y+=Ly;}
     }
     return {x, y};
 }

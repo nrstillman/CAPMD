@@ -72,7 +72,7 @@ struct Parameters {
     double tau = 10; //10
 
     // Division/death rates
-    double deathrate = 0;
+    double deathrate = 0.01;
     double divrate = 0.1;
     double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
     double maxZ = 4;
