@@ -24,7 +24,7 @@ int main() {
 
         int t_final = 1000000;
         for (int t = 0; t<= t_final; t++){
-            sim.move(t);
+            sim.move();
 //            if (t == 15000){
 //                N = sim.popSize();
 //                for (int i = sim.boundarysize; i < sim.boundarysize + N/2; i++){
@@ -36,8 +36,8 @@ int main() {
             if (t % 1000 == 0) {
                 sim.updateOutput();
                 sim.output->log(t);
-                sim.output->savePopulation("test.txt");
-                sim.output->vtp(t, t_final);
+				sim.saveData("text");
+				sim.saveData("vtp");
             }
         }
     }

@@ -19,6 +19,8 @@ Simulation::Simulation(){
 
     // particle counter for divison and death.
     currentflag = 0;
+	// timestep
+	timestep = 0;
 
     // create population of boundary particles <- must happen first
     if (params.bc_opt == "bounded") {Simulation::initBoundary();}
@@ -52,6 +54,8 @@ Simulation::Simulation(Parameters _params){
 
     // particle counter for divison and death.
     currentflag = 0;
+	// timestep
+	timestep = 0;
 
     // create population of boundary particles <- must happen first
     if (params.bc_opt == "bounded") {Simulation::initBoundary();}
@@ -149,9 +153,9 @@ void Simulation::initPopulation() {
     }
 }
 // time stepping of the simulation
-    void Simulation::move(int t)
+    void Simulation::move()
     {
-        double timeint = t*params.dt; // possibly for adding to age...
+        double timeint = timestep*params.dt; // possibly for adding to age...
 
         auto p = particles.begin();
         std::advance(p, boundarysize);
@@ -178,7 +182,9 @@ void Simulation::initPopulation() {
         if (rebuild) {
             domain->makeNeighbourList(particles);
         }
+        timestep ++;
     }
+    
     // population dynamics here
     // First division, then death, else new particles will appear in the just vacated holes ...
     void Simulation::populationDynamics(double Ndiv) {
@@ -287,6 +293,18 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
 
 void Simulation::updateOutput(){
     output->update(params, boundarysize, particles);
+}
+
+void Simulation::saveData(std::string outtype) {
+	 if (outtype.compare("vtp") == 0) {
+		 output->vtp(timestep);
+	 }
+	 else if (outtype.compare("text") == 0) {
+		 output->savePopulation(timestep);
+	 }
+	 else {
+		 cout << "Error: Unknown output type, doing nothing!";
+	 }
 }
 
 void Simulation::loadPopulation(std::string filepath)

@@ -21,6 +21,10 @@ PYBIND11_MODULE(pycapmd, m) {
 //    //Main simulation happens here
     py::class_<Simulation>(m, "simulation")
         .def(py::init<Parameters>())
+        //.def_readwrite("N", &Simulation::N) // parameters to be set in python
+        //        .def_readwrite("cutoffZ", &Simulation::cutoffZ)
+        //        .def_readwrite("dt", &Simulation::dt)
+        //        .def_readwrite("tau", &Simulation::tau)
         .def("initPopulation", &Simulation::initPopulation)
         .def("initBoundary", &Simulation::initBoundary)
         .def("move", &Simulation::move)
@@ -31,11 +35,13 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("getBoundaryPosition", &Simulation::getBoundaryPosition)
         .def("getPopulationRadius", &Simulation::getPopulationRadius)
         .def("populationDynamics", &Simulation::populationDynamics)
-        .def("initialise", &Simulation::initialise);
-
+        .def("initialise", &Simulation::initialise)
+		.def("saveData",&Simulation::saveData);
+        //.def_readwrite("setParams", &Simulation::setParams);
+    
     //Additional info for specific particles (useful for tracking and targeting particles)
     py::class_<Particle>(m, "particle")
-        .def(py::init<int, int, std::array<double,2>, double, double>())
+        .def(py::init<int, int, std::array<double, 2>, double, double>())
         .def("setId", &Particle::setId)
         .def("getId", &Particle::getId)
         .def("getPosition", &Particle::getPosition)
@@ -79,9 +85,6 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("divrate", &Parameters::divrate)
         .def_readwrite("cutoffZ", &Parameters::cutoffZ)
         .def_readwrite("maxZ", &Parameters::maxZ);
-
-    ///TODO: Introduce output binding
-
 
     // Used to convert lists in python to int vectors in c++ (specifically for indexing)
     py::bind_vector<std::vector<int>>(m, "VectorInt");

@@ -15,8 +15,8 @@ struct Parameters {
     // interaction parameters
 
     // io
-    std::string filename = "death";
-    std::string outputfolder = "vtp/";
+    std::string filename = "frame";
+    std::string outputfolder = "./";
 
     // Random
     int initseed = 2022;

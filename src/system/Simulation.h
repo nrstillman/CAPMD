@@ -50,7 +50,7 @@ class Simulation : virtual public Particle{
         void setParams(Parameters);
 
         // Methods for particle dynamics
-        void move(int);
+        void move();
         void populationDynamics(double);
 
         // Methods for getting sim data
@@ -69,6 +69,7 @@ class Simulation : virtual public Particle{
 
         //  I/O for sim data
         void loadPopulation(std::string);
+		void saveData(std::string outtype);
 
         // Access through other classes
 
@@ -79,6 +80,8 @@ class Simulation : virtual public Particle{
         double cutoffZ;
         // time step
         double dt;
+		// current time step
+		int timestep;
         // neighbour list total move threshold (should be of the order of 0.5)
         double maxmove;
         // running counter on particle flags
