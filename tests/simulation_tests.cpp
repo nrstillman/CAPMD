@@ -14,7 +14,7 @@ TEST_CASE( "Check particle class", "[ParticleTests]" ) {
         Particle p0;
         CHECK(p0.getId() == 0);
         // initialise a particle with certain properties
-        Particle p1(2, 2, std::vector<double> {1,1}, 2, 2);
+        Particle p1(2, 2, std::array<double,2> {1,1}, 2, 2);
         CHECK(p1.getId() == 2);
         // copy a particle
         Particle p2;
@@ -25,13 +25,13 @@ TEST_CASE( "Check particle class", "[ParticleTests]" ) {
     SECTION("1 -> ParticleProperties") {
 
         // initialise with position
-        Particle p (2, 2, std::vector<double> {12,4}, 2, 2);
-        std::vector<double> x = p.getPosition();
+        Particle p (2, 2, std::array<double,2> {12,4}, 2, 2);
+        std::array<double,2> x = p.getPosition();
         CHECK(x[0] == 12);
         CHECK(x[1] == 4);
 
         // set particle position
-        p.setPosition(std::vector<double>{5, 9});
+        p.setPosition(std::array<double,2>{5, 9});
 
         x = p.getPosition();
         CHECK(x[0] == 5);
@@ -70,13 +70,13 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
         Simulation sim = Simulation(params);
         sim.initialise();
 
-        std::vector<double> x_t0 = sim.getParticle(0)->getPosition();
+        std::array<double,2> x_t0 = sim.getParticle(0)->getPosition();
 
         for (int t = 0; t<100;t++){
             sim.move(t);
         }
 
-        std::vector<double> x_t100 = sim.getParticle(0)->getPosition();
+        std::array<double,2> x_t100 = sim.getParticle(0)->getPosition();
         REQUIRE(x_t0 != x_t100);
     }
 
