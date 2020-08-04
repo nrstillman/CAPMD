@@ -10,6 +10,9 @@
 #include <iomanip>      // std::setprecision
 #include <iterator>     // for reading txt
 #include <sstream>      // for reading txt
+#include <algorithm>	// for 'transform' to generate iterators
+#include <memory> 		// for shared pointers
+
 
 class Particle
     {
