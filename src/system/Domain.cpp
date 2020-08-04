@@ -81,6 +81,7 @@ int Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
         }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
+		std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
         idxmap[(*p)->getId()] = idx + boundarysize;
 
         pneighs.clear();

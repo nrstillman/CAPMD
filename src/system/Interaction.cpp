@@ -45,6 +45,7 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
+	//std::cout << kij << "  " << eps << std::endl;
 
     // compute vector distance between particles
     std::array<double,2> dr = calc_dr(ix,jx);

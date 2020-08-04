@@ -51,7 +51,7 @@ class Simulation : virtual public Particle{
 
         // Methods for particle dynamics
         void move();
-        void populationDynamics(double);
+        void populationDynamics(int);
 
         // Methods for getting sim data
         int popSize(void){ return particles.size() - boundarysize;}

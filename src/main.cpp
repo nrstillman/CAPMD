@@ -34,7 +34,7 @@ int main() {
 //            }
             if (t % 1000 == 0){sim.populationDynamics(1000);}
             if (t % 1000 == 0) {
-                sim.updateOutput();
+                //sim.updateOutput();
                 sim.output->log(t);
 				sim.saveData("text");
 				sim.saveData("vtp");

@@ -87,11 +87,16 @@ void Output::vtp(int timestep)
     vtkSmartPointer<vtkDoubleArray> force =  vtkSmartPointer<vtkDoubleArray>::New();
     force->SetName("Force");
     force->SetNumberOfComponents(3);
+	
+	vtkSmartPointer<vtkDoubleArray> forceact =  vtkSmartPointer<vtkDoubleArray>::New();
+	forceact->SetName("Active Force");
+    forceact->SetNumberOfComponents(3);
 
     for(auto p = particles.begin(); p != particles.end(); p++){
         points->InsertNextPoint ((*p)->getPosition()[0], (*p)->getPosition()[1], 0.0);
 
         double f[3] = {(*p)->getForce()[0], (*p)->getForce()[1], 0};
+		double fact[3] = {cos((*p)->getTheta()), sin((*p)->getTheta()), 0};
 
         // Get the data
         ids->InsertNextValue((*p)->getId());
@@ -101,19 +106,21 @@ void Output::vtp(int timestep)
         numcontact -> InsertNextValue((*p)->getZ());
 
         force->InsertNextTuple(f);
+		forceact->InsertNextTuple(fact);
+	}
 
-        // Set the additional polydata
-        polydata->GetPointData()->AddArray(ids);
-        polydata->GetPointData()->AddArray(types);
-        polydata->GetPointData()->AddArray(radii);
-        polydata->GetPointData()->AddArray(numneigh);
-        polydata->GetPointData()->AddArray(numcontact);
+	// Set the additional polydata
+	polydata->GetPointData()->AddArray(ids);
+	polydata->GetPointData()->AddArray(types);
+	polydata->GetPointData()->AddArray(radii);
+	polydata->GetPointData()->AddArray(numneigh);
+	polydata->GetPointData()->AddArray(numcontact);
 
-        polydata->GetPointData()->AddArray(force);
+	polydata->GetPointData()->AddArray(force);
+	polydata->GetPointData()->AddArray(forceact);
 
-        // Set the data to points
-        polydata->SetPoints(points);
-    }
+	// Set the data to points
+	polydata->SetPoints(points);
 
     // Write the file
     vtkSmartPointer<vtkXMLPolyDataWriter> writer =

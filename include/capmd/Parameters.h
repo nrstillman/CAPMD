@@ -36,7 +36,7 @@ struct Parameters {
     int Ly = 30; //30
 
     //Population
-    int N = 10; // Population size
+    int N = 1000; // Population size
     std::string init_opt = "random_unif"; //"random_unif";
     std::string bc_opt = "bounded";//"bounded";
 
@@ -67,7 +67,7 @@ struct Parameters {
         };
 
     //Dynamics (active parameters)
-    double factive = 0.; //0.1
+    double factive = 0.1; //0.1
     double zeta  = 1; //1
     double tau = 10; //10
 
@@ -75,7 +75,7 @@ struct Parameters {
     double deathrate = 0.01;
     double divrate = 0.1;
     double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
-    double maxZ = 4;
+    double maxZ = 6;
 };
 
 #endif //CAPMD_PARAMS_H

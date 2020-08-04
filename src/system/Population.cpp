@@ -38,6 +38,7 @@ bool Population::testDivide(int type, double z, double timeint) {
     // include timeinterval to make this a division probability.
     // Note that the resulting number needs to remain << 1 for accuracy
     divreal = divreal*timeint;
+	//std::cout << divreal << std::endl;
 
     // final check on division: If divreal is larger than a randomly chosen number in (0,1)
     // divid, else don't

@@ -83,6 +83,7 @@ void Simulation::initialise() {
     }
     currentflag = 0;
     // create population of boundary particles <- must happen first
+	// This has been done in the constructor already, needs a rethink
     if (params.bc_opt == "bounded") {Simulation::initBoundary();}
 
     // create population of particles
@@ -187,7 +188,7 @@ void Simulation::initPopulation() {
     
     // population dynamics here
     // First division, then death, else new particles will appear in the just vacated holes ...
-    void Simulation::populationDynamics(double Ndiv) {
+    void Simulation::populationDynamics(int Ndiv) {
         // check for divisions
         // modify the particles list only after everybody has been checked
         std::vector<std::shared_ptr<Particle>> newparticles;
@@ -195,6 +196,9 @@ void Simulation::initPopulation() {
         auto p = particles.begin();
         std::advance(p, boundarysize);
         double timeint = Ndiv*params.dt;
+		
+		std::cout << "boundary size " << boundarysize << std::endl;
+		std::cout << "initial number of particles " << particles.size() << std::endl;
 
         while (p != particles.end()) {
                 // actual time elapsed since last division check
@@ -228,6 +232,8 @@ void Simulation::initPopulation() {
         // now, at the end, stick the new particles at the end of the existing particle list
         particles.insert(particles.end(), newparticles.begin(), newparticles.end());
 
+		std::cout << "number of new particles " << newparticles.size() << std::endl;
+		std::cout << "number of particles after division " << particles.size() << std::endl;
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
         // Now, separately, we will check for death
@@ -240,6 +246,7 @@ void Simulation::initPopulation() {
         }
         //do a neighbour list rebuild to get all the indices straightened out again
         domain->makeNeighbourList(particles);
+		std::cout << "number of particles after division and death " << particles.size() << std::endl;
     }
 
 // function to remove particle in simulation (using id -> idx map in domain)
@@ -296,6 +303,8 @@ void Simulation::updateOutput(){
 }
 
 void Simulation::saveData(std::string outtype) {
+	 // the shared pointer in output is *not* updated routinely
+	 output->update(params, boundarysize, particles);
 	 if (outtype.compare("vtp") == 0) {
 		 output->vtp(timestep);
 	 }

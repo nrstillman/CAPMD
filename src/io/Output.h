@@ -11,6 +11,7 @@
 #include <vtkPoints.h>
 #include <vtkPointData.h>
 #include <chrono>
+#include <cmath>
 
 #include "Parameters.h"
 #include "Particle.h"
