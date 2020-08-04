@@ -73,7 +73,7 @@ TEST_CASE( "Test Simulation Basics", "[SimulationTests]" ) {
         std::array<double,2> x_t0 = sim.getParticle(0)->getPosition();
 
         for (int t = 0; t<100;t++){
-            sim.move(t);
+            sim.move();
         }
 
         std::array<double,2> x_t100 = sim.getParticle(0)->getPosition();
