@@ -16,3 +16,6 @@ def paramsFromFile(paramObj, fileName):
     except:
         print("Incorrect json format, returning default parameters")
         return paramObj
+    
+def partPosFromFile(filename):
+     array = np.loadtxt(filename, delimiter="\t")

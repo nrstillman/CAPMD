@@ -11,7 +11,7 @@
     "eps": 0.001,
     "N": 20,
     "init_opt": "random_unif",
-    "bc_opt": "bounded",
+    "bc_opt": "unbounded",
     "NTA": 0,
     "Nstem": 0, 
     "btype": 0,
