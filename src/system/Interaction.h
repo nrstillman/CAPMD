@@ -20,7 +20,8 @@ private:
 
     // types of particles that exist in the simulation
     int ntypes;
-
+    bool periodic;
+    double Lx, Ly;
     // what are their relative stiffnesses ... (k_ij)
     std::vector<std::vector<double>> pairstiff;
     // ... and their relative attraction strengths (epsilon_ij)
@@ -33,10 +34,10 @@ public:
     Interaction(Parameters);
 
     // vector between two particles
-    std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
+    std::array<double,2> calc_dr(std::array<double,2>, std::array<double,2> );
 
     // distance between two particles or doubles
-    double dist(std::vector<double>, std::vector<double> );
+    double dist(std::array<double,2>, std::array<double,2> );
 
 
     // compute the mechanical force between particles

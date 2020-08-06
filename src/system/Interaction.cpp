@@ -13,35 +13,49 @@ Interaction::Interaction(Parameters params){
     pairstiff = params.pairstiff;
     pairatt= params.pairatt;
     fade = params.fade;
+    Lx = params.Lx;
+    Ly = params.Ly;
+    if (params.bc_opt == "periodic"){periodic = true;}
 }
 
 // vector between two particles
-std::vector<double> Interaction::calc_dr(std::vector<double> xi, std::vector<double> xj)
+std::array<double,2> Interaction::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
 {
-    return {xj[0] - xi[0], xj[1] - xi[1]};
+    double x = xj[0] - xi[0];
+    double y = xj[1] - xi[1];
+    if (periodic){
+        if (x>Lx/2){x-=Lx;}
+        else if (x<-Lx/2){x+=Lx;}
+        else if (y>Ly/2){y-=Ly;}
+        else if (y<-Ly/2){y+=Ly;}
+    }
+    return {x, y};
 }
 
 // distance between two particles
-double Interaction::dist(std::vector<double> i, std::vector<double> j)
+double Interaction::dist(std::array<double,2> i, std::array<double,2> j)
 {
-    if (i == j) return params.eps; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+    if (i == j) return TOL; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
+    std::array<double,2> ix = i->getPosition();
+    std::array<double,2> jx = j->getPosition();
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
+	//std::cout << kij << "  " << eps << std::endl;
 
     // compute vector distance between particles
-    std::vector<double> dr = calc_dr(i->getPosition(),j->getPosition());
+    std::array<double,2> dr = calc_dr(ix,jx);
     // compute distance
-    double dx = dist(i->getPosition(), j->getPosition());
+    double dx = dist(ix, jx);
 
-//    std::cout << i->getId() << std::endl;
     // actual force computation according to our potential
     // several lines since piecewise defined
-    std::vector<double> force = {0,0};
+    std::array<double,2> force = {0,0};
+
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
         force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
@@ -52,9 +66,8 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     if (dx < params.cutoffZ*bij){
         i ->addZ(1);
     }
-
-//    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
-//    // used for particle fade-in post division.
+    // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
+    // used for particle fade-in post division.
     if (j->getType() != params.btype){
 
         double multi = 1.0;
@@ -66,8 +79,6 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
 
         std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
     }
-
-//    std::cout << force[0]<<","<<force[1]<<std::endl;
 
     // add force
     i->addForce(force);

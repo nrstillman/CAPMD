@@ -30,22 +30,20 @@ class Domain
         double cutoffZ;
         int boundarysize;
         double maxmove;
+        double Lx, Ly;
+        bool periodic;
 
         // Constructors
         Domain(Parameters);
 
-        // apply periodic boundary conditions here if applicable
-        // TODO: create boundary from parameters
-        //  Domain(parameters.boundary);
-
         // vector between two particles
-        std::vector<double> calc_dr(std::vector<double>, std::vector<double> );
+        std::array<double,2> calc_dr(std::array<double,2>, std::array<double,2> );
 
         // distance between two particles or doubles
-        double dist(std::vector<double>, std::vector<double> );
+        double dist(std::array<double,2>, std::array<double,2> );
 
         int countZ(std::vector<std::shared_ptr<Particle>>, int);
-        void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
+        int makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
 
         std::list<std::shared_ptr<Particle>> getNeighbours(int);

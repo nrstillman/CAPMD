@@ -19,9 +19,12 @@ Simulation::Simulation(){
 
     // particle counter for divison and death.
     currentflag = 0;
+	// timestep
+	timestep = 0;
 
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
+
     // update boundary size
     domain->setBoundarySize(boundarysize);
 
@@ -51,9 +54,11 @@ Simulation::Simulation(Parameters _params){
 
     // particle counter for divison and death.
     currentflag = 0;
+	// timestep
+	timestep = 0;
 
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
     // update boundary size
     domain->setBoundarySize(boundarysize);
 
@@ -76,11 +81,10 @@ void Simulation::initialise() {
     if (params.N == 0){
         throw "No particles (N=0).";
     }
-
     currentflag = 0;
-
     // create population of boundary particles <- must happen first
-    Simulation::initBoundary();
+	// This has been done in the constructor already, needs a rethink
+    if (params.bc_opt == "bounded") {Simulation::initBoundary();}
 
     // create population of particles
     Simulation::initPopulation();
@@ -89,42 +93,35 @@ void Simulation::initialise() {
     domain->makeNeighbourList(particles);
 }
 
-
 void Simulation::initBoundary() {
-    if (params.bc_opt == "bounded") {
+    // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles < in class defn
 
-        // RNG: draw from random initial conditions in [-L/2,L/2]x[-L/2,L/2] with random angles < in class defn
+    for (int i = 0; i < 2; i++) {
+        double b_rho = 1; // <- density of particle boundaries
+        for (int n = 0; n <= params.Lx/params.R/b_rho; n++) {
 
-        for (int i = 0; i < 2; i++) {
-            double b_rho = 1; // <- density of particle boundaries
-            for (int n = 0; n <= params.Lx/params.R/b_rho; n++) {
+            double x = -params.Lx/2. + n*params.R*b_rho;
+            double y = (params.Ly/2.)*pow(-1,i);
 
-                double x = -params.Lx/2. + n*params.R*b_rho;
-                double y = (params.Ly/2.)*pow(-1,i);
+            // initialise  a unique pointer to a new particle
+            std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
+            // move into vector of pointers
+            particles.push_back(std::move(pntrP));
 
-                // initialise  a unique pointer to a new particle
-                std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
-                // move into vector of pointers
-                particles.push_back(std::move(pntrP));
-
-                boundarysize +=1;
-            }
-            for (int n = 0; n <= params.Ly/params.R/b_rho; n++) {
-                double x = (params.Lx/2.)*pow(-1,i);
-                double y = -(params.Ly/2.) + n*params.R*b_rho;
-
-                std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
-
-                particles.push_back(std::move(pntrP));
-
-                boundarysize +=1;
-            }
+            boundarysize +=1;
         }
-        currentflag += boundarysize;
+        for (int n = 0; n <= params.Ly/params.R/b_rho; n++) {
+            double x = (params.Lx/2.)*pow(-1,i);
+            double y = -(params.Ly/2.) + n*params.R*b_rho;
+
+            std::shared_ptr<Particle> pntrP(new Particle(boundarysize, params.btype, {x, y}, theta, radius));
+
+            particles.push_back(std::move(pntrP));
+
+            boundarysize +=1;
+        }
     }
-    if (params.bc_opt == "input") {
-        throw "Cannot accept input yet";
-    }
+    currentflag += boundarysize;
 }
 
 void Simulation::initPopulation() {
@@ -157,9 +154,9 @@ void Simulation::initPopulation() {
     }
 }
 // time stepping of the simulation
-    void Simulation::move(int t)
+    void Simulation::move()
     {
-        double timeint = t*params.dt; // possibly for adding to age...
+        double timeint = timestep*params.dt; // possibly for adding to age...
 
         auto p = particles.begin();
         std::advance(p, boundarysize);
@@ -186,10 +183,12 @@ void Simulation::initPopulation() {
         if (rebuild) {
             domain->makeNeighbourList(particles);
         }
+        timestep ++;
     }
+    
     // population dynamics here
     // First division, then death, else new particles will appear in the just vacated holes ...
-    void Simulation::populationDynamics(double Ndiv) {
+    void Simulation::populationDynamics(int Ndiv) {
         // check for divisions
         // modify the particles list only after everybody has been checked
         std::vector<std::shared_ptr<Particle>> newparticles;
@@ -197,6 +196,9 @@ void Simulation::initPopulation() {
         auto p = particles.begin();
         std::advance(p, boundarysize);
         double timeint = Ndiv*params.dt;
+		
+		std::cout << "boundary size " << boundarysize << std::endl;
+		std::cout << "initial number of particles " << particles.size() << std::endl;
 
         while (p != particles.end()) {
                 // actual time elapsed since last division check
@@ -210,7 +212,7 @@ void Simulation::initPopulation() {
                     // also, random orientation for similar reasons
                     double theta = distheta(gen) * 2 * M_PI;
 
-                    std::vector<double> x =  {(*p)->getPosition()[0] + disx(gen)*params.eps, (*p)->getPosition()[1] + disx(gen)*params.eps};
+                    std::array<double,2> x =  {(*p)->getPosition()[0] + disx(gen)*params.eps, (*p)->getPosition()[1] + disx(gen)*params.eps};
                     // create a new particle in the same spot
                     std::shared_ptr<Particle> pntrP(new Particle(currentflag, (*p)->getType(), x,theta,radius));
                     // flag is set here
@@ -230,6 +232,8 @@ void Simulation::initPopulation() {
         // now, at the end, stick the new particles at the end of the existing particle list
         particles.insert(particles.end(), newparticles.begin(), newparticles.end());
 
+		std::cout << "number of new particles " << newparticles.size() << std::endl;
+		std::cout << "number of particles after division " << particles.size() << std::endl;
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
         // Now, separately, we will check for death
@@ -242,6 +246,7 @@ void Simulation::initPopulation() {
         }
         //do a neighbour list rebuild to get all the indices straightened out again
         domain->makeNeighbourList(particles);
+		std::cout << "number of particles after division and death " << particles.size() << std::endl;
     }
 
 // function to remove particle in simulation (using id -> idx map in domain)
@@ -262,9 +267,9 @@ std::shared_ptr<Particle> Simulation::getParticle(int i){
 }
 
 // return the population positions
-std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int> &index){
+std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<int> &index){
 
-    std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
+    std::vector<std::array<double,2>> positions;
     for (auto i : index) {
         Particle p = *particles[i];
         positions.push_back(p.getPosition());
@@ -273,11 +278,11 @@ std::vector<std::vector<double>> Simulation::getPopulationPosition(std::list<int
 }
 
 // return the boundary positions
-std::vector<std::vector<double>> Simulation::getBoundaryPosition(){
+std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 
-    std::vector<std::vector<double>> positions(0 , std::vector<double>(2));
-    for (int i = 0; i< boundarysize; ++i) {
-        Particle p = *particles[i];
+    std::vector<std::array<double,2>> positions;
+    for (int n = 0; n< boundarysize; ++n) {
+        Particle p = *particles[n];
         positions.push_back(p.getPosition());
     }
     return positions;
@@ -293,24 +298,22 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
     return radii;
 }
 
-void Simulation::saveVTP(int step, int finalstep)
-{
-    output->setParticles(particles);
-    output->vtp(step, finalstep);
+void Simulation::updateOutput(){
+    output->update(params, boundarysize, particles);
 }
 
-void Simulation::savePopulation(std::string filepath)
-{
-    std::filebuf fb;
-    fb.open (filepath, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
-    std::ostream out(&fb);
-    out << particles.size();
-    out << '\n';
-
-    for (auto p : particles) {
-        out << (*p);
-    }
-    fb.close();
+void Simulation::saveData(std::string outtype) {
+	 // the shared pointer in output is *not* updated routinely
+	 output->update(params, boundarysize, particles);
+	 if (outtype.compare("vtp") == 0) {
+		 output->vtp(timestep);
+	 }
+	 else if (outtype.compare("text") == 0) {
+		 output->savePopulation(timestep);
+	 }
+	 else {
+		 cout << "Error: Unknown output type, doing nothing!";
+	 }
 }
 
 void Simulation::loadPopulation(std::string filepath)
@@ -335,5 +338,6 @@ void Simulation::loadPopulation(std::string filepath)
     }
     inFile.close();
 }
+
 
 

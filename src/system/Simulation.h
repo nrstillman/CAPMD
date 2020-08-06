@@ -30,7 +30,6 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Dynamics> dynamics;
         std::shared_ptr<Population> population;
         std::shared_ptr<Interaction> interaction;
-        std::shared_ptr<Output> output;
 
         typedef std::mt19937 Engine;
         typedef std::uniform_real_distribution<double> Distribution;
@@ -42,15 +41,17 @@ class Simulation : virtual public Particle{
         Distribution distheta;
 
     public:
-        // Access through interface (should make these protected)
+        std::shared_ptr<Output> output;
+
+    // Access through interface (should make these protected)
         std::vector<std::shared_ptr<Particle>> particles;
 
         // Setting parameters
         void setParams(Parameters);
 
         // Methods for particle dynamics
-        void move(int);
-        void populationDynamics(double);
+        void move();
+        void populationDynamics(int);
 
         // Methods for getting sim data
         int popSize(void){ return particles.size() - boundarysize;}
@@ -62,14 +63,13 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Particle> getParticle(int);
         void removeParticle(int);
         std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
-        std::vector<std::vector<double>> getPopulationPosition(std::list<int> &index);
-        std::vector<std::vector<double>> getBoundaryPosition();
+        std::vector<std::array<double,2>> getPopulationPosition(std::list<int> &index);
+        std::vector<std::array<double,2>> getBoundaryPosition();
         std::vector<double> getPopulationRadius(std::list<int> &index);
 
         //  I/O for sim data
-        void savePopulation(std::string);
         void loadPopulation(std::string);
-        void saveVTP(int, int);
+		void saveData(std::string outtype);
 
         // Access through other classes
 
@@ -80,6 +80,8 @@ class Simulation : virtual public Particle{
         double cutoffZ;
         // time step
         double dt;
+		// current time step
+		int timestep;
         // neighbour list total move threshold (should be of the order of 0.5)
         double maxmove;
         // running counter on particle flags
@@ -97,6 +99,8 @@ class Simulation : virtual public Particle{
         void initialise();
         void initPopulation(); //  To initialise a population
         void initBoundary(); //  To create the boundary
+
+        void updateOutput(); //  To create the boundary
 };
 
 

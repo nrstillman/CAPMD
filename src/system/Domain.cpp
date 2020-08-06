@@ -4,7 +4,6 @@
 #include <cmath>
 #include <iterator>
 
-
 #define _USE_MATH_DEFINES
 
 // Domain constructor
@@ -12,19 +11,30 @@ Domain::Domain(Parameters params){
     cutoff = params.cutoff;
     cutoffZ = params.cutoffZ;
     maxmove = params.maxmove;
+    Lx = params.Lx;
+    Ly = params.Ly;
+    if (params.bc_opt == "periodic"){periodic = true;}
     std::cout << "Initialised Domain" << std::endl;
 }
 
 // vector between two particles
-std::vector<double> Domain::calc_dr(std::vector<double> xi, std::vector<double> xj)
+std::array<double,2> Domain::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
 {
-    return {xj[0] - xi[0], xj[1] - xi[1]};
+    double x = xj[0] - xi[0];
+    double y = xj[1] - xi[1];
+    if (periodic){
+        if (x>Lx/2){x-=Lx;}
+        else if (x<-Lx/2){x+=Lx;}
+        else if (y>Ly/2){y-=Ly;}
+        else if (y<-Ly/2){y+=Ly;}
+    }
+    return {x, y};
 }
 
 // distance between two particles
-double Domain::dist(std::vector<double> i, std::vector<double> j)
+double Domain::dist(std::array<double,2> i, std::array<double,2> j)
 {
-    std::vector<double> dr = calc_dr(i,j);
+    std::array<double,2> dr = calc_dr(i,j);
     return sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
 }
 
@@ -46,8 +56,7 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
-//    std::cout << "Neighbour List Calculated" << std::endl;
+int Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
     NeighbourList.clear();
     //vector of previous positions of particle (used in rebuild)
     auto p = particles.begin();
@@ -72,19 +81,21 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
+		std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
         idxmap[(*p)->getId()] = idx + boundarysize;
 
         pneighs.clear();
         ++p;
         idx += 1;
     }
+    return 1;
 }
 
 // check for a neighbour list rebuild based on max motion of particles
 bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles) {
     for  (int i = boundarysize; i< particles.size(); ++i)  {
         // this is not pretty
-        std::vector<double> drmove = calc_dr(particles[i]->getPrevPosition(), particles[i]->getPosition());
+        std::array<double,2> drmove = calc_dr(particles[i]->getPrevPosition(), particles[i]->getPosition());
         double distmove = sqrt(drmove[0]*drmove[0] + drmove[1]*drmove[1]);
         if (distmove > maxmove) return true;
     }
