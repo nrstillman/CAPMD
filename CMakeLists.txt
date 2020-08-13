@@ -8,7 +8,6 @@ include(${VTK_USE_FILE})
 
 add_library(
     capmd
-    SHARED
     ${CMAKE_SOURCE_DIR}/src/system/Simulation.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Particle.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Population.cpp

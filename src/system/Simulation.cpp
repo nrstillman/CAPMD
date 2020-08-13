@@ -277,6 +277,17 @@ std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<in
     return positions;
 }
 
+// return the population Ids
+std::vector<int>  Simulation::getPopulationId(std::list<int> &index){
+
+    std::vector<int> ids;
+    for (auto i : index) {
+        Particle p = *particles[i];
+        ids.push_back(p.getId());
+    }
+    return ids;
+}
+
 // return the boundary positions
 std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 
@@ -286,6 +297,17 @@ std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
         positions.push_back(p.getPosition());
     }
     return positions;
+}
+
+// return the boundary positions
+std::vector<int> Simulation::getBoundaryId(){
+
+    std::vector<int> ids;
+    for (int n = 0; n< boundarysize; ++n) {
+        Particle p = *particles[n];
+        ids.push_back(p.getPosition());
+    }
+    return ids;
 }
 
 std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){

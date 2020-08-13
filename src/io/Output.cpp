@@ -2,8 +2,6 @@
 #include <iostream>
 #include "Output.h"
 
-//
-//
 Output::Output(Parameters params, int boundarysize, std::vector<std::shared_ptr<Particle>> _particles){
         file_name = params.filename;
         output_folder = params.outputfolder;
