@@ -283,7 +283,7 @@ std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<in
 }
 
 // return the population Ids
-std::vector<std::array<double,2>>  Simulation::getPopulationId(std::list<int> &index){
+std::vector<int>  Simulation::getPopulationId(std::list<int> &index){
 
     std::vector<int> ids;
     for (auto i : index) {
@@ -305,7 +305,7 @@ std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 }
 
 // return the boundary positions
-std::vector<std::array<double,2>> Simulation::getBoundaryId(){
+std::vector<int> Simulation::getBoundaryId(){
 
     std::vector<int> ids;
     for (int n = 0; n< boundarysize; ++n) {
