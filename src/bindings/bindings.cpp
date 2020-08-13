@@ -31,6 +31,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("popSize", &Simulation::popSize)
         .def("getBoundarySize", &Simulation::getBoundarySize)
         .def("getParticle", &Simulation::getParticle)
+        .def("getParticlebyId", &Simulation::getParticlebyId)
         .def("getPopulationPosition", &Simulation::getPopulationPosition)
         .def("getPopulationId", &Simulation::getPopulationId)
         .def("getBoundaryPosition", &Simulation::getBoundaryPosition)

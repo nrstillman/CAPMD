@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.10)  # CMake version check
 project(capmd)                        # Create project "capmd"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)   # Require c++14 standard
-#set(VTK_DIR "C:/MyProjects/VTK/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+#set(VTK_DIR "C:/MyProjects/VTK/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE) #<- uncomment for PC builds
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
 add_library(
     capmd
+    # SHARED #<- uncomment for linux builds
     ${CMAKE_SOURCE_DIR}/src/system/Simulation.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Particle.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Population.cpp

@@ -259,10 +259,15 @@ void Simulation::removeParticle(int i){
     }
 }
 
-// function to access particle in particle list (using id -> idx map in domain) : python 
+// function to access particle in particle list : python 
 std::shared_ptr<Particle> Simulation::getParticle(int idx){
-    // int idx = domain->getIdx(i);
-    // std::cout << idx << std::endl;
+    return particles[idx];
+}
+
+// function to access particle in particle list (using id -> idx map in domain) : python 
+std::shared_ptr<Particle> Simulation::getParticlebyId(int id){
+    int idx = domain->getIdx(i);
+    std::cout << idx << std::endl;
     return particles[idx];
 }
 
@@ -278,7 +283,7 @@ std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<in
 }
 
 // return the population Ids
-std::vector<int>  Simulation::getPopulationId(std::list<int> &index){
+std::vector<std::array<double,2>>  Simulation::getPopulationId(std::list<int> &index){
 
     std::vector<int> ids;
     for (auto i : index) {
@@ -300,7 +305,7 @@ std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 }
 
 // return the boundary positions
-std::vector<int> Simulation::getBoundaryId(){
+std::vector<std::array<double,2>> Simulation::getBoundaryId(){
 
     std::vector<int> ids;
     for (int n = 0; n< boundarysize; ++n) {
