@@ -78,7 +78,6 @@ class Particle
         void addForce(std::array<double,2>);
 
         void setActiveForce(std::array<double,2> x)  { activeforce = x;}
-        void addActiveForce(std::array<double,2>);
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);

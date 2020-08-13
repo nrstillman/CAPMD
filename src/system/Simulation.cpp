@@ -264,9 +264,9 @@ std::shared_ptr<Particle> Simulation::getParticle(int idx){
     return particles[idx];
 }
 
-// function to access particle in particle list (using id -> idx map in domain) : python 
+// function to access particle in particle list (using id -> idx map in domain) : python
 std::shared_ptr<Particle> Simulation::getParticlebyId(int id){
-    int idx = domain->getIdx(i);
+    int idx = domain->getIdx(id);
     std::cout << idx << std::endl;
     return particles[idx];
 }
@@ -310,7 +310,7 @@ std::vector<int> Simulation::getBoundaryId(){
     std::vector<int> ids;
     for (int n = 0; n< boundarysize; ++n) {
         Particle p = *particles[n];
-        ids.push_back(p.getPosition());
+        ids.push_back(p.getId());
     }
     return ids;
 }

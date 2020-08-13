@@ -32,8 +32,8 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     std::array<double,2> f = p->getForce();
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
-    std::vector<double> unit = {cos(theta),sin(theta)};
-    std::vector <double> factvector = {factive*unit[0], factive*unit[1]};
+    std::array<double, 2> unit = {cos(theta),sin(theta)};
+    std::array<double, 2> factvector = {factive*unit[0], factive*unit[1]};
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise

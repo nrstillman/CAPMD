@@ -61,7 +61,7 @@ class Simulation : virtual public Particle{
 
         // Methods for particle data
         std::shared_ptr<Particle> getParticle(int);
-        std::shared_ptr<Particle> getParticlebyId(int)
+        std::shared_ptr<Particle> getParticlebyId(int);
 
         void removeParticle(int);
         std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
