@@ -47,6 +47,7 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
         else if (x[1]<-Ly/2){x[1]+=Ly;}
     }
     p->setPosition(x);
+    p->setActiveForce(factvector);
 
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)

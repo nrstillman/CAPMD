@@ -246,7 +246,7 @@ void Simulation::initPopulation() {
         }
         //do a neighbour list rebuild to get all the indices straightened out again
         domain->makeNeighbourList(particles);
-		std::cout << "number of particles after division and death " << particles.size() << std::endl;
+		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
     }
 
 // function to remove particle in simulation (using id -> idx map in domain)
@@ -259,10 +259,10 @@ void Simulation::removeParticle(int i){
     }
 }
 
-// function to access particle in particle list (using id -> idx map in domain)
-std::shared_ptr<Particle> Simulation::getParticle(int i){
-    int idx = domain->getIdx(i);
-    std::cout << idx << std::endl;
+// function to access particle in particle list (using id -> idx map in domain) : python 
+std::shared_ptr<Particle> Simulation::getParticle(int idx){
+    // int idx = domain->getIdx(i);
+    // std::cout << idx << std::endl;
     return particles[idx];
 }
 

@@ -24,8 +24,8 @@ Particle::Particle(int pid, int ptype, std::array<double,2> px, double ptheta, d
 
 Particle::Particle(const Particle & rhs)
 {
-    this->setId(rhs.getId());
-    std::cout << "particle copied " << std::endl;
+    this->setId(rhs.getId()); // check removing this doesn't break code
+    std::cout << "particle copied " << std::endl; 
     age = rhs.age;
     force = rhs.force;
     type = rhs.type;

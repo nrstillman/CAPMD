@@ -30,6 +30,7 @@ class Particle
         std::array<double,2> position;
         double theta;
         std::array<double,2> force;
+        std::array<double,2> activeforce;
 
         // default constructor
         Particle(int pid = 0, int ptype = 0, std::array<double,2> px = {0,0},double ptheta = 0.,double  pr = 1.);
@@ -75,6 +76,9 @@ class Particle
         std::array<double,2> getForce() { return force;}
         void setForce(std::array<double,2> x)  { force = x;}
         void addForce(std::array<double,2>);
+
+        void setActiveForce(std::array<double,2> x)  { activeforce = x;}
+        void addActiveForce(std::array<double,2>);
 
         friend std::ostream& operator<< (std::ostream &, const Particle &);
         friend std::istream& operator>> (std::istream &, const Particle &);
