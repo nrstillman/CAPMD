@@ -12,6 +12,7 @@
 #include "Particle.h"
 #include "Simulation.h"
 #include "Parameters.h"
+#include "Interface.h"
 
 namespace py = pybind11;
 
@@ -41,7 +42,12 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("initialise", &Simulation::initialise)
 		.def("saveData",&Simulation::saveData);
         //.def_readwrite("setParams", &Simulation::setParams);
-    
+
+    py::class_<Interface>(m, "interface")
+        .def(py::init<Parameters>())
+        .def("killCell", &Interface::killCell)
+        .def("trackCell", &Interface::trackCell);
+
     //Additional info for specific particles (useful for tracking and targeting particles)
     py::class_<Particle>(m, "particle")
         .def(py::init<int, int, std::array<double, 2>, double, double>())
