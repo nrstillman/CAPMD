@@ -157,17 +157,16 @@ void Simulation::initPopulation() {
     void Simulation::move()
     {
         double timeint = timestep*params.dt; // possibly for adding to age...
-
         auto p = particles.begin();
         std::advance(p, boundarysize);
 
         while (p != particles.end()) {
+
             // zero force and number of contact neighbours for each timestep
             (*p)->setForce({0,0});
             (*p)->setZ(0);
             // get neighbours of p out of neighbour list
             std::list<std::shared_ptr<Particle>> neighbours = domain->getNeighbours((*p)->getIndex());
-
             for (auto n : neighbours) {
                 // use interaction to compute force
                 interaction->computeForce((*p),n);
@@ -179,7 +178,6 @@ void Simulation::initPopulation() {
             dynamics->step(particles[i], params.dt);
         }
         bool rebuild = domain->checkRebuild(particles);
-
         if (rebuild) {
             domain->makeNeighbourList(particles);
         }
@@ -232,8 +230,8 @@ void Simulation::initPopulation() {
         // now, at the end, stick the new particles at the end of the existing particle list
         particles.insert(particles.end(), newparticles.begin(), newparticles.end());
 
-		std::cout << "number of new particles " << newparticles.size() << std::endl;
-		std::cout << "number of particles after division " << particles.size() << std::endl;
+//		std::cout << "number of new particles " << newparticles.size() << std::endl;
+//		std::cout << "number of particles after division " << particles.size() << std::endl;
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
         // Now, separately, we will check for death
@@ -246,17 +244,33 @@ void Simulation::initPopulation() {
         }
         //do a neighbour list rebuild to get all the indices straightened out again
         domain->makeNeighbourList(particles);
-		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
+//		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
     }
 
 // function to remove particle in simulation (using id -> idx map in domain)
 void Simulation::removeParticle(int i){
     int idx = domain->getIdx(i);
-    if (idx == -1){std::cout << "No particle with that id detected" << std::endl;}
+    if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
     else {
         particles.erase(particles.begin() + idx);
         domain->makeNeighbourList(particles);
+        std::cout << particles.size() << std::endl;
     }
+}
+
+// function to remove particle in simulation (using id -> idx map in domain)
+void Simulation::removeParticles(std::vector<int> idxs){
+
+    bool rebuild = false;
+    for (int i = 0; i <= idxs.size(); i++){
+        int idx = domain->getIdx(i);
+        if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
+        else {
+            particles.erase(particles.begin() + idx);
+            rebuild = true;
+        }
+    }
+    if(rebuild) {domain->makeNeighbourList(particles);}
 }
 
 // function to access particle in particle list : python 
@@ -267,7 +281,6 @@ std::shared_ptr<Particle> Simulation::getParticle(int idx){
 // function to access particle in particle list (using id -> idx map in domain) : python
 std::shared_ptr<Particle> Simulation::getParticlebyId(int id){
     int idx = domain->getIdx(id);
-    std::cout << idx << std::endl;
     return particles[idx];
 }
 
@@ -276,8 +289,7 @@ std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<in
 
     std::vector<std::array<double,2>> positions;
     for (auto i : index) {
-        Particle p = *particles[i];
-        positions.push_back(p.getPosition());
+        positions.push_back((particles[i])->getPosition());
     }
     return positions;
 }
@@ -287,8 +299,7 @@ std::vector<int>  Simulation::getPopulationId(std::list<int> &index){
 
     std::vector<int> ids;
     for (auto i : index) {
-        Particle p = *particles[i];
-        ids.push_back(p.getId());
+        ids.push_back((particles[i])->getId());
     }
     return ids;
 }
@@ -298,8 +309,7 @@ std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 
     std::vector<std::array<double,2>> positions;
     for (int n = 0; n< boundarysize; ++n) {
-        Particle p = *particles[n];
-        positions.push_back(p.getPosition());
+        positions.push_back((particles[n])->getPosition());
     }
     return positions;
 }
@@ -309,8 +319,7 @@ std::vector<int> Simulation::getBoundaryId(){
 
     std::vector<int> ids;
     for (int n = 0; n< boundarysize; ++n) {
-        Particle p = *particles[n];
-        ids.push_back(p.getId());
+        ids.push_back((particles[n])->getId());
     }
     return ids;
 }
@@ -319,8 +328,7 @@ std::vector<double> Simulation::getPopulationRadius(std::list<int> &index){
 
     std::vector<double> radii(0);
     for (auto i : index) {
-        Particle p = *particles[i];
-        radii.push_back(p.getRadius());
+        radii.push_back((particles[i])->getRadius());
     }
     return radii;
 }

@@ -64,6 +64,8 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Particle> getParticlebyId(int);
 
         void removeParticle(int);
+        void removeParticles(std::vector<int>);
+
         std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
         std::vector<std::array<double,2>> getPopulationPosition(std::list<int> &index);
         std::vector<int> getPopulationId(std::list<int> &index);

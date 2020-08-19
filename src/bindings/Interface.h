@@ -19,7 +19,7 @@ class Interface : public Simulation{
 
         void trackCell(int);
         void killCell(int);
-
+        void killCells(std::vector<int>);
         void setCellType(int, int);
 //        void setCellAttrib(int, int, std::string attribute);
 
