@@ -203,7 +203,7 @@ void Simulation::initPopulation() {
                 // compute probabilistic chance at division
                 bool divide = population->testDivide((*p)->getType(),(*p)->getZ(),timeint);
                 if (divide) {
-                    std::cout << "division" << std::endl;
+//                    std::cout << "division" << std::endl;
                     // note: setting the new particle to the same radius as the old will
                     // have unintended consequences (selecting for large particles)
                     double radius = params.R * (1 + params.poly * (disr(gen) - 0.5));
@@ -238,7 +238,7 @@ void Simulation::initPopulation() {
         for (auto p = particles.begin() + boundarysize; p != particles.end(); ){
             bool death = population->testDeath((*p)->getType(),timeint);
             // get rid of the particle
-            if (death) {p = particles.erase(p); std::cout << "death" << std::endl;}
+            if (death) {p = particles.erase(p);}// std::cout << "death" << std::endl;}
             // or continue the loop
             else{++p;}
         }
@@ -285,17 +285,18 @@ std::shared_ptr<Particle> Simulation::getParticlebyId(int id){
 }
 
 // return the population positions
-std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::list<int> &index){
+std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::vector<int> index){
 
     std::vector<std::array<double,2>> positions;
     for (auto i : index) {
+        std::cout << i << std::endl;
         positions.push_back((particles[i])->getPosition());
     }
     return positions;
 }
 
 // return the population Ids
-std::vector<int>  Simulation::getPopulationId(std::list<int> &index){
+std::vector<int> Simulation::getPopulationId(std::vector<int> index){
 
     std::vector<int> ids;
     for (auto i : index) {

@@ -28,7 +28,11 @@ PYBIND11_MODULE(pycapmd, m) {
         //        .def_readwrite("tau", &Simulation::tau)
         .def("initPopulation", &Simulation::initPopulation)
         .def("initBoundary", &Simulation::initBoundary)
-//        .def("move", &Simulation::move)
+        .def("initialise", &Simulation::initialise);
+        //.def_readwrite("setParams", &Simulation::setParams);
+
+    py::class_<Interface>(m, "interface")
+        .def(py::init<Parameters>())
         .def("popSize", &Simulation::popSize)
         .def("getBoundarySize", &Simulation::getBoundarySize)
         .def("getParticle", &Simulation::getParticle)
@@ -38,11 +42,6 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("getBoundaryPosition", &Simulation::getBoundaryPosition)
         .def("getBoundaryId", &Simulation::getBoundaryId)
         .def("getPopulationRadius", &Simulation::getPopulationRadius)
-        .def("initialise", &Simulation::initialise);
-        //.def_readwrite("setParams", &Simulation::setParams);
-
-    py::class_<Interface>(m, "interface")
-        .def(py::init<Parameters>())
         .def("saveData",&Interface::saveData)
         .def("move", &Interface::move)
         .def("populationDynamics", &Interface::populationDynamics)
