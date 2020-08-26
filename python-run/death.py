@@ -41,9 +41,9 @@ def kill_cell_in_rect(cell_pos, cell_id, rect, interface):
     else 0
     """
     collision = is_cell_in_rect(cell_pos, rect)
-    print(collision)
+    #print(collision)
     if collision:
-        print("Killing cell with id: ", cell_id)
+        #print("Killing cell with id: ", cell_id)
         interface.killCell(cell_id)
         return 1
     return 0
