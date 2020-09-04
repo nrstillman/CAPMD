@@ -17,11 +17,11 @@ class Dynamics {
         Parameters params;
 
         // magnitude of the active force
-        double factive;
+        std::vector<double> factive;
         // substrate friction
-        double  zeta;
+        std::vector<double> zeta;
         // correlation time of the active driving
-        double tau;
+        std::vector<double> tau;
 
         // bool condition for periodic bc
         bool periodic = false;

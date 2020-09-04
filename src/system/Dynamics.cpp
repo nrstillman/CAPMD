@@ -9,9 +9,11 @@
 
 Dynamics::Dynamics(Parameters params) {
     // set active parameters here
+
     factive = params.factive;
     zeta = params.zeta;
     tau = params.tau;
+
     Lx = params.Lx;
     Ly = params.Ly;
 
@@ -29,17 +31,17 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
     // get particle posn
     std::array<double,2> x = p->getPosition();
-    std::array<double,2> f = p->getForce();
+//    std::array<double,2> f = p->getForce();
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
-    std::array<double, 2> unit = {cos(theta),sin(theta)};
-    std::array<double, 2> factvector = {factive*unit[0], factive*unit[1]};
+//    std::array<double, 2> unit = {cos(theta),sin(theta)};
+    std::array<double, 2> factvector = {factive[p->getType()]*cos(theta), factive[p->getType()]*sin(theta)};
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise
-    for (int i = 0; i<2; i++){
-        x[i] += (factvector[i] + f[i])/zeta*dt;
-    }
+    x[0] += (factvector[0]+ p->getForce()[0])/zeta[p->getType()]*dt;
+    x[1] += (factvector[1] + p->getForce()[1])/zeta[p->getType()]*dt;
+
     if (periodic){
         if (x[0]>Lx/2){x[0]-=Lx;}
         else if (x[0]<-Lx/2){x[0]+=Lx;}
@@ -48,11 +50,14 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     }
     p->setPosition(x);
     p->setActiveForce(factvector);
+    p->setVel({(factvector[0] + p->getForce()[0])/zeta[p->getType()],
+               (factvector[1] + p->getForce()[1])/zeta[p->getType()]});
 
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
-    theta += 2.0/tau*sqrt(dt)*dist(gen);
+//    std::cout << 2.0/tau*sqrt(dt)*dist(gen) << std::endl;
+    theta += 2.0/tau[p->getType()]*sqrt(dt)*dist(gen);
     p->setTheta(theta);
     p->setAge(p->getAge() + dt);
 

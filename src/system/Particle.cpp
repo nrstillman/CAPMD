@@ -7,6 +7,7 @@ Particle::Particle(int pid, int ptype, std::array<double,2> px, double ptheta, d
 {
     age = 0;
     force = {0,0};
+    vel = {0,0};
     prevposition = {0,0};
     id = pid;
 
@@ -28,6 +29,7 @@ Particle::Particle(const Particle & rhs)
     std::cout << "particle copied " << std::endl; 
     age = rhs.age;
     force = rhs.force;
+    vel= rhs.vel;
     type = rhs.type;
     position = rhs.position;
     prevposition = rhs.prevposition;

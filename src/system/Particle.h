@@ -30,6 +30,7 @@ class Particle
         std::array<double,2> position;
         double theta;
         std::array<double,2> force;
+        std::array<double,2> vel;
         std::array<double,2> activeforce;
 
         // default constructor
@@ -76,6 +77,9 @@ class Particle
         std::array<double,2> getForce() { return force;}
         void setForce(std::array<double,2> x)  { force = x;}
         void addForce(std::array<double,2>);
+
+        std::array<double,2> getVel() { return vel;}
+        void setVel(std::array<double,2> x)  { vel = x;}
 
         void setActiveForce(std::array<double,2> x)  { activeforce = x;}
 
