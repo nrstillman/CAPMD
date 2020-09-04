@@ -22,14 +22,9 @@ PYBIND11_MODULE(pycapmd, m) {
 //    //Main simulation happens here
     py::class_<Simulation>(m, "simulation")
         .def(py::init<Parameters>())
-        //.def_readwrite("N", &Simulation::N) // parameters to be set in python
-        //        .def_readwrite("cutoffZ", &Simulation::cutoffZ)
-        //        .def_readwrite("dt", &Simulation::dt)
-        //        .def_readwrite("tau", &Simulation::tau)
         .def("initPopulation", &Simulation::initPopulation)
         .def("initBoundary", &Simulation::initBoundary)
         .def("initialise", &Simulation::initialise);
-        //.def_readwrite("setParams", &Simulation::setParams);
 
     py::class_<Interface>(m, "interface")
         .def(py::init<Parameters>())
@@ -46,7 +41,9 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("move", &Interface::move)
         .def("populationDynamics", &Interface::populationDynamics)
         .def("killCell", &Interface::killCell)
-        .def("trackCell", &Interface::trackCell);
+        .def("killCells", &Interface::killCells)
+        .def("setCellType", &Interface::setCellType)
+        .def("setCellTypes", &Interface::setCellTypes);
 
     //Additional info for specific particles (useful for tracking and targeting particles)
     py::class_<Particle>(m, "particle")
@@ -85,7 +82,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("fade", &Parameters::fade)
         .def_readwrite("pairstiff", &Parameters::pairstiff)     //pairstiff - nxn mat
         .def_readwrite("pairatt", &Parameters::pairatt)         //pairatt - nxn mat
-        // Dyanmics
+        // Dynamics
         .def_readwrite("factive", &Parameters::factive)
         .def_readwrite("zeta", &Parameters::zeta)
         .def_readwrite("tau", &Parameters::tau)

@@ -52,7 +52,7 @@ struct Parameters {
     double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
 
     //Interaction
-    static const int ntypes = 3;
+    int ntypes = 3;
     double fade = 3;
 
     std::vector<std::vector<double>> pairstiff =
