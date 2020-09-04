@@ -262,22 +262,6 @@ void Simulation::removeParticle(int i){
 
 // function to remove particle in simulation (using id -> idx map in domain)
 void Simulation::removeParticles(std::vector<int> ids){
-// Below is slower (safer?) version using iterator on particle list
-//    auto p = particles.begin();
-//    bool rebuild = false;
-//    int killNum = 0;
-//    while (p != particles.end())
-//    {
-//        bool killParticle = std::find(ids.begin(), ids.end(), (*p)->getId()) != ids.end();
-//
-//        if (killParticle)
-//        {
-//            p = particles.erase(p);
-//            rebuild = true;
-//            killNum +=1;
-//        }
-//    }
-
     bool rebuild = false;
     std::sort(ids.begin(), ids.end());
     int killNum = 0;
@@ -295,20 +279,22 @@ void Simulation::removeParticles(std::vector<int> ids){
     if(rebuild) {domain->makeNeighbourList(particles);}
 }
 
-//
-//bool rebuild = false;
-//int killNum = 0;
-//for (auto p = particles.begin(); p != particles.end(); p++){
-//if ids[i];
-//std::cout << "Id received: " << ids[i] << std::endl;
-//if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
-//else {
-//particles.erase(particles.begin() + idx);
-//rebuild = true;
-//killNum +=1;
-//}
-//}
-//}
+// function to remove particle in simulation (using id -> idx map in domain)
+void Simulation::changeParticles(std::vector<int> ids, int newtype){
+    bool rebuild = false;
+    std::sort(ids.begin(), ids.end());
+    int changeNum = 0;
+    for (int i = ids.size()-1; i >= 0; i--){
+        int idx = domain->getIdx(ids[i]);
+        std::cout << "Id received: " << ids[i] << std::endl;
+        if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
+        else {
+            particles[idx]->setType(newtype);
+            changeNum +=1;
+        }
+    }
+    std::cout << "Changed " << changeNum << " cells" << std::endl;
+}
 
 // function to access particle in particle list : python 
 std::shared_ptr<Particle> Simulation::getParticle(int idx){

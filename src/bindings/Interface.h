@@ -21,7 +21,9 @@ class Interface : public Simulation{
         void killCell(int);
         void killCells(std::vector<int>);
         void setCellType(int, int);
-//        void setCellAttrib(int, int, std::string attribute);
+        void setCellTypes(std::vector<int>, int);
+
+//        void setCellAttrib(int, int, std::string attribute); <- this will be evolution of set cell type
 
 //        void killROI(int);
 //        void setROIAttrib(int, int, std::string attribute);

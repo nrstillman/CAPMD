@@ -26,7 +26,7 @@ int main() {
         std::array<double, 2> minR = {-Rlength, -1*double(L)};
 
         int t_final = 30000;
-        int t_zap = 5000;
+        int t_zap = t_final/2;
         for (int t = 0; t<= t_final; t++){
             sim.move();
             if (t == t_zap){
@@ -35,16 +35,17 @@ int main() {
                 for (int i = sim.boundarysize; i < sim.boundarysize + pop; i++) {popidx.push_back(i);}
                 std::vector<int> popId = sim.getPopulationId(popidx);
                 std::vector<std::array<double,2>> popPosn = sim.getPopulationPosition(popidx);
-                std::vector<int> killList;
+                std::vector<int> zapList;
                 for (int i = 0; i < pop; i++){
                     std::array<double,2> x = popPosn[i];
                     if ((x[0] < maxR[0]) && (x[0] > minR[0])){
                         if ((x[1] < maxR[1]) && (x[1] > minR[1])){
-                            killList.push_back(popId[i]);
+                            zapList.push_back(popId[i]);
                         }
                     }
                 }
-                sim.killCells(killList);
+                sim.setCellTypes(zapList, 2);
+//                sim.killCells(zapList);
 
                 std::cout << "Cell zapping stage completed" << std::endl;
             }

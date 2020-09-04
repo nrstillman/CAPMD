@@ -52,28 +52,31 @@ struct Parameters {
     double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
 
     //Interaction
-    int ntypes = 2;
+    static const int ntypes = 3;
     double fade = 3;
 
     std::vector<std::vector<double>> pairstiff =
         {
-            {10, 10},
-            {10, 1},
+            {10, 10, 10},
+            {10, 1, 1},
+            {10, 1, 1},
         };
     std::vector<std::vector<double>> pairatt =
         {
-            { 0, 0},
-            { 0, 0}, //max 0.2
+            { 0, 0, 0},
+            { 0, 0.15, 0.15}, //max 0.2
+            { 0, 0.15, 0.15}, //max 0.2
         };
 
     //Dynamics (active parameters)
-    double factive = 0.1; //0.1
-    double zeta  = 1; //1
-    double tau = 10; //10
+    std::vector<double> factive = {0, 0.2, 0.001}; //0.1
+    std::vector<double> zeta = {0, 1, 1}; //1
+    std::vector<double> tau = {0, 10, 10}; //10
 
     // Division/death rates
-    double deathrate = 0.01;
+    double deathrate = 0.005;
     double divrate = 0.1;
+
     double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
     double maxZ = 6;
 };
