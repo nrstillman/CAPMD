@@ -196,7 +196,7 @@ void Simulation::initPopulation() {
         double timeint = Ndiv*params.dt;
 		
 		std::cout << "boundary size " << boundarysize << std::endl;
-		std::cout << "initial number of particles " << particles.size() << std::endl;
+		std::cout << "number of particles " << particles.size() << std::endl;
 
         while (p != particles.end()) {
                 // actual time elapsed since last division check
@@ -234,44 +234,81 @@ void Simulation::initPopulation() {
 //		std::cout << "number of particles after division " << particles.size() << std::endl;
         // and rebuild the neighbour list
         if (rebuild) domain->makeNeighbourList(particles);
-        // Now, separately, we will check for death
-        for (auto p = particles.begin() + boundarysize; p != particles.end(); ){
-            bool death = population->testDeath((*p)->getType(),timeint);
-            // get rid of the particle
-            if (death) {p = particles.erase(p);}// std::cout << "death" << std::endl;}
-            // or continue the loop
-            else{++p;}
-        }
-        //do a neighbour list rebuild to get all the indices straightened out again
-        domain->makeNeighbourList(particles);
-//		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
+
+
+//        // Now, separately, we will check for death
+//        for (auto p = particles.begin() + boundarysize; p != particles.end(); ){
+//            bool death = population->testDeath((*p)->getType(),timeint);
+//            // get rid of the particle
+//            if (death) {p = particles.erase(p);}// std::cout << "death" << std::endl;}
+//            // or continue the loop
+//            else{++p;}
+//        }
+//        //do a neighbour list rebuild to get all the indices straightened out again
+//        domain->makeNeighbourList(particles);
+////		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
     }
 
 // function to remove particle in simulation (using id -> idx map in domain)
 void Simulation::removeParticle(int i){
     int idx = domain->getIdx(i);
+    std::cout << "Id received: " << i << std::endl;
     if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
     else {
         particles.erase(particles.begin() + idx);
         domain->makeNeighbourList(particles);
-        std::cout << particles.size() << std::endl;
     }
 }
 
 // function to remove particle in simulation (using id -> idx map in domain)
-void Simulation::removeParticles(std::vector<int> idxs){
+void Simulation::removeParticles(std::vector<int> ids){
+// Below is slower (safer?) version using iterator on particle list
+//    auto p = particles.begin();
+//    bool rebuild = false;
+//    int killNum = 0;
+//    while (p != particles.end())
+//    {
+//        bool killParticle = std::find(ids.begin(), ids.end(), (*p)->getId()) != ids.end();
+//
+//        if (killParticle)
+//        {
+//            p = particles.erase(p);
+//            rebuild = true;
+//            killNum +=1;
+//        }
+//    }
 
     bool rebuild = false;
-    for (int i = 0; i <= idxs.size(); i++){
-        int idx = domain->getIdx(i);
+    std::sort(ids.begin(), ids.end());
+    int killNum = 0;
+    for (int i = ids.size()-1; i >= 0; i--){
+        int idx = domain->getIdx(ids[i]);
+        std::cout << "Id received: " << ids[i] << std::endl;
         if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
         else {
             particles.erase(particles.begin() + idx);
             rebuild = true;
+            killNum +=1;
         }
     }
+    std::cout << "Killed " << killNum << " cells" << std::endl;
     if(rebuild) {domain->makeNeighbourList(particles);}
 }
+
+//
+//bool rebuild = false;
+//int killNum = 0;
+//for (auto p = particles.begin(); p != particles.end(); p++){
+//if ids[i];
+//std::cout << "Id received: " << ids[i] << std::endl;
+//if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
+//else {
+//particles.erase(particles.begin() + idx);
+//rebuild = true;
+//killNum +=1;
+//}
+//}
+//}
 
 // function to access particle in particle list : python 
 std::shared_ptr<Particle> Simulation::getParticle(int idx){
@@ -289,7 +326,6 @@ std::vector<std::array<double,2>> Simulation::getPopulationPosition(std::vector<
 
     std::vector<std::array<double,2>> positions;
     for (auto i : index) {
-        std::cout << i << std::endl;
         positions.push_back((particles[i])->getPosition());
     }
     return positions;

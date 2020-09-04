@@ -13,6 +13,7 @@
 #include <list>
 #include <string>
 #include <sstream>
+#include <algorithm> // fpr count
 #include <memory> // For std::shared_ptr
 
 #ifndef CAPMD_SIMULATION_H

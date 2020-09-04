@@ -40,17 +40,14 @@ double Interaction::dist(std::array<double,2> i, std::array<double,2> j)
 
 void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
 
-    std::array<double,2> ix = i->getPosition();
-    std::array<double,2> jx = j->getPosition();
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
-	//std::cout << kij << "  " << eps << std::endl;
 
     // compute vector distance between particles
-    std::array<double,2> dr = calc_dr(ix,jx);
+    std::array<double,2> dr = calc_dr(i->getPosition(),j->getPosition());
     // compute distance
-    double dx = dist(ix, jx);
+    double dx = dist(i->getPosition(), j->getPosition());
 
     // actual force computation according to our potential
     // several lines since piecewise defined

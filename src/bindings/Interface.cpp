@@ -17,6 +17,7 @@ void Interface::trackCell(int cell_idx){
 
 void Interface::killCell(int cell_id){
     Simulation::removeParticle(cell_id);
+    std::cout << "cell killed" << std::endl;
 }
 
 void Interface::killCells(std::vector<int> cell_ids){

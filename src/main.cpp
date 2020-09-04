@@ -9,16 +9,15 @@
 
 int main() {
 
-    int L = 40;//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-//    std::vector<int> N = {10};//, 125, 285, 500, 800, 1150, 1560, 2000, 2500, 3200};
-    int N = 30;
+    int L = 60;//, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    int N = 2;
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 1; i++){
 
         Parameters params;
         params.Lx = L; params.Ly = L;
         params.N = N; // Population size
-        params.filename = "wound_healing";
+        params.filename = "bounded_no_death";
 
         Interface sim = Interface(params);
         std::array<double, 2> x ;
@@ -26,8 +25,8 @@ int main() {
         std::array<double, 2> maxR = {Rlength, double(L)};
         std::array<double, 2> minR = {-Rlength, -1*double(L)};
 
-        int t_final = 15000;
-        int t_zap = 7000;
+        int t_final = 30000;
+        int t_zap = 5000;
         for (int t = 0; t<= t_final; t++){
             sim.move();
             if (t == t_zap){
@@ -36,23 +35,26 @@ int main() {
                 for (int i = sim.boundarysize; i < sim.boundarysize + pop; i++) {popidx.push_back(i);}
                 std::vector<int> popId = sim.getPopulationId(popidx);
                 std::vector<std::array<double,2>> popPosn = sim.getPopulationPosition(popidx);
+                std::vector<int> killList;
                 for (int i = 0; i < pop; i++){
                     std::array<double,2> x = popPosn[i];
-                    if ((x[0] < maxR[0]) and (x[0] > minR[0])){
-                        if ((x[1] < maxR[1]) and (x[1] > minR[1])){
-                            sim.killCell(popId[i]);
+                    if ((x[0] < maxR[0]) && (x[0] > minR[0])){
+                        if ((x[1] < maxR[1]) && (x[1] > minR[1])){
+                            killList.push_back(popId[i]);
                         }
                     }
-//                    sim.setCellType(i, 0);
                 }
+                sim.killCells(killList);
+
+                std::cout << "Cell zapping stage completed" << std::endl;
             }
-            if (t % 1000 == 0){sim.populationDynamics(1000);}
             if (t % 100 == 0) {
                 //sim.updateOutput();
                 sim.output->log(t);
-				sim.saveData("text");
-				sim.saveData("vtp");
+                sim.saveData("text");
+                sim.saveData("vtp");
             }
+            if (t % 100 == 0){sim.populationDynamics(100);}
         }
     }
 }
