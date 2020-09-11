@@ -17,3 +17,6 @@ lib/
 testing_pybind.ipynb
 trajectory.p
 vtp/
+
+capmd.cbp
+pycapmd.cpython-37m-darwin.so

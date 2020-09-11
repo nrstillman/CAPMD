@@ -56,10 +56,16 @@ PYBIND11_MODULE(pycapmd, m) {
     //Allow for changing parameters in python scripts
     py::class_<Parameters>(m, "Parameters")
         .def(py::init<>())
+        // io
+        .def_readwrite("outputfolder", &Parameters::outputfolder)
+        .def_readwrite("filename", &Parameters::filename)
         // Domain
         .def_readwrite("Lx", &Parameters::Lx)
         .def_readwrite("Ly", &Parameters::Ly)
         // Simulation
+        .def_readwrite("angseed", &Parameters::angseed)
+        .def_readwrite("popdynfreq", &Parameters::popdynfreq)
+        .def_readwrite("t_final", &Parameters::t_final)
         .def_readwrite("cutoff", &Parameters::cutoff)
         .def_readwrite("dt", &Parameters::dt)
         .def_readwrite("dim", &Parameters::dim)
