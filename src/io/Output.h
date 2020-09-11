@@ -31,6 +31,7 @@ public:
 
     std::string file_name;
     std::string output_folder;
+    int t_final;
 
     int N;
     int NB;

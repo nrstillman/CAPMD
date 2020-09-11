@@ -17,6 +17,7 @@ struct Parameters {
     // io
     std::string filename = "frame";
     std::string outputfolder = "./";
+    int output_time = 100;
 
     // Random
     int initseed = 2022;
@@ -25,7 +26,7 @@ struct Parameters {
 
     // Simulation
     int popdynfreq = 100;
-    int t_final = 10000;
+    int t_final = 30000;
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
     double maxmove = 0.25;
