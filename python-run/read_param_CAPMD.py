@@ -8,7 +8,8 @@ class Param:
 		self.N = p.N # Number of particles
 		self.dt = p.dt # time step
 		self.dumpname = 'ParticleData'  # root name of particle data csv files
-
+		self.dump = {}
+		self.dump['freq'] = p.output_time
 		# Geometry: always a plane, either with or without periodic boundary conditions
 		if p.bc_opt != 'periodic':
 			self.periodic = False
@@ -40,7 +41,7 @@ class Param:
 		self.seed = p.angseed # seed of orientational noise term
 		self.mu = [1/z if z != 0 else 0 for z in p.zeta] # mobility (1/friction), usually 1 in simulation units
 		self.v0 = p.factive # self-propulsion speed
-		self.nu = p.tau # magnitude of orientational noise
+		self.nu = [1/t if t != 0 else 0 for t in p.tau] # magnitude of orientational noise
 		
 		# We may want to add alignment at some point.
 		# Currently none

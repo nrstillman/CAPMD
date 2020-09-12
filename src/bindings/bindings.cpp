@@ -59,6 +59,7 @@ PYBIND11_MODULE(pycapmd, m) {
         // io
         .def_readwrite("outputfolder", &Parameters::outputfolder)
         .def_readwrite("filename", &Parameters::filename)
+        .def_readwrite("output_time", &Parameters::output_time)
         // Domain
         .def_readwrite("Lx", &Parameters::Lx)
         .def_readwrite("Ly", &Parameters::Ly)

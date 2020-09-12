@@ -52,13 +52,13 @@ class Particle
         int getType() const { return type; };
         void setType( int x) { type = x;}
 
-        double getAge() { return age;}
+        double getAge() const { return age;}
         void setAge( double x) { age = x;}
 
-        double getRadius() { return radius;}
+        double getRadius() const { return radius;}
         void setRadius( double x) { radius = x;}
 
-        double getTheta() { return theta;}
+        double getTheta() const { return theta;}
         void setTheta( double x) { theta = x;}
 
         int getNumNeigh() { return numneigh;}

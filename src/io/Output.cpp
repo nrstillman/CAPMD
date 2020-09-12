@@ -1,7 +1,7 @@
 #include <stdlib.h>     /* atoi */
 #include <iostream>
 #include "Output.h"
-#include <cmath>
+#include <cmath> // used to calculate log10 of final time for trailing zeros
 
 Output::Output(Parameters params, int boundarysize, std::vector<std::shared_ptr<Particle>> _particles){
         file_name = params.filename;
@@ -46,8 +46,9 @@ void Output::savePopulation(int timestep)
     std::filebuf fb;
     fb.open (outputfile, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
     std::ostream out(&fb);
-    out << particles.size();
-    out << '\n';
+    out << "flag,type,radius,x,y,vx,vy,nx,ny\n";
+    //    out << particles.size();
+    //    out << '\n';
 
     for (auto p : particles) {
         out << (*p);
@@ -59,7 +60,7 @@ void Output::savePopulation(int timestep)
 void Output::vtp(int timestep)
 {
     std::ostringstream oss;  // use a stringstream to format the data
-    oss << output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".dat";
+    oss << output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".vtp";
     std::string outputfile = oss.str();
 
     //polydata for particle attributes
