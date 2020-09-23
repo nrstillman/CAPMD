@@ -47,6 +47,16 @@ def kill_cell_in_rect(cell_pos, cell_id, rect, interface):
         interface.killCell(cell_id)
         return 1
     return 0
+   
+
+def kill_cells_in_rect(centres, cell_ids, rect, interface):
+    collisions = [] # note which IDs collide
+    for (centre, cell_id) in zip(centres, cell_ids):
+        coll = is_cell_in_rect(centre, rect)
+        if coll:
+            collisions.append(cell_id)
+    if len(collisions) > 0:
+        interface.killCells(collisions)
     
 """ Add to end of loop
     for idx in index:
