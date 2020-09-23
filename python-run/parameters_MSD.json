@@ -7,7 +7,7 @@
 
     "angseed": 2000,
     "popdynfreq": 10001,
-    "t_final": 100000,
+    "t_final": 10000,
 
     "Lx": 60,
     "Ly": 60,
@@ -34,9 +34,9 @@
     "pairstiff": [[0,0],[0,0]],
     "pairatt": [[0,0],[0,0]],
 
-    "factive": [0.01],
-    "zeta": [1],
-    "tau": [50],
+    "factive": [0, 0.01],
+    "zeta": [0, 1],
+    "tau": [0, 1],
 
     "deathrate": 0.005,
     "divrate": 0.1,

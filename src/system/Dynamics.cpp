@@ -31,16 +31,21 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
     // get particle posn
     std::array<double,2> x = p->getPosition();
-//    std::array<double,2> f = p->getForce();
+//    std::cout << "x = (" << x[0] << "," << x[1] << ")" << std::endl;
+    //    std::array<double,2> f = p->getForce();
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
-//    std::array<double, 2> unit = {cos(theta),sin(theta)};
+    // std::array<double, 2> unit = {cos(theta),sin(theta)};
     std::array<double, 2> factvector = {factive[p->getType()]*cos(theta), factive[p->getType()]*sin(theta)};
+//    std::cout << "theta = (" << theta << ")" << std::endl;
+//    std::cout << "f = (" << factvector[0] << "," << factvector[1] << ")" << std::endl;
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise
     x[0] += (factvector[0]+ p->getForce()[0])/zeta[p->getType()]*dt;
     x[1] += (factvector[1] + p->getForce()[1])/zeta[p->getType()]*dt;
+
+//    std::cout << "x = (" << x[0] << "," << x[1] << ")" << std::endl;
 
     if (periodic){
         if (x[0]>Lx/2){x[0]-=Lx;}

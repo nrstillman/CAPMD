@@ -108,7 +108,7 @@ void Simulation::initBoundary() {
             // move into vector of pointers
             particles.push_back(std::move(pntrP));
 
-            boundarysize +=1;
+            boundarysize ++;
         }
         for (int n = 0; n <= params.Ly/params.R/b_rho; n++) {
             double x = (params.Lx/2.)*pow(-1,i);
@@ -118,7 +118,7 @@ void Simulation::initBoundary() {
 
             particles.push_back(std::move(pntrP));
 
-            boundarysize +=1;
+            boundarysize ++;
         }
     }
     currentflag += boundarysize;
@@ -145,6 +145,9 @@ void Simulation::initPopulation() {
             } else if (i < (params.NTA + params.Nstem)) {
                 ptype = 3;
             }
+//            std::cout << "Particle = " << currentflag << std::endl;
+//            std::cout << "x = " << x << "y = " << y << std::endl;
+//            std::cout << "theta = " << theta << std::endl;
             std::shared_ptr<Particle> pntrP(new Particle(currentflag, ptype, {x, y}, theta, radius));
             particles.push_back(std::move(pntrP));
             currentflag += 1;
@@ -156,6 +159,7 @@ void Simulation::initPopulation() {
 // time stepping of the simulation
     void Simulation::move()
     {
+//        std::cout<< "---------- t=" <<timestep <<  "---------- " <<std::endl;
         double timeint = timestep*params.dt; // possibly for adding to age...
         auto p = particles.begin();
         std::advance(p, boundarysize);
@@ -214,7 +218,7 @@ void Simulation::initPopulation() {
                     // create a new particle in the same spot
                     std::shared_ptr<Particle> pntrP(new Particle(currentflag, (*p)->getType(), x,theta,radius));
                     // flag is set here
-                    currentflag +=1;
+                    currentflag ++;
                     // index will be set by the neighbour list rebuild
 
                     // add to the list of new particles
@@ -272,7 +276,7 @@ void Simulation::removeParticles(std::vector<int> ids){
         else {
             particles.erase(particles.begin() + idx);
             rebuild = true;
-            killNum +=1;
+            killNum ++;
         }
     }
     std::cout << "Killed " << killNum << " cells" << std::endl;
@@ -290,7 +294,7 @@ void Simulation::changeParticles(std::vector<int> ids, int newtype){
         if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
         else {
             particles[idx]->setType(newtype);
-            changeNum +=1;
+            changeNum ++;
         }
     }
     std::cout << "Changed " << changeNum << " cells" << std::endl;
