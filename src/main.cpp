@@ -25,7 +25,7 @@ int main() {
         std::array<double, 2> maxR = {Rlength, double(L)};
         std::array<double, 2> minR = {-Rlength, -1*double(L)};
 
-        int t_final = 30000;
+        int t_final = params.t_final;
         int t_zap = t_final/2;
         for (int t = 0; t<= t_final; t++){
             sim.move();
@@ -49,13 +49,13 @@ int main() {
 
                 std::cout << "Cell zapping stage completed" << std::endl;
             }
-            if (t % 100 == 0) {
+            if (t % params.output_time == 0) {
                 //sim.updateOutput();
                 sim.output->log(t);
                 sim.saveData("text");
                 sim.saveData("vtp");
             }
-            if (t % 100 == 0){sim.populationDynamics(100);}
+            if (t % params.popdynfreq == 0){sim.populationDynamics(100);}
         }
     }
 }

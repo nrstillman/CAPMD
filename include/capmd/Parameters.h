@@ -17,6 +17,7 @@ struct Parameters {
     // io
     std::string filename = "frame";
     std::string outputfolder = "./";
+    int output_time = 100;
 
     // Random
     int initseed = 2022;
@@ -24,6 +25,8 @@ struct Parameters {
     int popseed = 2021;
 
     // Simulation
+    int popdynfreq = 100;
+    int t_final = 30000;
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
     double maxmove = 0.25;
@@ -69,9 +72,9 @@ struct Parameters {
         };
 
     //Dynamics (active parameters)
-    std::vector<double> factive = {0, 0.2, 0.001}; //0.1
-    std::vector<double> zeta = {0, 1, 1}; //1
-    std::vector<double> tau = {0, 10, 10}; //10
+    std::vector<double> factive = {0, 0.2, 0.001}; //active force
+    std::vector<double> zeta = {0, 1, 1}; //friction
+    std::vector<double> tau = {0, 10, 10}; //angular noise term
 
     // Division/death rates
     double deathrate = 0.005;
@@ -79,6 +82,7 @@ struct Parameters {
 
     double cutoffZ = 1 + 2*pairatt[0][0]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
     double maxZ = 6;
+
 };
 
 #endif //CAPMD_PARAMS_H
