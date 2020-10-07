@@ -20,4 +20,7 @@ vtp/
 
 capmd.cbp
 pycapmd.cpython-37m-darwin.so
-SAMoSA/
+python-run/util/SAMoSA/
+
+docs/
+src/doxyconfig

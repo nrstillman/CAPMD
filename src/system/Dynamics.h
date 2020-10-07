@@ -8,38 +8,39 @@
 
 #include <memory>
 #include <random>
+/**
+    \file Dynamics.h
+    Handles active propulsion and overdamped motion
+*/
 
-// handles self-propulsion and overdamped motion
+/*!
+    Used for all dynamic motion, including updating particle position. Population dynamics is treated in Population.h
+*/
 class Dynamics {
 
-    private:
-        // dynamics parameters
-        Parameters params;
-
-        // magnitude of the active force
-        std::vector<double> factive;
-        // substrate friction
-        std::vector<double> zeta;
-        // correlation time of the active driving
-        std::vector<double> tau;
-
-        // bool condition for periodic bc
-        bool periodic = false;
-        double Lx;
-        double Ly;
-
-        typedef std::mt19937 Engine;
-        typedef std::normal_distribution<double> Distribution;
-
-        Engine gen;
-        Distribution dist;
-
     public:
-        //Constructor
+        //! Dynamics Constructor
         Dynamics(Parameters);
 
-        // move a particle according to the force law, and add active motion
+        //! Moves a particle according to the force law and adds a active motion
         void step(std::shared_ptr<Particle> , double);
+
+    private:
+        //! Parameter object (specifically for assigning...)
+        Parameters params;
+
+        std::vector<double> factive; //!< Magnitude of the active force
+        std::vector<double> zeta; //!< Substrate friction
+        std::vector<double> tau; //!< Correlation time of the active motion
+
+        bool periodic = false; //!< Bool condition for periodic boundary conditions
+        double Lx, Ly; //!< Boundary edges
+
+        typedef std::mt19937 Engine; //!< Mersenne-Twister Random Number Engine Template
+        typedef std::normal_distribution<double> Distribution; //!< Normal distribution template
+
+        Engine gen;  //!< Engine for random num gen
+        Distribution dist; //!< Normal distribution used for updating theta
 };
 
 #endif //CAPMD_DYNAMICS_H

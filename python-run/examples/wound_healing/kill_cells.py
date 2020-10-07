@@ -48,7 +48,6 @@ def kill_cell_in_rect(cell_pos, cell_id, rect, interface):
         return 1
     return 0
    
-
 def kill_cells_in_rect(centres, cell_ids, rect, interface):
     collisions = [] # note which IDs collide
     for (centre, cell_id) in zip(centres, cell_ids):

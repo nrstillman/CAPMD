@@ -12,42 +12,43 @@
 #include <sstream>      // for reading txt
 #include <algorithm>	// for 'transform' to generate iterators
 #include <memory> 		// for shared pointers
-
-
+/**
+    \file Particle.h
+    Class that mostly gives and returns individual particle information
+*/
+/*!
+   Note, we do not include a destructor. This may need to be revisited early on
+*/
 class Particle
     {
-    private:
-        int id;
-        int idx;
-        std::array<double,2> prevposition;
-        int numneigh;
-        double z; // must be double for division check later on
-
     public:
-        double radius;
-        double age;
-        int type;
-        std::array<double,2> position;
-        double theta;
-        std::array<double,2> force;
-        std::array<double,2> vel;
-        std::array<double,2> activeforce;
+        double radius; //!< Particle radius
+        double age;  //!< Particle age (since creation) which is used in death calculation
+        int type;  //!< Particle type (such as boundary cell)
+        std::array<double,2> position; //!< Particle position
+        double theta;  //!< Particle angle
+        std::array<double,2> force;  //!< Particle force
+        std::array<double,2> vel;  //!< Particle velocity
+        std::array<double,2> activeforce;  //!< Particle active force (which is output)
 
-        // default constructor
+        //! Particle constructor
         Particle(int pid = 0, int ptype = 0, std::array<double,2> px = {0,0},double ptheta = 0.,double  pr = 1.);
-
-        Particle(const Particle &); // copy constructor
-
-        Particle(std::string); // copy constructor
+        //! Particle copy constructor
+        Particle(const Particle &);
+        //! Particle constructor overloaded with string (why?)
+        Particle(std::string);
 //
 //        ~Particle(); // destructor
 
-        // additional methods
-        int getId() const { return id; }; //Accessor
-        void setId( int x) {std::cout << "attempted id change!"<< std::endl;} // Mutator
+    /*!
+      Various methods for accessing and altering particle properties
+    */
 
-        int getIndex() const { return idx; }; //Accessor
-        void setIndex( int x) {idx = x;} // Mutator
+        int getId() const { return id; };
+        void setId( int x) {std::cout << "attempted id change!"<< std::endl;}
+
+        int getIndex() const { return idx; };
+        void setIndex( int x) {idx = x;}
 
         int getType() const { return type; };
         void setType( int x) { type = x;}
@@ -83,11 +84,17 @@ class Particle
 
         void setActiveForce(std::array<double,2> x)  { activeforce = x;}
 
-        friend std::ostream& operator<< (std::ostream &, const Particle &);
-        friend std::istream& operator>> (std::istream &, const Particle &);
+        friend std::ostream& operator<< (std::ostream &, const Particle &); //!< Overload the out stream for saving particle data
+        friend std::istream& operator>> (std::istream &, const Particle &); //!< Overload the in stream for loading particle data
 
-        static void split(const std::string &s, char delim, std::vector<double> &elems);
+        static void split(const std::string &s, char delim, std::vector<double> &elems);  //!< Split function for ??
+
+    private:
+        int id; //!< Particle id which should not change
+        int idx; //!< Particle position within the vector of all particles
+        std::array<double,2> prevposition;  //!< Position of the particle for the previous timestep (used in neighbourlist calculation)
+        int numneigh; //!< Number of neighbours
+        double z; //!< Number of particles in contact with the particle
 };
-
 
 #endif //CAPMD_PARTICLE_H

@@ -9,31 +9,42 @@
 #include "Parameters.h"
 #include "Particle.h"
 
+/**
+    \file Population.h
+    Handles all population dynamics including division and death
+*/
 class Population{
+    public:
+            //! Population Dynamics constructor
+            Population(Parameters);
 
-private:
-    // number of types
-    int ntypes;
-    // division rate
-    double divrates;
-    // death rate
-    double deathrates;
-    // maximum density at division (in units of particle neighbours)
-    int maxZ;
+            /*! Test for particle division
+            \param type - Particle type (eg boundary particles don't divide)
+            \param z - Number of contact neighbours
+            \param timeint - Time since last division
+            */
+            bool testDivide(int, double, double);
 
-    std::random_device rd;
-    typedef std::mt19937 Engine;
-    typedef std::uniform_real_distribution<double> Distribution;
+            /*! Test for particle division
+            \param type - Particle type (eg boundary particles don't divide)
+            \param z - Number of contact neighbours
+            \param timeint - Time since last division
+            */
+            bool testDeath(int, double);
 
-    Engine gen;
-    Distribution dist;
+    private:
 
-public:
-        Population(Parameters);
-        bool testDivide(int, double, double);
+        int ntypes;//!< Number of types
+        double divrates; //!< Division rate
+        double deathrates; //!< death rate
+        int maxZ; //!< maximum density at division (in units of particle neighbours)
 
-        bool testDeath(int, double);
+        std::random_device rd;
+        typedef std::mt19937 Engine;
+        typedef std::uniform_real_distribution<double> Distribution;
 
+        Engine gen;
+        Distribution dist;
 };
 
 

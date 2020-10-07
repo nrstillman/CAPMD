@@ -90,7 +90,6 @@ def testDrawWindow(windowName):
             print("exit")
             break
 
-        
 def testIntersection():
     
     size = 1000 

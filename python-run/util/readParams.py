@@ -1,11 +1,11 @@
 """
-parameter class from json
+Read in files and convert to parameter objecets
 """
 
 import json
 import numpy as np
 
-def paramsFromFile(paramObj, fileName):
+def fromJSON(paramObj, fileName):
     print("enter loop")
     paramObjCopy = paramObj
     try:

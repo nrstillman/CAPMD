@@ -2,13 +2,27 @@ cmake_minimum_required(VERSION 3.10)  # CMake version check
 project(capmd)                        # Create project "capmd"
 set(CMAKE_CXX_STANDARD 14)            # Enable c++14 standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON)   # Require c++14 standard
-#set(VTK_DIR "C:/MyProjects/VTK/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE) #<- uncomment for PC builds
-find_package(VTK REQUIRED)
+
+if(APPLE AND EXISTS /usr/local/opt/qt5)
+    # Homebrew installs Qt5 (up to at least 5.9.1) in /usr/local/qt5.
+    # This check makes sure that it's located rather than the default /usr/local prefix.
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+endif()
+if(APPLE AND EXISTS /usr/local/Cellar/vtk@8.2/8.2.0)
+    # Even worse, homebrew installs new versions of vtk which are not longer supported
+    # Instead, use an old version and make explicit here
+    set(VTK_DIR "/usr/local/Cellar/vtk@8.2/8.2.0/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+endif()
+if (WIN32)
+    # Same problem of versions for windows builds
+    set(VTK_DIR "C:/MyProjects/VTK/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+endif (WIN32)
+
+find_package(VTK REQUIRED NO_MODULE)
 include(${VTK_USE_FILE})
 
 add_library(
     capmd
-    # SHARED #<- uncomment for linux builds
     ${CMAKE_SOURCE_DIR}/src/system/Simulation.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Particle.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Population.cpp
@@ -17,7 +31,7 @@ add_library(
     ${CMAKE_SOURCE_DIR}/src/system/Dynamics.cpp
     ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
     ${CMAKE_SOURCE_DIR}/src/bindings/Interface.cpp
-    ${CMAKE_SOURCE_DIR}/src/bindings/Measure.cpp)
+)
 
 # Add additonal directories.
 include_directories(include/capmd)
@@ -45,6 +59,8 @@ pybind11_add_module(
     pycapmd
     ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
 )
+set_target_properties(pycapmd PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python-run/build)
 
 # Link vtk libraries to python module
 target_link_libraries(

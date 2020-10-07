@@ -18,9 +18,11 @@
 
 #ifndef CAPMD_SIMULATION_H
 #define CAPMD_SIMULATION_H
+/**
+    \file Simulation.h
+    Main functioning and activity of the simulator which contains other classes
+*/
 
-
-// We tie it all together in the simulation
 class Simulation : virtual public Particle{
 
     private:

@@ -2,7 +2,7 @@
 """
 Created on Fri Jul 31 16:09:13 2020
 
-@author: Owner
+@author: M Talbot
 """
 import math
 
