@@ -1,4 +1,4 @@
-#Example scripts for testing ssambap with python
+# Example scripts for testing ssambap with python
 
 ## Death & Division
 
