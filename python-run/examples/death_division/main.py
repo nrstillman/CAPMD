@@ -22,20 +22,21 @@ def main():
 	nmax = params.t_final
 
 	save_at = params.output_time 
-	steps_between_check = 100 
+	steps_between_check = params.popdynfreq
 	Nzaplist = 50
 
 	for n in tqdm(range(nmax)):
 
 	    sim.move()
 
+        if (n % steps_between_check == 0):
+            sim.populationDynamics(steps_between_check)
+
 	    if (n % save_at == 0):
 	        sim.saveData('vtp')
 	        sim.saveData('text')
 	            
 	print('Simulation Complete\n\n') 
-
-
 
 if __name__ == "__main__":
 

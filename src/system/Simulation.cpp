@@ -199,8 +199,8 @@ void Simulation::initPopulation() {
         std::advance(p, boundarysize);
         double timeint = Ndiv*params.dt;
 		
-		std::cout << "boundary size " << boundarysize << std::endl;
-		std::cout << "number of particles " << particles.size() << std::endl;
+//		std::cout << "boundary size " << boundarysize << std::endl;
+//		std::cout << "number of particles " << particles.size() << std::endl;
 
         while (p != particles.end()) {
                 // actual time elapsed since last division check

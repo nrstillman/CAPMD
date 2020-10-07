@@ -6,7 +6,7 @@
     "output_time": 200,
 
     "angseed": 2000,
-    "popdynfreq": 10001,
+    "popdynfreq": 101,
     "t_final": 10000,
 
     "Lx": 60,
@@ -27,16 +27,16 @@
     "flag": 0,
     "type": 0,
     "R": 1,
-    "poly": 0.1,
+    "poly": 0.3,
 
     "ntypes": 1,
     "fade": 3, 
-    "pairstiff": [[0,0],[0,0]],
-    "pairatt": [[0,0],[0,0]],
+    "pairstiff": [[10,10],[10,1]],
+    "pairatt": [[0,0],[0,0.15]],
 
-    "factive": [0, 0.01],
+    "factive": [0, 0.2],
     "zeta": [0, 1],
-    "tau": [0, 1],
+    "tau": [0, 10],
 
     "deathrate": 0.005,
     "divrate": 0.1,

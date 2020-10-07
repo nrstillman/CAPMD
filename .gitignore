@@ -20,7 +20,15 @@ vtp/
 
 capmd.cbp
 pycapmd.cpython-37m-darwin.so
+
 python-run/util/SAMoSA/
+python-run/build/
+python-run/data/
+python-run/examples/death_division/output/*
+python-run/examples/msd/output/*
+python-run/examples/wound_healing/output/*
+python-run/examples/zap_cells/output/*
+python-run/examples/no_death_div/output/*
 
 docs/
 src/doxyconfig

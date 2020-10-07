@@ -30,7 +30,7 @@ def main():
     nmax = 10052 
     death_time = 10050 # <- 50 such that it is far from the death causing holes in popDyn
     save_at = params.output_time
-    steps_between_check = 100
+    steps_between_check = params.popdynfreq
     for n in tqdm(range(nmax)):
         sim.move()
 
