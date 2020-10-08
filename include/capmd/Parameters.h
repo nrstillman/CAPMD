@@ -56,7 +56,7 @@ struct Parameters {
 
     //Interaction
     int ntypes = 3;
-    double fade = 3;
+    double fade = 3; //also run with 1
 
     std::vector<std::vector<double>> pairstiff =
         {

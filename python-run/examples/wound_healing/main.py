@@ -27,8 +27,8 @@ def main():
     ly = params.Ly
     wound = [(-lx/4, -ly), (lx/4,ly)]
 
-    nmax = 10052 
-    death_time = 10050 # <- 50 such that it is far from the death causing holes in popDyn
+    nmax = params.t_final
+    # death_time = 1000000 # <- 50 such that it is far from the death causing holes in popDyn
     save_at = params.output_time
     steps_between_check = params.popdynfreq
     for n in tqdm(range(nmax)):
@@ -45,32 +45,30 @@ def main():
             pop_id = sim.getPopulationId(idxs) #<- get id
             pop_pos = sim.getPopulationPosition(idxs) # <-  get position
             # [kc.kill_cell_in_rect(x, i, rect, sim) for (x,i) in zip(pop_pos, pop_id)] 
-            print(kc.select_cells(pop_pos, pop_id, wound))
             killList = capmd.VectorInt(kc.select_cells(pop_pos, pop_id, wound))
             sim.killCells(killList);
 
             print('Finished killing')
-
-        elif (n >= death_time) and (n <= death_time + 1): # Only after wounding occurs (limit is in place as atm we plot the result)
-            N = sim.popSize()
-            NB = sim.getBoundarySize()
-            idxs = capmd.VectorInt(range(N, N+NB))
-            pop_pos = sim.getPopulationPosition(idxs)
+        # elif (n >= death_time) and (n <= death_time + 1): # Only after wounding occurs (limit is in place as atm we plot the result)
+        #     N = sim.popSize()
+        #     NB = sim.getBoundarySize()
+        #     idxs = capmd.VectorInt(range(N, N+NB))
+        #     pop_pos = sim.getPopulationPosition(idxs)
             
-            edges = border.alpha_shape(pop_pos, alpha = 3)
-            plt.figure()
-            plt.axis('equal')
-            xs = []
-            ys = []
-            # separate xs and ys since pop_pos[:,0] and pop_pos[:,1] dont agree since its a list of tuples
-            for pos in pop_pos:
-                xs.append(pos[0])
-                ys.append(pos[1])
-            plt.plot(xs, ys, '.')
-            for i, j in edges:
-                print("edges: ",i,j)
-                plt.plot([xs[i],xs[j]], [ys[i],ys[j]])
-            plt.show()
+        #     edges = border.alpha_shape(pop_pos, alpha = 3)
+        #     plt.figure()
+        #     plt.axis('equal')
+        #     xs = []
+        #     ys = []
+        #     # separate xs and ys since pop_pos[:,0] and pop_pos[:,1] dont agree since its a list of tuples
+        #     for pos in pop_pos:
+        #         xs.append(pos[0])
+        #         ys.append(pos[1])
+        #     plt.plot(xs, ys, '.')
+        #     for i, j in edges:
+        #         print("edges: ",i,j)
+        #         plt.plot([xs[i],xs[j]], [ys[i],ys[j]])
+        #     plt.show()
         
         if(n % save_at == 0):
             sim.saveData('vtp')
