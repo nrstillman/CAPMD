@@ -29,6 +29,8 @@ python-run/examples/msd/output/*
 python-run/examples/wound_healing/output/*
 python-run/examples/zap_cells/output/*
 python-run/examples/no_death_div/output/*
+python-run/current_work/
+python-run/grant_fig/
 
 docs/
 src/doxyconfig

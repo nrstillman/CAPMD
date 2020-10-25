@@ -13,6 +13,7 @@ Dynamics::Dynamics(Parameters params) {
     factive = params.factive;
     zeta = params.zeta;
     tau = params.tau;
+    alignmentTorque = params.alignmentTorque;
 
     Lx = params.Lx;
     Ly = params.Ly;
@@ -28,17 +29,11 @@ Dynamics::Dynamics(Parameters params) {
 void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
 
     double theta = p->getTheta();
-
     // get particle posn
     std::array<double,2> x = p->getPosition();
-//    std::cout << "x = (" << x[0] << "," << x[1] << ")" << std::endl;
-    //    std::array<double,2> f = p->getForce();
 
     // compute the active force, according to its current direction along a unit vector that makes an angle theta with the x-axis
-    // std::array<double, 2> unit = {cos(theta),sin(theta)};
     std::array<double, 2> factvector = {factive[p->getType()]*cos(theta), factive[p->getType()]*sin(theta)};
-//    std::cout << "theta = (" << theta << ")" << std::endl;
-//    std::cout << "f = (" << factvector[0] << "," << factvector[1] << ")" << std::endl;
 
     // update the positions, according to Euler in the simplest approach
     // Why not something more sophisticated? The angular, stochastic, step is much more complex otherwise
@@ -46,7 +41,6 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     x[1] += (factvector[1] + p->getForce()[1])/zeta[p->getType()]*dt;
 
 //    std::cout << "x = (" << x[0] << "," << x[1] << ")" << std::endl;
-
     if (periodic){
         if (x[0]>Lx/2){x[0]-=Lx;}
         else if (x[0]<-Lx/2){x[0]+=Lx;}
@@ -61,11 +55,9 @@ void Dynamics::step(std::shared_ptr<Particle> p, double dt) {
     // update the angle. Here, in the simplest approach, there is no angular torque from either active or passive sources
     // note stochastic calculus: The rotational diffusion constant is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
-//    std::cout << 2.0/tau*sqrt(dt)*dist(gen) << std::endl;
     theta += 2.0/tau[p->getType()]*sqrt(dt)*dist(gen);
+    theta += alignmentTorque[p->getType()]*dt; //add in alignment (if it exists)
+
     p->setTheta(theta);
     p->setAge(p->getAge() + dt);
-
-    /// more general form if some form of torque or alignment is present:
-    // p.theta += alignmentTorque*dt + 2.0/tau[p.type]*sqrt(dt)*rng(gen);
 }

@@ -1,13 +1,15 @@
-// Created by N.R. Stillman & S. Henkes 2020
 //
-#include "Interaction.h"
+// Created by Namid Stillman on 10/25/20.
+//
+
+#include "Potential.h"
 #include <cmath>
 
 #define _USE_MATH_DEFINES
 
 double TOL = 1E-6;
 
-Interaction::Interaction(Parameters params){
+Potential::Potential(Parameters params){
     // read out number of types, pair stiffnesses and pair attractions
     ntypes = params.ntypes;
     pairstiff = params.pairstiff;
@@ -16,10 +18,11 @@ Interaction::Interaction(Parameters params){
     Lx = params.Lx;
     Ly = params.Ly;
     if (params.bc_opt == "periodic"){periodic = true;}
+    std::cout << "Lx is " << Lx <<" and Ly is "<< Ly << std::endl;
 }
 
 // vector between two particles
-std::array<double,2> Interaction::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
+std::array<double,2> Potential::calc_dr(std::array<double,2> xi, std::array<double,2> xj)
 {
     double x = xj[0] - xi[0];
     double y = xj[1] - xi[1];
@@ -33,13 +36,12 @@ std::array<double,2> Interaction::calc_dr(std::array<double,2> xi, std::array<do
 }
 
 // distance between two particles
-double Interaction::dist(std::array<double,2> i, std::array<double,2> j)
+double Potential::dist(std::array<double,2> i, std::array<double,2> j)
 {
     if (i == j) return TOL; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
 }
 
-void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
-
+void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
@@ -49,7 +51,7 @@ void Interaction::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Part
     // compute distance
     double dx = dist(i->getPosition(), j->getPosition());
 
-    // actual force computation according to our potential
+    // actual force computation according to our potentials
     // several lines since piecewise defined
     std::array<double,2> force = {0,0};
 

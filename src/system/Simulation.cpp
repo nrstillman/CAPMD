@@ -2,8 +2,7 @@
 //
 #include "Simulation.h"
 
-//#define _USE_MATH_DEFINES
-#define M_PI 3.141592
+#define _USE_MATH_DEFINES
 
 Simulation::Simulation(){
     gen = Engine(params.initseed);
@@ -13,7 +12,8 @@ Simulation::Simulation(){
     disr = Distribution(0,1);
 
     domain = std::make_shared<Domain>(params);
-    interaction = std::make_shared<Interaction>(params);
+//    interaction = std::make_shared<Interaction>(params);
+    std::shared_ptr<Potential> interaction = Interaction::createPotential(params);
     dynamics = std::make_shared<Dynamics>(params);
     population = std::make_shared<Population>(params);
 
@@ -48,7 +48,7 @@ Simulation::Simulation(Parameters _params){
     disr = Distribution(0,1);
 
     domain = std::make_shared<Domain>(params);
-    interaction = std::make_shared<Interaction>(params);
+    interaction = Interaction::createPotential(params);
     dynamics = std::make_shared<Dynamics>(params);
     population = std::make_shared<Population>(params);
 
@@ -150,6 +150,38 @@ void Simulation::initPopulation() {
     }
 }
 // time stepping of the simulation
+void Simulation::move(int t_final)
+{
+    int t = 0;
+    while (t < t_final){
+        double timeint = timestep*params.dt; // possibly for adding to age...
+        auto p = particles.begin();
+        std::advance(p, boundarysize);
+
+        while (p != particles.end()) {
+            // zero force and number of contact neighbours for each timestep
+            (*p)->setForce({0,0});
+            (*p)->setZ(0);
+            // get neighbours of p out of neighbour list
+            std::list<std::shared_ptr<Particle>> neighbours = domain->getNeighbours((*p)->getIndex());
+            for (auto n : neighbours) {
+                // use interaction to compute force
+                interaction->computeForce((*p),n);
+            }
+            ++p; // onto the next particle
+        }
+        // using the forces, update the positions and angles
+        for (int i = boundarysize; i< particles.size(); ++i) {
+            dynamics->step(particles[i], params.dt);
+        }
+        bool rebuild = domain->checkRebuild(particles);
+        if (rebuild) {
+            domain->makeNeighbourList(particles);
+        }
+        timestep ++;
+        t ++;
+    }
+}
     void Simulation::move()
     {
 //        std::cout<< "---------- t=" <<timestep <<  "---------- " <<std::endl;

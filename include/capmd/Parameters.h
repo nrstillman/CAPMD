@@ -55,6 +55,7 @@ struct Parameters {
     double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
 
     //Interaction
+    int potential = 1;
     int ntypes = 3;
     double fade = 3; //also run with 1
 
@@ -73,6 +74,7 @@ struct Parameters {
 
     //Dynamics (active parameters)
     std::vector<double> factive = {0, 0.2, 0.001}; //active force
+    std::vector<double> alignmentTorque = {0,0,0}; //alignment torque
     std::vector<double> zeta = {0, 1, 1}; //friction
     std::vector<double> tau = {0, 10, 10}; //angular noise term
 

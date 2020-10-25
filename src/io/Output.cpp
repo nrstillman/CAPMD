@@ -106,7 +106,15 @@ void Output::vtp(int timestep)
 
         double f[3] = {(*p)->getForce()[0], (*p)->getForce()[1], 0};
         double v[3] = {(*p)->getVel()[0], (*p)->getVel()[1], 0};
-		double fact[3] = {cos((*p)->getTheta()), sin((*p)->getTheta()), 0};
+        double fact[3] = {cos((*p)->getTheta()), sin((*p)->getTheta()), 0};
+//
+//        if ((*p)->getType() != 0){
+//            std::cout << "\nParticle: "<< (*p)->getId() << std::endl;
+//            std::cout << "Velocity: " << std::endl;
+//            std::cout << v[0] << " " << v[1] << std::endl;
+//            std::cout << "factive: " << std::endl;
+//            std::cout << fact[0] << " " << fact[1] << std::endl;
+//        }
 
         // Get the data
         ids->InsertNextValue((*p)->getId());

@@ -38,7 +38,8 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("getBoundaryId", &Simulation::getBoundaryId)
         .def("getPopulationRadius", &Simulation::getPopulationRadius)
         .def("saveData",&Interface::saveData)
-        .def("move", &Interface::move)
+        .def("move", py::overload_cast<int>(&Interface::move))
+        .def("move", py::overload_cast<>(&Interface::move))
         .def("populationDynamics", &Interface::populationDynamics)
         .def("killCell", &Interface::killCell)
         .def("killCells", &Interface::killCells)
@@ -91,6 +92,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("pairatt", &Parameters::pairatt)         //pairatt - nxn mat
         // Dynamics
         .def_readwrite("factive", &Parameters::factive)
+        .def_readwrite("alignment", &Parameters::alignmentTorque)
         .def_readwrite("zeta", &Parameters::zeta)
         .def_readwrite("tau", &Parameters::tau)
         // Div/Death

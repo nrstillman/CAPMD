@@ -3,9 +3,11 @@
 #include "Population.h"
 #include "Domain.h"
 #include "Dynamics.h"
-#include "Interaction.h"
 #include "Particle.h"
 #include "Output.h"
+
+#include "potentials/Interaction.h"
+#include "potentials/Potential.h"
 
 #include <iostream>
 #include <fstream>
@@ -32,7 +34,8 @@ class Simulation : virtual public Particle{
         std::shared_ptr<Domain> domain;
         std::shared_ptr<Dynamics> dynamics;
         std::shared_ptr<Population> population;
-        std::shared_ptr<Interaction> interaction;
+//        std::shared_ptr<Interaction> interaction;
+        std::shared_ptr<Potential> interaction;
 
         typedef std::mt19937 Engine;
         typedef std::uniform_real_distribution<double> Distribution;
@@ -54,6 +57,7 @@ class Simulation : virtual public Particle{
 
         // Methods for particle dynamics
         void move();
+        void move(int);
         void populationDynamics(int);
 
         // Methods for getting sim data

@@ -27,15 +27,18 @@ add_library(
     ${CMAKE_SOURCE_DIR}/src/system/Particle.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Population.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Domain.cpp
-    ${CMAKE_SOURCE_DIR}/src/system/Interaction.cpp
     ${CMAKE_SOURCE_DIR}/src/system/Dynamics.cpp
-    ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/potentials/Interaction.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/potentials/Potential.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/potentials/newPotential.cpp
     ${CMAKE_SOURCE_DIR}/src/bindings/Interface.cpp
+    ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
 )
 
 # Add additonal directories.
 include_directories(include/capmd)
 include_directories(src/system)
+include_directories(src/system/potentials)
 include_directories(src/io)
 include_directories(src/bindings)
 
