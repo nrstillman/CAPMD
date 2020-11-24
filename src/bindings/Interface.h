@@ -3,10 +3,14 @@
 
 #include <string>
 #include "Simulation.h"
+#include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 #ifndef CAPMD_DO_H
 #define CAPMD_DO_H
-
+// for convenience
+using json = nlohmann::json;
 
 class Interface : public Simulation{
 
@@ -24,9 +28,11 @@ class Interface : public Simulation{
         void setCellTypes(std::vector<int>, int);
 
 //        void setCellAttrib(int, int, std::string attribute); <- this will be evolution of set cell type
-
 //        void killROI(int);
 //        void setROIAttrib(int, int, std::string attribute);
+
+        static Parameters loadJSON(std::string);
+
 };
 
 

@@ -15,8 +15,12 @@ struct Parameters {
     // interaction parameters
 
     // io
+    std::string configfile = "parameters.json";
+
+    // io
     std::string filename = "frame";
-    std::string outputfolder = "./";
+    std::string outputfolder = "./output/";
+    std::string output_type = "text";
     int output_time = 100;
 
     // Random
@@ -25,8 +29,9 @@ struct Parameters {
     int popseed = 2021;
 
     // Simulation
-    int popdynfreq = 100;
     int t_final = 30000;
+    int popdynfreq = 100;
+    int zaptime = 1500;
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
     double maxmove = 0.25;

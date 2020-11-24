@@ -1,4 +1,4 @@
-from tqdm import tqdm
+# from tqdm import tqdm
 #import matplotlib.pyplot as plt
 import numpy as np
 import Debug.pycapmd as pycapmd # this can be changed to build.pycapmd when availiable
@@ -26,7 +26,7 @@ print("[INFO] - Animation Started")
 end = False
 
 rect = None
-for t in tqdm(range(1000)):
+for t in range(1000):
     #break
     if int(t)%100 == 0:
         sim.populationDynamics(100)

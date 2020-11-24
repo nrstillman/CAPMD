@@ -12,31 +12,29 @@ from numpy import random # used to randomly choose cells
 
 def main():
 
-	parameterFile = "parameters.json"
-	params = readParams.fromJSON(capmd.Parameters(), parameterFile)
+    parameterFile = "parameters.json"
+    params = readParams.fromJSON(capmd.Parameters(), parameterFile)
 
-	sim = capmd.interface(params)
+    sim = capmd.interface(params)
 
-	N = sim.popSize()
-	NB = sim.getBoundarySize()
+    N = sim.popSize()
+    NB = sim.getBoundarySize()
 
-	lx = params.Lx
-	ly = params.Ly
-	nmax = params.t_final
+    lx = params.Lx
+    ly = params.Ly
+    nmax = params.t_final
 
-	save_at = params.output_time 
-	steps_between_check = 100 
-	Nzaplist = 50
+    save_at = params.output_time 
+    steps_between_check = 100 
+    # Nzaplist = 50
 
-	for n in tqdm(range(nmax)):
+    for n in tqdm(range(int(params.t_final/save_at))):
+        sim.move(save_at)
 
-	    sim.move()
-
-	    if (n % save_at == 0):
-	        sim.saveData('vtp')
-	        sim.saveData('text')
-	            
-	print('Simulation Complete\n\n') 
+        sim.saveData('vtp')
+        sim.saveData('text')
+                    
+    print('Simulation Complete\n\n') 
 
 if __name__ == "__main__":
 

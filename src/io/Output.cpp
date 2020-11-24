@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Output.h"
 #include <cmath> // used to calculate log10 of final time for trailing zeros
+#include <sys/types.h>
+#include <sys/stat.h>
 
 Output::Output(Parameters params, int boundarysize, std::vector<std::shared_ptr<Particle>> _particles){
         file_name = params.filename;
@@ -41,14 +43,12 @@ void Output::log(int timestep){
 void Output::savePopulation(int timestep)
 {
     std::ostringstream oss;  // use a stringstream to format the data
-	oss << output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".dat";
+    oss << "../" << output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".dat";
     std::string outputfile = oss.str();
     std::filebuf fb;
     fb.open (outputfile, std::ofstream::out | std::ofstream::trunc); //< currently deleting txt - use this for appending: std::ios::app);
     std::ostream out(&fb);
     out << "flag,type,radius,x,y,vx,vy,nx,ny\n";
-    //    out << particles.size();
-    //    out << '\n';
 
     for (auto p : particles) {
         out << (*p);
@@ -60,7 +60,8 @@ void Output::savePopulation(int timestep)
 void Output::vtp(int timestep)
 {
     std::ostringstream oss;  // use a stringstream to format the data
-    oss << output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".vtp";
+
+    oss << "../"<< output_folder << file_name << "_" << std::setfill('0') << std::setw(int(log10(t_final)) +1) << std::to_string(timestep) << ".vtp";
     std::string outputfile = oss.str();
 
     //polydata for particle attributes
@@ -107,14 +108,6 @@ void Output::vtp(int timestep)
         double f[3] = {(*p)->getForce()[0], (*p)->getForce()[1], 0};
         double v[3] = {(*p)->getVel()[0], (*p)->getVel()[1], 0};
         double fact[3] = {cos((*p)->getTheta()), sin((*p)->getTheta()), 0};
-//
-//        if ((*p)->getType() != 0){
-//            std::cout << "\nParticle: "<< (*p)->getId() << std::endl;
-//            std::cout << "Velocity: " << std::endl;
-//            std::cout << v[0] << " " << v[1] << std::endl;
-//            std::cout << "factive: " << std::endl;
-//            std::cout << fact[0] << " " << fact[1] << std::endl;
-//        }
 
         // Get the data
         ids->InsertNextValue((*p)->getId());
@@ -148,27 +141,5 @@ void Output::vtp(int timestep)
     writer->SetFileName(outputfile.c_str());
     writer->SetInputData(polydata);
     writer->Write();
-
-//     // create .pvd (is this best way?) <- move to separate method either way
-//     ofstream pvdfile;
-//     if (t == 0){
-//         pvdfile.open(pvdfilename.c_str());
-//         pvdfile << "<?xml version=\"1.0\"?>" << std::endl;
-//         pvdfile << "<VTKFile type=\"Collection\" version=\"0.1\"" << std::endl;
-//         pvdfile << "\t byte_order=\"LittleEndian\"" << std::endl;
-//         pvdfile << "\t compressor=\"vtkZLibDataCompressor\">" << std::endl;
-//         pvdfile << "<Collection>" << std::endl;
-//     }
-//     else{
-//         pvdfile.open(pvdfilename.c_str(), std::ios_base::app);
-//     }
-//     pvdfile << "\t<DataSet timestep=\"" << t << "\" group=\"\" part=\"0\" \n"
-//                " \t\tfile=\""<< file_name+"_" + std::to_string(t) + ".vtp"<< "\"/>" << endl;
-// 
-//     if (t == finalstep) {
-//         pvdfile << "</Collection>\n          </VTKFile>" << std::endl;
-//     }
-//     pvdfile.close();
-
 
 }

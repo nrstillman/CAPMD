@@ -3,7 +3,9 @@
 //
 
 #include "Interface.h"
-//
+// for convenience
+using json = nlohmann::json;
+
 Interface::Interface() : Simulation(){
 };
 
@@ -33,5 +35,113 @@ void Interface::setCellTypes(std::vector<int> cell_ids, int new_cell_type){
     Simulation::changeParticles(cell_ids, new_cell_type);
 };
 
-//void setCellAttrib(int cell_idx, int attribute_value, std::string attribute){};
+Parameters Interface::loadJSON(std::string filename){
+    // read a JSON file
+    std::ifstream f("../include/config/" + filename);
 
+    std::string line;
+    try {
+        f.is_open();
+        std::cout << "File found @ " << "'../include/config/" + filename + "'." << std::endl;
+        std::cout << "---------" << std::endl;
+    }
+    catch (int e){
+        std::cout << "Error " << e << ". Could not find file. ";
+    }
+
+    try
+    {
+        // parsing input with a syntax error
+        json j = json::parse(f);
+        // range-based for
+        // special iterator member functions for objects
+        Parameters params;
+        for (json::iterator it = j.begin(); it != j.end(); ++it) {
+            if (it.key() == "filename"){
+                params.filename = it.value();
+            }
+            else if (it.key() == "outputfolder"){
+                params.outputfolder = it.value();
+            }
+            else if (it.key() == "output_time"){
+                params.output_time = it.value();
+            }
+            else if (it.key() == "output_type"){
+                params.output_type = it.value();
+            }
+            else if (it.key() == "init_opt"){
+                params.init_opt = it.value();
+            }
+            else if (it.key() == "bc_opt"){
+                params.bc_opt = it.value();
+            }
+            else if (it.key() == "popdynfreq"){
+                params.popdynfreq = it.value();
+            }
+            else if (it.key() == "zaptime"){
+                params.zaptime = it.value();
+            }
+            else if (it.key() == "t_final"){
+                params.t_final = it.value();
+            }
+            else if (it.key() == "dt") {
+                params.dt = it.value();
+            }
+            else if (it.key() == "N") {
+                params.N = it.value();
+            }
+            else if (it.key() == "ntypes") {
+                params.ntypes = it.value();
+            }
+            else if (it.key() == "Lx"){
+                params.Lx = it.value();
+            }
+            else if (it.key() == "Ly"){
+                params.Ly = it.value();
+            }
+            else if (it.key() == "deathrate"){
+                params.deathrate = it.value();
+            }
+            else if (it.key() == "divrate"){
+                params.divrate = it.value();
+            }
+            else if (it.key() == "factive"){
+                params.factive[0] = it.value()[0];
+                params.factive[1] = it.value()[1];
+            }
+            else if (it.key() == "tau"){
+                params.tau[0] = it.value()[0];
+                params.tau[1] = it.value()[1];
+            }
+            else if (it.key() == "alignmentTorque"){
+                params.alignmentTorque[0] = it.value()[0];
+                params.alignmentTorque[1] = it.value()[1];
+            }
+            else if (it.key() == "pairatt"){
+                params.pairatt[0][0] = it.value()[0][0];
+                params.pairatt[0][1] = it.value()[0][1];
+                params.pairatt[1][0] = it.value()[1][0];
+                params.pairatt[1][1] = it.value()[1][1];
+            }
+            else if (it.key() == "pairstiff"){
+                params.pairstiff[0][0] = it.value()[0][0];
+                params.pairstiff[0][1] = it.value()[0][1];
+                params.pairstiff[1][0] = it.value()[1][0];
+                params.pairstiff[1][1] = it.value()[1][1];
+            }
+            else{
+                std::cout << "Note:" << it.key() << " not updated." << std::endl;
+            }
+        }
+        std::cout << "---------" << std::endl;
+        return params;
+    }
+    catch (json::parse_error& e)
+    {
+        // output exception information
+        std::cout << "\nmessage: " << e.what() << '\n'
+                  << "\nexception id: " << e.id << '\n'
+                  << "\nbyte position of error: " << e.byte << std::endl;
+    }
+}
+//void setCellAttrib(int cell_idx, int attribute_value, std::string attribute){};

@@ -26,11 +26,11 @@ class Param:
 		self.box = [p.Lx,p.Ly,5.0]
 		
 		# Potential parameters (will need to be modified for several stiffnesses)
-		self.potential = 'soft_attractive' # our current potential
+		self.potential = 'soft_attractive' # our current potentials
 		self.pot_params = {}
 		self.pot_params['k'] = p.pairstiff # stiffness
 		
-		self.pot_params['re_fact'] = [[att+1 for att in pair] for pair in p.pairatt]  # point at which the potential hits its minimum. We label that 1 + epsilon
+		self.pot_params['re_fact'] = [[att+1 for att in pair] for pair in p.pairatt]  # point at which the potentials hits its minimum. We label that 1 + epsilon
 		# alternative option when interactions are turned off
 		self.potential = 'none'
 		self.pot_params['k'] = 0.0

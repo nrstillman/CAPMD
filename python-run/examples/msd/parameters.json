@@ -3,7 +3,7 @@
 
     "outputfolder": "output/",
     "filename": "MSD_data",
-    "output_time": 200,
+    "output_time": 50,
 
     "angseed": 2000,
     "popdynfreq": 10001,
@@ -34,9 +34,10 @@
     "pairstiff": [[0,0],[0,0]],
     "pairatt": [[0,0],[0,0]],
 
-    "factive": [0, 0.01],
+    "factive": [0, 1],
+    "alignment": [0, 0.1],
     "zeta": [0, 1],
-    "tau": [0, 1],
+    "tau": [0, 5],
 
     "deathrate": 0.005,
     "divrate": 0.1,

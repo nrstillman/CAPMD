@@ -1,6 +1,6 @@
-import sys
-sys.path.append('../../build/') # This will be replaced by a called function in later releases
-sys.path.append('../../util/') # This will be replaced by a called function in later releases
+import sys,os
+sys.path.append(os.path.realpath('../../build/')) # This will be replaced by a called function in later releases
+sys.path.append(os.path.realpath('../../util/')) # This will be replaced by a called function in later releases
 
 import pycapmd as capmd
 import readParams
@@ -16,7 +16,7 @@ def main():
 
     parameterFile = "parameters.json"
     params = readParams.fromJSON(capmd.Parameters(), parameterFile)
-    #sim = capmd.simulation(params)
+    #sim = config.simulation(params)
     sim = capmd.interface(params)
 
     N = sim.popSize()
@@ -52,7 +52,7 @@ def main():
         # elif (n >= death_time) and (n <= death_time + 1): # Only after wounding occurs (limit is in place as atm we plot the result)
         #     N = sim.popSize()
         #     NB = sim.getBoundarySize()
-        #     idxs = capmd.VectorInt(range(N, N+NB))
+        #     idxs = config.VectorInt(range(N, N+NB))
         #     pop_pos = sim.getPopulationPosition(idxs)
             
         #     edges = border.alpha_shape(pop_pos, alpha = 3)
