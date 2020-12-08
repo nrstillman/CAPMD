@@ -61,6 +61,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("outputfolder", &Parameters::outputfolder)
         .def_readwrite("filename", &Parameters::filename)
         .def_readwrite("output_time", &Parameters::output_time)
+        .def_readwrite("output_type", &Parameters::output_type)
         // Domain
         .def_readwrite("Lx", &Parameters::Lx)
         .def_readwrite("Ly", &Parameters::Ly)
@@ -68,6 +69,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("angseed", &Parameters::angseed)
         .def_readwrite("popdynfreq", &Parameters::popdynfreq)
         .def_readwrite("t_final", &Parameters::t_final)
+        .def_readwrite("zaptime", &Parameters::zaptime)
         .def_readwrite("cutoff", &Parameters::cutoff)
         .def_readwrite("dt", &Parameters::dt)
         .def_readwrite("dim", &Parameters::dim)

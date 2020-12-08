@@ -7,6 +7,7 @@ newPotential::newPotential(Parameters params) : Potential(params){
 }
 
 void newPotential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
+    std::cout << "Chosen new potential" << std::endl;
 
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];

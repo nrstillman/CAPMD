@@ -94,8 +94,7 @@ class Simulation : virtual public Particle{
         // Members (taken from parameters but included incase changing through python script)
         // Number of particles
         int N;
-        // Neighbour list (cutoff) and contact cutoff range (cutoffZ)
-        double cutoffZ;
+
         // time step
         double dt;
 		// current time step
@@ -104,8 +103,6 @@ class Simulation : virtual public Particle{
         double maxmove;
         // running counter on particle flags
         int currentflag;
-        // correlation time
-        double tau;
 
         int boundarysize = 0;
 

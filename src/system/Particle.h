@@ -76,7 +76,7 @@ class Particle
         void setPrevPosition() { prevposition = position;}
 
         std::array<double,2> getForce() { return force;}
-        void setForce(std::array<double,2> x)  { force = x;}
+        void setForce(std::array<double,2> x)  {force = x;}
         void addForce(std::array<double,2>);
 
         std::array<double,2> getVel() { return vel;}

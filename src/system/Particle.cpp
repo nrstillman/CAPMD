@@ -68,10 +68,14 @@ void Particle::addForce(std::array<double,2> f){
 }
 std::ostream& operator<<(std::ostream& out,const Particle& p)
 {
-    return out << p.getId() << ',' << p.type << ',' << p.radius
-        << std::setprecision(8) << ',' << p.position[0]<< ','  << std::setprecision(8) << p.position[1]
-        << std::setprecision(8) << ',' << p.vel[0]<< ','  << std::setprecision(8) << p.vel[1]
-        << ',' << cos(p.theta) << ',' << sin(p.theta) << std::endl ;
+    return out << p.getId() << ',' << p.type << ','
+        << std::setprecision(8) << p.radius << ','
+        << std::setprecision(8) << p.position[0] << ','
+        << std::setprecision(8) << p.position[1] << ','
+        << std::setprecision(8) << p.vel[0] << ','
+        << std::setprecision(8) << p.vel[1] << ','
+        << std::setprecision(8) << cos(p.theta) << ','
+        << std::setprecision(8) << sin(p.theta) << std::endl ;
 }
 
 // taken from http://stackoverflow.com/a/236803/248823

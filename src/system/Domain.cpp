@@ -15,6 +15,7 @@ Domain::Domain(Parameters params){
     Ly = params.Ly;
     if (params.bc_opt == "periodic"){periodic = true;}
     std::cout << "Initialised Domain" << std::endl;
+    std::cout << "Lx is " << Lx <<" and Ly is "<< Ly << std::endl;
 }
 
 // vector between two particles
@@ -23,10 +24,10 @@ std::array<double,2> Domain::calc_dr(std::array<double,2> xi, std::array<double,
     double x = xj[0] - xi[0];
     double y = xj[1] - xi[1];
     if (periodic){
-        if (x>Lx/2){x-=Lx;}
-        else if (x<-Lx/2){x+=Lx;}
-        else if (y>Ly/2){y-=Ly;}
-        else if (y<-Ly/2){y+=Ly;}
+        if (x>=Lx/2){x-=Lx; }
+        else if (x<=-Lx/2){x+=Lx; }
+        if (y>=Ly/2){y-=Ly; }
+        else if (y<=-Ly/2){y+=Ly; }
     }
     return {x, y};
 }
@@ -47,7 +48,7 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
     std::list <std::shared_ptr<Particle>> neighs = NeighbourList[i];
     for (auto n : neighs) {
             double dist_ip = dist(particles[i]->getPosition(), n->getPosition());
-            if (dist_ip <cutoffZ) z+=1;
+            if (dist_ip <cutoffZ) {z+=1;}
     }
     return z;
 }
@@ -56,7 +57,7 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
-int Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
+void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
     NeighbourList.clear();
     //vector of previous positions of particle (used in rebuild)
     auto p = particles.begin();
@@ -68,6 +69,7 @@ int Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
         (*p)->setPrevPosition();
 
         std::list<std::shared_ptr<Particle>> pneighs;
+        std::vector<int> ids;
         int numneighs = 0;
         std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
         for(neigh = particles.begin(), end = particles.end() ; neigh != end; ++neigh) {
@@ -75,29 +77,38 @@ int Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
             double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
             if (dist_pq < cutoff) {
                 pneighs.push_back((*neigh));
+                ids.push_back((*neigh)->getId());
                 numneighs += 1;
                 }
             }
         }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
-//		std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
+/*		std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
+		std::cout << "neighbours are:" << std::endl;
+		for (int n = 0; n<numneighs; n++){
+		    std::cout << " " << ids[n];
+		}
+		std::cout << "." <<std::endl;*/
         idxmap[(*p)->getId()] = idx + boundarysize;
 
         pneighs.clear();
         ++p;
         idx += 1;
     }
-    return 1;
 }
 
 // check for a neighbour list rebuild based on max motion of particles
 bool Domain::checkRebuild(std::vector<std::shared_ptr<Particle>> particles) {
     for  (int i = boundarysize; i< particles.size(); ++i)  {
         // this is not pretty
-        std::array<double,2> drmove = calc_dr(particles[i]->getPrevPosition(), particles[i]->getPosition());
-        double distmove = sqrt(drmove[0]*drmove[0] + drmove[1]*drmove[1]);
-        if (distmove > maxmove) return true;
+//        std::array<double,2> drmove = calc_dr(particles[i]->getPosition(), particles[i]->getPrevPosition());
+//        double distmove = sqrt(drmove[0]*drmove[0] + drmove[1]*drmove[1]);
+        double distmove = dist(particles[i]->getPosition(), particles[i]->getPrevPosition());
+        if (distmove > maxmove){
+//            std::cout << "Rebuild neighbour list triggered!" << std::endl;
+            return true;
+        }
     }
     return false;
 }

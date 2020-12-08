@@ -12,6 +12,7 @@ Output::Output(Parameters params, int boundarysize, std::vector<std::shared_ptr<
         NB = boundarysize;
         particles = _particles;
         t_final = params.t_final;
+        factive = params.factive;
 }
 
 void Output::update(Parameters params, int boundarysize, std::vector<std::shared_ptr<Particle>> _particles){
@@ -21,6 +22,7 @@ void Output::update(Parameters params, int boundarysize, std::vector<std::shared
     NB = boundarysize;
     particles = _particles;
     t_final = params.t_final;
+    factive = params.factive;
 }
 
 void Output::log(int timestep){
@@ -107,7 +109,12 @@ void Output::vtp(int timestep)
 
         double f[3] = {(*p)->getForce()[0], (*p)->getForce()[1], 0};
         double v[3] = {(*p)->getVel()[0], (*p)->getVel()[1], 0};
-        double fact[3] = {cos((*p)->getTheta()), sin((*p)->getTheta()), 0};
+        double fact[3] =  {factive[(*p)->getType()]*cos((*p)->getTheta()),
+                           factive[(*p)->getType()]*sin((*p)->getTheta()),
+                           0};
+//        if ((*p)->getId() == 5) {
+//        std::cout << "Output velocity of particle " << (*p)->getId() <<  " is {" << (*p)->getVel()[0] <<  "," << (*p)->getVel()[1] << "}." << std::endl;
+//        }
 
         // Get the data
         ids->InsertNextValue((*p)->getId());

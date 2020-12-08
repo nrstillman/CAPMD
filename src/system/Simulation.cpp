@@ -171,8 +171,11 @@ void Simulation::move(int t_final)
             ++p; // onto the next particle
         }
         // using the forces, update the positions and angles
-        for (int i = boundarysize; i< particles.size(); ++i) {
-            dynamics->step(particles[i], params.dt);
+        p = particles.begin();
+        std::advance(p, boundarysize);
+
+        while (p != particles.end()) {
+                dynamics->step((*p));
         }
         bool rebuild = domain->checkRebuild(particles);
         if (rebuild) {
@@ -201,9 +204,12 @@ void Simulation::move(int t_final)
             }
             ++p; // onto the next particle
         }
+        p = particles.begin();
+        std::advance(p, boundarysize);
         // using the forces, update the positions and angles
-        for (int i = boundarysize; i< particles.size(); ++i) {
-            dynamics->step(particles[i], params.dt);
+        while (p != particles.end()) {
+            dynamics->step((*p));
+            ++p; // onto the next particle
         }
         bool rebuild = domain->checkRebuild(particles);
         if (rebuild) {

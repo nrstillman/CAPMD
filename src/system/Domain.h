@@ -43,7 +43,7 @@ class Domain
         int countZ(std::vector<std::shared_ptr<Particle>>, int);
 
         //! Calculates a particles neighbour list - This is one of the most intensive aspects of code
-        int makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
+        void makeNeighbourList(std::vector<std::shared_ptr<Particle>>);
         //! Check to see whether a particle's neighbour list needs to be recalculated based on distance travelled
         bool checkRebuild(std::vector<std::shared_ptr<Particle>>);
         //! Returns list of neighbours by index

@@ -8,10 +8,10 @@ if(APPLE AND EXISTS /usr/local/opt/qt5)
     # This check makes sure that it's located rather than the default /usr/local prefix.
     list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 endif()
-if(APPLE AND EXISTS /usr/local/Cellar/vtk@8.2/8.2.0)
+if(APPLE AND EXISTS /usr/local/Cellar/vtk@8.2/8.2.0_1)
     # Even worse, homebrew installs new versions of vtk which are not longer supported
     # Instead, use an old version and make explicit here
-    set(VTK_DIR "/usr/local/Cellar/vtk@8.2/8.2.0/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+    set(VTK_DIR "/usr/local/Cellar/vtk@8.2/8.2.0_1/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
 endif()
 if (WIN32)
     # Same problem of versions for windows builds
@@ -36,7 +36,7 @@ add_library(
 )
 
 # Add additonal directories.
-include_directories(include/capmd)
+include_directories(include/config)
 include_directories(src/system)
 include_directories(src/system/potentials)
 include_directories(src/io)

@@ -27,10 +27,10 @@ std::array<double,2> Potential::calc_dr(std::array<double,2> xi, std::array<doub
     double x = xj[0] - xi[0];
     double y = xj[1] - xi[1];
     if (periodic){
-        if (x>Lx/2){x-=Lx;}
-        else if (x<-Lx/2){x+=Lx;}
-        else if (y>Ly/2){y-=Ly;}
-        else if (y<-Ly/2){y+=Ly;}
+        if (x>=Lx/2){x-=Lx; }// std::cout << "new x is " << x << std::endl;}
+        else if (x<=-Lx/2){x+=Lx; }// std::cout << "new x is " << x << std::endl;}
+        if (y>=Ly/2){y-=Ly; }//std::cout << "new y is " << y << std::endl;}
+        else if (y<=-Ly/2){y+=Ly; }// std::cout << "new y is " << y << std::endl;}
     }
     return {x, y};
 }
@@ -38,10 +38,13 @@ std::array<double,2> Potential::calc_dr(std::array<double,2> xi, std::array<doub
 // distance between two particles
 double Potential::dist(std::array<double,2> i, std::array<double,2> j)
 {
-    if (i == j) return TOL; else return sqrt((j[0] - i[0])*(j[0] - i[0]) + (j[1] - i[1])*(j[1] - i[1]));
+    std::array<double,2> dr = calc_dr(i,j);
+
+    if (i == j) return TOL; else return sqrt(dr[0]*dr[0] + dr[1]*dr[1]);
 }
 
 void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
+//    std::cout << "Chosen old potential" << std::endl;
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
@@ -56,13 +59,16 @@ void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Partic
     std::array<double,2> force = {0,0};
 
     double bij = i->getRadius()+ j->getRadius();
-    if (dx < bij*(1 + eps)) {
-        force = {-kij*(bij - dx)*dr[0]/dx,-kij*(bij - dx)*dr[1]/dx};
+
+    bool adhesive;
+    if (dx/bij - 1 <= eps) {
+        force = {kij*(dx - bij)*dr[0]/dx,kij*(dx - bij)*dr[1]/dx};
     }
-    else if (dx < bij*(1 + 2*eps)){
-        force = {kij*(bij - dx - 2*eps)*dr[0]/dx, kij*(bij - dx - 2*eps)*dr[1]/dx};
+    else if ((dx/bij - 1 > eps) && (dx/bij - 1 <= 2*eps)){
+        force = {-kij*(dx - bij - 2*bij*eps)*dr[0]/dx, -kij*(dx - bij - 2*bij*eps)*dr[1]/dx};
     }
-    if (dx < params.cutoffZ*bij){
+
+    if (dx < params.cutoffZ){
         i ->addZ(1);
     }
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
@@ -78,7 +84,6 @@ void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Partic
 
         std::transform(force.begin(), force.end(), force.begin(), [&multiplier](auto& c){return c*multiplier;});
     }
-
     // add force
     i->addForce(force);
 }

@@ -32,6 +32,7 @@ public:
     std::string file_name;
     std::string output_folder;
     int t_final;
+    std::vector<double> factive;
 
     int N;
     int NB;

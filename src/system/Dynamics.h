@@ -22,18 +22,17 @@ class Dynamics {
         //! Dynamics Constructor
         Dynamics(Parameters);
         //! Moves a particle according to the force law and adds a active motion
-        void step(std::shared_ptr<Particle> , double);
+        void step(std::shared_ptr<Particle>);
 
     private:
         //! Parameter object (specifically for assigning...)
-        Parameters params;
-
         std::vector<double> factive; //!< Magnitude of the active force
         std::vector<double> zeta; //!< Substrate friction
         std::vector<double> tau; //!< Correlation time of the active motion
         std::vector<double> alignmentTorque; //!< Alignment Torque
         bool periodic = false; //!< Bool condition for periodic boundary conditions
         double Lx, Ly; //!< Boundary edges
+        double dt;
 
         typedef std::mt19937 Engine; //!< Mersenne-Twister Random Number Engine Template
         typedef std::normal_distribution<double> Distribution; //!< Normal distribution template
