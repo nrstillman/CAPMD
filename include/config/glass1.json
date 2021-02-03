@@ -4,12 +4,12 @@
     "output_time": 100,
     "output_type": "all",
 
-    "t_final": 100000,
-    "popdynfreq": 100001,
-    "zaptime": 100001,
+    "t_final": 130000,
+    "popdynfreq": 1000001,
+    "zaptime": 1000001,
 
-    "Lx": 59.08,
-    "Ly": 59.08,
+    "Lx": 56.049,
+    "Ly": 56.049,
     
     "dt": 0.01,
     "dim": 2,

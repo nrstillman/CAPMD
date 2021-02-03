@@ -67,7 +67,6 @@ void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Partic
     else if ((dx/bij - 1 > eps) && (dx/bij - 1 <= 2*eps)){
         force = {-kij*(dx - bij - 2*bij*eps)*dr[0]/dx, -kij*(dx - bij - 2*bij*eps)*dr[1]/dx};
     }
-
     if (dx < params.cutoffZ){
         i ->addZ(1);
     }
