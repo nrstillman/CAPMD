@@ -32,6 +32,7 @@ class Dynamics {
         std::vector<double> alignmentTorque; //!< Alignment Torque
         bool periodic = false; //!< Bool condition for periodic boundary conditions
         double Lx, Ly; //!< Boundary edges
+        int NCells; //!< Number of cells for computing neighbourhood
         double dt;
 
         typedef std::mt19937 Engine; //!< Mersenne-Twister Random Number Engine Template

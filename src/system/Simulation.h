@@ -49,8 +49,9 @@ class Simulation : virtual public Particle{
     public:
         std::shared_ptr<Output> output;
 
-    // Access through interface (should make these protected)
+        // Access through interface (should make these protected)
         std::vector<std::shared_ptr<Particle>> particles;
+        int cells;
 
         // Setting parameters
         void setParams(Parameters);

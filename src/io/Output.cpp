@@ -76,6 +76,10 @@ void Output::vtp(int timestep)
     ids->SetName("Id");
     ids->SetNumberOfComponents(1);
 
+    vtkSmartPointer<vtkIntArray> cids =  vtkSmartPointer<vtkIntArray>::New();
+    cids->SetName("Cell Id");
+    cids->SetNumberOfComponents(1);
+
     vtkSmartPointer<vtkIntArray> types =  vtkSmartPointer<vtkIntArray>::New();
     types->SetName("Type");
     types->SetNumberOfComponents(1);
@@ -118,6 +122,7 @@ void Output::vtp(int timestep)
 
         // Get the data
         ids->InsertNextValue((*p)->getId());
+        cids->InsertNextValue((*p)->getCid());
         types->InsertNextValue((*p)->getType());
         radii->InsertNextValue((*p)->getRadius());
         numneigh -> InsertNextValue((*p)->getNumNeigh());
@@ -130,6 +135,7 @@ void Output::vtp(int timestep)
 
 	// Set the additional polydata
 	polydata->GetPointData()->AddArray(ids);
+    polydata->GetPointData()->AddArray(cids);
 	polydata->GetPointData()->AddArray(types);
 	polydata->GetPointData()->AddArray(radii);
 	polydata->GetPointData()->AddArray(numneigh);

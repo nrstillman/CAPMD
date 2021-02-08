@@ -3,7 +3,7 @@
 #include "Dynamics.h"
 #include <cmath>
 #include <iostream>
-#include <random>
+#include <algorithm>
 
 #define _USE_MATH_DEFINES
 
@@ -18,6 +18,7 @@ Dynamics::Dynamics(Parameters params) {
 
     Lx = params.Lx;
     Ly = params.Ly;
+    NCells = params.NCells;
 
     // change to periodic bc if chosen
     if (params.bc_opt == "periodic"){periodic = true;}
@@ -61,4 +62,5 @@ void Dynamics::step(std::shared_ptr<Particle> p) {
 
     p->setTheta(theta);
     p->setAge(p->getAge() + dt);
+
 }

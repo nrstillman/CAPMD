@@ -11,7 +11,7 @@ Particle::Particle(int pid, int ptype, std::array<double,2> px, double ptheta, d
     vel = {0,0};
     prevposition = {0,0};
     id = pid;
-
+    cellidx = 0;
     type = ptype;
     position = px;
     theta = ptheta;
@@ -27,7 +27,8 @@ Particle::Particle(int pid, int ptype, std::array<double,2> px, double ptheta, d
 Particle::Particle(const Particle & rhs)
 {
     this->setId(rhs.getId()); // check removing this doesn't break code
-    std::cout << "particle copied " << std::endl; 
+    std::cout << "particle copied " << std::endl;
+    cellidx = rhs.cellidx;
     age = rhs.age;
     force = rhs.force;
     vel= rhs.vel;

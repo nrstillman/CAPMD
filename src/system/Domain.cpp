@@ -13,9 +13,15 @@ Domain::Domain(Parameters params){
     maxmove = params.maxmove;
     Lx = params.Lx;
     Ly = params.Ly;
+    NCells  = params.NCells;
+    std::vector<std::vector<int>> CellList(params.NCells*params.NCells);
     if (params.bc_opt == "periodic"){periodic = true;}
     std::cout << "Initialised Domain" << std::endl;
     std::cout << "Lx is " << Lx <<" and Ly is "<< Ly << std::endl;
+}
+//included as mod negative is machine depndent
+int Domain::mod(int k, int n) {
+    return ((k %= n) < 0) ? k+n : k;
 }
 
 // vector between two particles
@@ -57,39 +63,82 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // gets passed all the currently existing particles
 // and a suitable cutoff, which is *larger* than the maximum existing interaction range,
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
+
+void Domain::makeCellList(std::vector<std::shared_ptr<Particle>> particles){
+    std::cout << "Remade cell list" <<std::endl;
+    //vector of previous positions of particle (used in rebuild)
+    std::vector<std::vector<std::shared_ptr<Particle>>> tmpList(NCells*NCells);
+    auto p = particles.begin();
+    std::advance(p, boundarysize);
+    int idx = 0;
+    while (p != particles.end()) {
+        // construct grid and assign particle into cell
+        double dx = Lx/NCells;
+        double dy = Ly/NCells;
+        int cid;
+        for (int n = 0; n<=NCells;n++){
+            for (int m = 0; m<=NCells;m++){
+                bool xcheck = ((*p)->getPosition()[0] > (-Lx/2 + m*dx) && ((*p)->getPosition()[0]< (-Lx/2 + dx*(m+1))));
+                bool ycheck = ((*p)->getPosition()[1] > (-Ly/2 + n*dy) && ((*p)->getPosition()[1]< (-Ly/2 + dy*(n+1))));
+                if (xcheck && ycheck){
+                    cid = NCells*m + n;
+//                    std::cout << cid << std::endl;
+                    tmpList[cid].push_back((*p));
+                    (*p)->setCid(cid);
+                }
+            }
+        }
+        ++p;
+    }
+    CellList = tmpList;
+}
 void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles){
     NeighbourList.clear();
     //vector of previous positions of particle (used in rebuild)
     auto p = particles.begin();
     std::advance(p, boundarysize);
     int idx = 0;
-    while (p != particles.end()) {
 
+    while (p != particles.end()) {
+        /// Gets neighbouring cells for particle
+        std::array<int, 9> cellNeighbours;
+        int a = (int)(*p)->getCid()/NCells;
+        int b = mod((*p)->getCid(),NCells);
+        int cidx = 0;
+        for (int i = a-1; i < a+2; i++) {
+            for (int j = b-1; j < b+2; j++) {
+                cellNeighbours[cidx] = NCells*(mod(i,NCells)) + mod(j,NCells);
+                ++cidx;
+            }
+        }
         (*p)->setIndex(idx);
         (*p)->setPrevPosition();
 
         std::list<std::shared_ptr<Particle>> pneighs;
         std::vector<int> ids;
         int numneighs = 0;
-        std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
-        for(neigh = particles.begin(), end = particles.end() ; neigh != end; ++neigh) {
-        if ((*p)->getId() != (*neigh)->getId() ){
-            double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
-            if (dist_pq < cutoff) {
-                pneighs.push_back((*neigh));
-                ids.push_back((*neigh)->getId());
-                numneighs += 1;
+        for (cidx = 0; cidx < 9; cidx++){
+            std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
+            for(neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end() ; neigh != end; ++neigh) {
+                if ((*p)->getId() != (*neigh)->getId() ){
+                    double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
+                    if (dist_pq < cutoff) {
+                        pneighs.push_back((*neigh));
+                        ids.push_back((*neigh)->getId());
+                        numneighs += 1;
+                        }
+                    }
                 }
             }
-        }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
-/*		std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
+		/* std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
 		std::cout << "neighbours are:" << std::endl;
 		for (int n = 0; n<numneighs; n++){
 		    std::cout << " " << ids[n];
 		}
-		std::cout << "." <<std::endl;*/
+		std::cout << "." <<std::endl;
+		*/
         idxmap[(*p)->getId()] = idx + boundarysize;
 
         pneighs.clear();

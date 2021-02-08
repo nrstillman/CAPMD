@@ -25,6 +25,7 @@ class Particle
         double radius; //!< Particle radius
         double age;  //!< Particle age (since creation) which is used in death calculation
         int type;  //!< Particle type (such as boundary cell)
+        int  cellidx;
         std::array<double,2> position; //!< Particle position
         double theta;  //!< Particle angle
         std::array<double,2> force;  //!< Particle force
@@ -46,6 +47,9 @@ class Particle
 
         int getId() const { return id; };
         void setId( int x) {std::cout << "attempted id change!"<< std::endl;}
+
+        int getCid() const { return cellidx; };
+        void setCid(int x) {cellidx = x;}
 
         int getIndex() const { return idx; };
         void setIndex( int x) {idx = x;}

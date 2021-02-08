@@ -31,6 +31,7 @@ Simulation::Simulation(){
     // create population of particles
     Simulation::initPopulation();
     // create the first neighbour list
+    domain->makeCellList(particles);
     domain->makeNeighbourList(particles);
 
     output = std::make_shared<Output>(params, boundarysize, particles);
@@ -64,6 +65,8 @@ Simulation::Simulation(Parameters _params){
 
     // create population of particles
     Simulation::initPopulation();
+    // allocate particles into a cell
+    domain->makeCellList(particles);
     // create the first neighbour list
     domain->makeNeighbourList(particles);
 
@@ -179,6 +182,7 @@ void Simulation::move(int t_final)
         }
         bool rebuild = domain->checkRebuild(particles);
         if (rebuild) {
+            domain->makeCellList(particles);
             domain->makeNeighbourList(particles);
         }
         timestep ++;
@@ -213,6 +217,7 @@ void Simulation::move(int t_final)
         }
         bool rebuild = domain->checkRebuild(particles);
         if (rebuild) {
+            domain->makeCellList(particles);
             domain->makeNeighbourList(particles);
         }
         timestep ++;
@@ -264,7 +269,9 @@ void Simulation::move(int t_final)
         particles.insert(particles.end(), newparticles.begin(), newparticles.end());
 
         // and rebuild the neighbour list
-        if (rebuild) domain->makeNeighbourList(particles);
+        if (rebuild)
+            domain->makeCellList(particles);
+            domain->makeNeighbourList(particles);
 //        // Now, separately, we will check for death
         for (auto p = particles.begin() + boundarysize; p != particles.end(); ){
             bool death = population->testDeath((*p)->getType(),timeint);
@@ -274,6 +281,7 @@ void Simulation::move(int t_final)
             else{++p;}
         }
         //do a neighbour list rebuild to get all the indices straightened out again
+        domain->makeCellList(particles);
         domain->makeNeighbourList(particles);
 //		std::cout << "Number of particles after division and death " << particles.size() << std::endl;
     }
@@ -285,6 +293,7 @@ void Simulation::removeParticle(int i){
     if (idx == -1){std::cout << "Error: No particle with that id detected" << std::endl;}
     else {
         particles.erase(particles.begin() + idx);
+        domain->makeCellList(particles);
         domain->makeNeighbourList(particles);
     }
 }
@@ -302,7 +311,10 @@ void Simulation::removeParticles(std::vector<int> ids){
             killNum ++;
         }
     }
-    if(rebuild) {domain->makeNeighbourList(particles);}
+    if(rebuild) {
+        domain->makeCellList(particles);
+        domain->makeNeighbourList(particles);
+    }
 }
 
 // function to remove particle in simulation (using id -> idx map in domain)
@@ -395,7 +407,11 @@ void Simulation::saveData(std::string outtype) {
 	 else if (outtype.compare("text") == 0) {
 		 output->savePopulation(timestep);
 	 }
-	 else {
+     else if (outtype.compare("both") == 0) {
+         output->savePopulation(timestep);
+         output->vtp(timestep);
+     }
+     else {
 		 std::cout << "Error: Unknown output type, doing nothing!";
 	 }
 }
