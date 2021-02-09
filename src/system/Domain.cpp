@@ -65,7 +65,7 @@ int Domain::countZ(std::vector<std::shared_ptr<Particle>> particles, int i) {
 // optimal value is in the range of the first maximum of g(r), about 1.4 interaction ranges
 
 void Domain::makeCellList(std::vector<std::shared_ptr<Particle>> particles){
-    std::cout << "Remade cell list" <<std::endl;
+    //std::cout << "Remade cell list" <<std::endl;
     //vector of previous positions of particle (used in rebuild)
     std::vector<std::vector<std::shared_ptr<Particle>>> tmpList(NCells*NCells);
     auto p = particles.begin();
@@ -117,19 +117,33 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         std::list<std::shared_ptr<Particle>> pneighs;
         std::vector<int> ids;
         int numneighs = 0;
-        for (cidx = 0; cidx < 9; cidx++){
-            std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
-            for(neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end() ; neigh != end; ++neigh) {
-                if ((*p)->getId() != (*neigh)->getId() ){
-                    double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
-                    if (dist_pq < cutoff) {
-                        pneighs.push_back((*neigh));
-                        ids.push_back((*neigh)->getId());
-                        numneighs += 1;
+        //TODO: Can we combine both of these into a single loop? - for now, have two and parallelise cell checks
+        #pragma omp parallel
+        {
+            std::vector<std::shared_ptr<Particle>> priv_pneighs;
+            std::vector<int> priv_ids;
+            #pragma omp for nowait schedule(static) reduction(+:numneighs)
+            for (cidx = 0; cidx < 9; cidx++) {
+                std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
+                for (neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end();
+                     neigh != end; ++neigh) {
+                    if ((*p)->getId() != (*neigh)->getId()) {
+                        double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
+                        if (dist_pq < cutoff) {
+                            priv_pneighs.push_back((*neigh));
+                            priv_ids.push_back((*neigh)->getId());
+                            numneighs += 1;
                         }
                     }
                 }
             }
+            #pragma omp for schedule(static) ordered
+            for (int i = 0; i < omp_get_num_threads(); i++) {
+            #pragma omp ordered
+                pneighs.insert(pneighs.end(), priv_pneighs.begin(), priv_pneighs.end());
+                ids.insert(ids.end(), priv_ids.begin(), priv_ids.end());
+            }
+        }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
 		/* std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
