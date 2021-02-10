@@ -30,10 +30,8 @@ Population::Population(Parameters params) {
 // takes a particle, a number of neighbours for it, and a random number generator
 // the time interval is the amount of real time that has elapsed since the last check
 bool Population::testDivide(int type, double z, double timeint) {
-
-    /// TODO: check type
     // actual density-dependent division rate
-    double divreal = divrates*(1-z/maxZ);
+    double divreal = divrates[type]*(1-z/maxZ);
 
     // include timeinterval to make this a division probability.
     // Note that the resulting number needs to remain << 1 for accuracy
@@ -47,10 +45,9 @@ bool Population::testDivide(int type, double z, double timeint) {
 
 // check if a particle will die. Similar to division, just without the z-dependence (which can be added if desired)
 bool Population::testDeath(int type, double timeint) {
-
     // include timeinterval to make this a division probability.
     // Note that the resulting number needs to remain << 1 for accuracy
-    double deathreal = deathrates*timeint;
+    double deathreal = deathrates[type]*timeint;
     // final check on death: If deathreal is larger than a randomly chosen number in (0,1)
     // divid, else don't
     if (deathreal > dist(gen)) return true; else return false;

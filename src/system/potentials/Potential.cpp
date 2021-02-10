@@ -18,7 +18,7 @@ Potential::Potential(Parameters params){
     Lx = params.Lx;
     Ly = params.Ly;
     if (params.bc_opt == "periodic"){periodic = true;}
-    std::cout << "Lx is " << Lx <<" and Ly is "<< Ly << std::endl;
+    std::cout << "Initialised Potential" << std::endl;
 }
 
 // vector between two particles

@@ -17,7 +17,6 @@ Domain::Domain(Parameters params){
     std::vector<std::vector<int>> CellList(params.NCells*params.NCells);
     if (params.bc_opt == "periodic"){periodic = true;}
     std::cout << "Initialised Domain" << std::endl;
-    std::cout << "Lx is " << Lx <<" and Ly is "<< Ly << std::endl;
 }
 //included as mod negative is machine depndent
 int Domain::mod(int k, int n) {
@@ -117,31 +116,19 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         std::list<std::shared_ptr<Particle>> pneighs;
         std::vector<int> ids;
         int numneighs = 0;
-        //TODO: Can we combine both of these into a single loop? - for now, have two and parallelise cell checks
-        #pragma omp parallel
-        {
-            std::vector<std::shared_ptr<Particle>> priv_pneighs;
-            std::vector<int> priv_ids;
-            #pragma omp for nowait schedule(static) reduction(+:numneighs)
-            for (cidx = 0; cidx < 9; cidx++) {
-                std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
-                for (neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end();
-                     neigh != end; ++neigh) {
-                    if ((*p)->getId() != (*neigh)->getId()) {
-                        double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
-                        if (dist_pq < cutoff) {
-                            priv_pneighs.push_back((*neigh));
-                            priv_ids.push_back((*neigh)->getId());
-                            numneighs += 1;
-                        }
+        //TODO: Can we combine both of these into a single loop? - for now, have two
+        for (cidx = 0; cidx < 9; cidx++) {
+            std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
+            for (neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end();
+                 neigh != end; ++neigh) {
+                if ((*p)->getId() != (*neigh)->getId()) {
+                    double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
+                    if (dist_pq < cutoff) {
+                        pneighs.push_back((*neigh));
+                        ids.push_back((*neigh)->getId());
+                        numneighs += 1;
                     }
                 }
-            }
-            #pragma omp for schedule(static) ordered
-            for (int i = 0; i < omp_get_num_threads(); i++) {
-            #pragma omp ordered
-                pneighs.insert(pneighs.end(), priv_pneighs.begin(), priv_pneighs.end());
-                ids.insert(ids.end(), priv_ids.begin(), priv_ids.end());
             }
         }
         NeighbourList.push_back(pneighs);

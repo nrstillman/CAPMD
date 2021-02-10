@@ -90,44 +90,64 @@ Parameters Interface::loadJSON(std::string filename){
             else if (it.key() == "N") {
                 params.N = it.value();
             }
+            else if (it.key() == "NTA") {
+                params.NTA = it.value();
+            }
+            else if (it.key() == "Ntracer") {
+                params.Ntracer = it.value();
+            }
             else if (it.key() == "ntypes") {
                 params.ntypes = it.value();
             }
-            else if (it.key() == "Lx"){
-                params.Lx = it.value();
-            }
-            else if (it.key() == "Ly"){
-                params.Ly = it.value();
+            else if (it.key() == "phi"){
+                params.phi = it.value();
             }
             else if (it.key() == "deathrate"){
-                params.deathrate = it.value();
+                params.deathrate[0] = it.value()[0];
+                params.deathrate[1] = it.value()[1];
+                params.deathrate[2] = it.value()[2];
             }
             else if (it.key() == "divrate"){
-                params.divrate = it.value();
+                params.divrate[0] = it.value()[0];
+                params.divrate[1] = it.value()[1];
+                params.divrate[2] = it.value()[2];
             }
             else if (it.key() == "factive"){
                 params.factive[0] = it.value()[0];
                 params.factive[1] = it.value()[1];
+                params.factive[2] = it.value()[2];
             }
             else if (it.key() == "tau"){
                 params.tau[0] = it.value()[0];
                 params.tau[1] = it.value()[1];
+                params.tau[2] = it.value()[2];
             }
             else if (it.key() == "alignmentTorque"){
                 params.alignmentTorque[0] = it.value()[0];
                 params.alignmentTorque[1] = it.value()[1];
+                params.alignmentTorque[2] = it.value()[2];
             }
             else if (it.key() == "pairatt"){
                 params.pairatt[0][0] = it.value()[0][0];
                 params.pairatt[0][1] = it.value()[0][1];
+                params.pairatt[0][2] = it.value()[0][2];
                 params.pairatt[1][0] = it.value()[1][0];
                 params.pairatt[1][1] = it.value()[1][1];
+                params.pairatt[1][2] = it.value()[1][2];
+                params.pairatt[2][0] = it.value()[2][0];
+                params.pairatt[2][1] = it.value()[2][1];
+                params.pairatt[2][2] = it.value()[2][2];
             }
             else if (it.key() == "pairstiff"){
                 params.pairstiff[0][0] = it.value()[0][0];
                 params.pairstiff[0][1] = it.value()[0][1];
+                params.pairstiff[0][2] = it.value()[0][2];
                 params.pairstiff[1][0] = it.value()[1][0];
                 params.pairstiff[1][1] = it.value()[1][1];
+                params.pairstiff[1][2] = it.value()[1][2];
+                params.pairstiff[2][0] = it.value()[2][0];
+                params.pairstiff[2][1] = it.value()[2][1];
+                params.pairstiff[2][2] = it.value()[2][2];
             }
             else{
                 std::cout << "Note:" << it.key() << " not updated." << std::endl;

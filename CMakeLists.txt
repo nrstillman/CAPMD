@@ -50,9 +50,10 @@ add_executable(
     capmd_demo
     ${CMAKE_SOURCE_DIR}/src/main.cpp
 )
-# Link the CAPMD demo against libcapmd and the VTK libraries.
+
+# Link the CAPMD demo against libcapmd, VTK libraries
 target_link_libraries(
-        capmd_demo
+        capmd_demo PRIVATE
         capmd
         ${VTK_LIBRARIES}
 )
@@ -71,5 +72,3 @@ target_link_libraries(
         capmd
         ${VTK_LIBRARIES}
 )
-
-

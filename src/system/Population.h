@@ -35,8 +35,8 @@ class Population{
     private:
 
         int ntypes;//!< Number of types
-        double divrates; //!< Division rate
-        double deathrates; //!< death rate
+        std::vector<double> divrates; //!< Division rate
+        std::vector<double> deathrates; //!< death rate
         int maxZ; //!< maximum density at division (in units of particle neighbours)
 
         std::random_device rd;

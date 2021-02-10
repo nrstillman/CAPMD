@@ -38,9 +38,16 @@ Simulation::Simulation(){
 }
 
 Simulation::Simulation(Parameters _params){
-    std::cout << "Initialised Simulation w Parameters" << std::endl;
 
     params = _params;
+    // TODO: sort out how params is loaded...
+    params.Lx = sqrt(params.N*M_PI/params.phi);
+    params.Ly = sqrt(params.N*M_PI/params.phi);
+    params.NCells = params.Lx/(params.cutoff+2*params.R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
+
+    std::cout << "Initialised Simulation w Parameters:" << std::endl;
+    std::cout << "Phi is " << params.phi << std::endl;
+    std::cout << "Lx is " << params.Lx <<" and Ly is "<< params.Ly << std::endl;
 
     gen = Engine(params.initseed);
     disx = Distribution(0,1);
@@ -124,7 +131,7 @@ void Simulation::initBoundary() {
 }
 
 void Simulation::initPopulation() {
-    std::cout<<"Initialise Population" << std::endl;
+    std::cout<<"Initialised Population" << std::endl;
     if (params.init_opt == "random_unif") {
 
         std::cout << "N of boundary particles is " << boundarysize << std::endl;

@@ -1,25 +1,24 @@
 {
-    "outputfolder": "./output/",
-    "filename": "test2",
-    "output_time": 200,
+    "outputfolder": "./output/msd/",
+    "filename": "msd200",
+    "output_time": 100,
     "output_type": "all",
 
-    "angseed": 2000,
-    "popdynfreq": 101,
-    "t_final": 10000,
+    "t_final": 100000,
+    "popdynfreq": 100001,
+    "zaptime": 100001,
 
-    "phi": 1.0;
-    "Lx": 60,
-    "Ly": 60,
+    "Lx": 25,
+    "Ly": 25,
     
     "dt": 0.01,
     "dim": 2,
     "maxmove": 0.25,
     "cutoff": 3,
     "eps": 0.001,
-    "N": 100,
+    "N": 200,
     "init_opt": "random_unif",
-    "bc_opt": "unbounded",
+    "bc_opt": "periodic",
     "NTA": 0,
     "Nstem": 0, 
     "btype": 0,
@@ -34,12 +33,12 @@
     "pairstiff": [[0,0],[0,0]],
     "pairatt": [[0,0],[0,0]],
 
-    "factive": [0, 0.2],
+    "factive": [0, 0.01],
     "zeta": [0, 1],
-    "tau": [0, 10],
+    "tau": [0, 200], 
 
-    "deathrate": 0.005,
-    "divrate": 0.1,
+    "deathrate": 0,
+    "divrate": 0,
     "cutoffZ": 1,
-    "maxZ": 4
+    "maxZ": 6
 }

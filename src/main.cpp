@@ -16,7 +16,6 @@ int main(int argc, char* argv[]) {
     if (argc > 1){
         params =  Interface::loadJSON(argv[1]);
     }
-
     Interface sim = Interface(params);
 
     std::array<double, 2> x ;
