@@ -1,7 +1,7 @@
 {
     "outputfolder": "./output/",
     "filename": "liquid",
-    "output_time": 100,
+    "output_time": 200,
     "output_type": "all",
 
     "t_final": 130000,
@@ -36,7 +36,7 @@
 
     "factive": [0, 0.03,0.03],
     "zeta": [0, 1,1],
-    "tau": [0, 200,200],
+    "tau": [0, 400,400],
 
     "deathrate": [0,0,0],
     "divrate": [0,0,0],

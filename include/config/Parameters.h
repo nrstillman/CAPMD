@@ -95,7 +95,7 @@ struct Parameters {
     std::vector<double> deathrate = {0.01,0.01,0.01,0.01};
     std::vector<double> divrate = {0.1,0.1,0.1,0.1};
 
-    double cutoffZ = 1 + 2*pairatt[type][type]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
+    double cutoffZ = 1 + 2*0.15;//pairatt[type][type]; // (1 + 2*eps) - matching [Silke, H, Soft Matt. 2016]
     double maxZ = 6;
 
 };

@@ -1,25 +1,25 @@
 {
     "outputfolder": "./output/",
-    "filename": "glass_v0.01_nu0.01_phi1_eps0",
-    "output_time": 200,
+    "filename": "deathdiv3",
+    "output_time": 100,
     "output_type": "all",
 
-    "t_final": 130000,
-    "popdynfreq": 10000001,
-    "zaptime": 10000001,
+    "t_final": 100000,
+    "popdynfreq": 101,
+    "zaptime": 100001,
 
-    "phi": 1.0,
-    
+    "phi": 0.6,
+
     "dt": 0.01,
     "dim": 2,
     "maxmove": 0.25,
     "cutoff": 3,
     "eps": 0.001,
     "N": 1000,
+    "Ntracer": 50,
 
     "init_opt": "random_unif",
     "bc_opt": "periodic",
-    "Ntracer": 0,
     "NTA": 0,
     "Nstem": 0, 
     "btype": 0,
@@ -31,16 +31,15 @@
 
     "ntypes": 1,
     "fade": 3, 
-
     "pairstiff": [[10,10,10],[10,1,1],[10,1,1]],
-    "pairatt": [[0,0,0],[0,0,0],[0,0,0]],
+    "pairatt": [[0,0,0],[0,0.15,0.15],[0,0.15,0.15]],
 
-    "factive": [0, 0.01,0.01],
+    "factive": [0, 0,0],
     "zeta": [0, 1,1],
-    "tau": [0, 400,400],
+    "tau": [0, 200,200],
 
-    "deathrate": [0,0,0],
-    "divrate": [0,0,0],
+    "deathrate": [0.05, 0.05, 0.05],
+    "divrate": [0.1, 0.1, 0.1],
     "cutoffZ": 1,
     "maxZ": 6
 }
