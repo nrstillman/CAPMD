@@ -63,8 +63,10 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("output_time", &Parameters::output_time)
         .def_readwrite("output_type", &Parameters::output_type)
         // Domain
+        .def_readwrite("phi", &Parameters::phi)
         .def_readwrite("Lx", &Parameters::Lx)
         .def_readwrite("Ly", &Parameters::Ly)
+        .def_readwrite("NCells", &Parameters::NCells)
         // Simulation
         .def_readwrite("angseed", &Parameters::angseed)
         .def_readwrite("popdynfreq", &Parameters::popdynfreq)
@@ -77,6 +79,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("eps", &Parameters::eps)
         // Population
         .def_readwrite("N", &Parameters::N)
+        .def_readwrite("Ntracer", &Parameters::Ntracer)
         .def_readwrite("init_opt", &Parameters::init_opt)
         .def_readwrite("bc_opt", &Parameters::bc_opt)
         .def_readwrite("NTA", &Parameters::NTA)

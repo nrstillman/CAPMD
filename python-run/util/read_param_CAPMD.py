@@ -18,8 +18,14 @@ class Param:
 			self.periodic = True
 			self.constraint = 'plane_periodic'
 
-		self.lx = p.Lx
-		self.ly = p.Ly
+		self.phi = p.phi
+		# self.lx = p.Lx
+		# self.ly = p.Ly
+
+	    self.lx = np.sqrt(p.N*np.pi/p.phi)
+	    self.ly = np.sqrt(p.N*np.pi/p.phi)
+	    # self.NCells = p.Lx/(p.cutoff+2*p.R)
+
 		# put into a box to be compatible with samos convention
 		# Note height. Just important it's larger than the maximum distance between contacting cells
 		# Else problems with the cell list later on.

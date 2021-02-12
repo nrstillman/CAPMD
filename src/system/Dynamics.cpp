@@ -50,7 +50,6 @@ void Dynamics::step(std::shared_ptr<Particle> p) {
         else if (x[1]<=-Ly/2){x[1]+=Ly;}// std::cout << "Particle " << p->getId() << " Jumped! New posn is (" << x[0] << ", " << x[1] << ")." <<std::endl;}
     }
     p->setPosition(x);
-    p->setActiveForce(factvector);
     p->setVel({(factvector[0] + p->getForce()[0])/zeta[p->getType()],
                (factvector[1] + p->getForce()[1])/zeta[p->getType()]});
 
@@ -58,7 +57,7 @@ void Dynamics::step(std::shared_ptr<Particle> p) {
     // note stochastic calculus: The rotational diffusion constant (nu) is 2/tau, but the noise strength is 2/tau*sqrt(dt)
     // multiply by random number chosen from a normal distribution with mean 0 and standard deviation 1
     theta += sqrt(2.0/tau[p->getType()])*sqrt(dt)*dist(gen);
-    theta += alignmentTorque[p->getType()]*dt; //add in alignment (if it exists)
+//    theta += alignmentTorque[p->getType()]*dt; //add in alignment (if it exists)
 
     p->setTheta(theta);
     p->setAge(p->getAge() + dt);

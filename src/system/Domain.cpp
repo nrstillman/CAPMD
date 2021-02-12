@@ -120,7 +120,7 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         for (cidx = 0; cidx < 9; cidx++) {
             std::vector<std::shared_ptr<Particle>>::iterator neigh, end;
             for (neigh = CellList[cellNeighbours[cidx]].begin(), end = CellList[cellNeighbours[cidx]].end();
-                 neigh != end; ++neigh) {
+                neigh != end; ++neigh) {
                 if ((*p)->getId() != (*neigh)->getId()) {
                     double dist_pq = dist((*p)->getPosition(), (*neigh)->getPosition());
                     if (dist_pq < cutoff) {
