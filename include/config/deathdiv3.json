@@ -8,15 +8,15 @@
     "popdynfreq": 101,
     "zaptime": 100001,
 
-    "phi": 0.6,
+    "phi": 0.1,
 
     "dt": 0.01,
     "dim": 2,
     "maxmove": 0.25,
     "cutoff": 3,
     "eps": 0.001,
-    "N": 1000,
-    "Ntracer": 50,
+    "N": 50,
+    "Ntracer": 5,
 
     "init_opt": "random_unif",
     "bc_opt": "periodic",
@@ -30,7 +30,7 @@
     "poly": 0.3,
 
     "ntypes": 1,
-    "fade": 3, 
+    "fade": 6, 
     "pairstiff": [[10,10,10],[10,1,1],[10,1,1]],
     "pairatt": [[0,0,0],[0,0.15,0.15],[0,0.15,0.15]],
 
@@ -38,8 +38,8 @@
     "zeta": [0, 1,1],
     "tau": [0, 200,200],
 
-    "deathrate": [0.05, 0.05, 0.05],
+    "deathrate": [0.1, 0, 0],
     "divrate": [0.1, 0.1, 0.1],
-    "cutoffZ": 1,
+    "cutoffZ": 2,
     "maxZ": 6
 }
