@@ -24,17 +24,15 @@ void newPotential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Par
 
     double bij = i->getRadius()+ j->getRadius();
     if (dx < bij*(1 + eps)) {
+        i ->addZ(1);
         force = {-kij*(bij - dx)*(dr[0]*dr[0])/dx,-kij*(bij - dx)*(dr[1]*dr[1])/dx};
     }
     else if (dx < bij*(1 + 2*eps)){
         force = {kij*(bij - dx - 2*eps)*(dr[0]*dr[0])/dx, kij*(bij - dx - 2*eps)*(dr[1]*dr[1])/dx};
     }
-    if (dx < params.cutoffZ*bij){
-        i ->addZ(1);
-    }
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     // used for particle fade-in post division.
-    if (j->getType() != params.btype){
+    if (j->getType() != btype){
 
         double multi = 1.0;
         if (i->getAge()<fade) {multi = i->getAge()/fade;}

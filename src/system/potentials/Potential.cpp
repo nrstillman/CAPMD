@@ -14,6 +14,8 @@ Potential::Potential(Parameters params){
     ntypes = params.ntypes;
     pairstiff = params.pairstiff;
     pairatt= params.pairatt;
+    cutoffZ= params.cutoffZ;
+    btype = params.btype;
     fade = params.fade;
     Lx = params.Lx;
     Ly = params.Ly;
@@ -60,19 +62,18 @@ void Potential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Partic
 
     double bij = i->getRadius()+ j->getRadius();
 
-    bool adhesive;
     if (dx/bij - 1 <= eps) {
         force = {kij*(dx - bij)*dr[0]/dx,kij*(dx - bij)*dr[1]/dx};
     }
     else if ((dx/bij - 1 > eps) && (dx/bij - 1 <= 2*eps)){
         force = {-kij*(dx - bij - 2*bij*eps)*dr[0]/dx, -kij*(dx - bij - 2*bij*eps)*dr[1]/dx};
     }
-    if (dx < params.cutoffZ){
+    if (dx/bij < 1 + 2*eps){
         i ->addZ(1);
     }
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     // used for particle fade-in post division.
-    if (j->getType() != params.btype){
+    if (j->getType() != btype){
 
         double multi = 1.0;
         if (i->getAge()<fade) {multi = i->getAge()/fade;}

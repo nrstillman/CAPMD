@@ -14,18 +14,20 @@
 class Potential {
 
     public:
-        Parameters params;
+        Parameters p;
+        // Constructor
+        Potential(Parameters);
 
         int ntypes; //! Number of different types of particles that exist in the simulation
         bool periodic; //!< Indicating whether boundary is periodic or not
         double Lx, Ly; //!< Boundary edges
+        double cutoffZ;
+        int btype;
 
         std::vector<std::vector<double>> pairstiff; //! Particle stiffnesses ... (k_ij)
         std::vector<std::vector<double>> pairatt; //! Particle attraction strengths (epsilon_ij)
 
         double fade; //! Fade-in (or out) time for particle interactions
-        // Constructor
-        Potential(Parameters);
 
         //! Calculates vector between two particles
         std::array<double,2> calc_dr(std::array<double,2>, std::array<double,2> );

@@ -44,9 +44,10 @@ Simulation::Simulation(Parameters _params){
     params.Lx = sqrt(params.N*M_PI/params.phi);
     params.Ly = sqrt(params.N*M_PI/params.phi);
     params.NCells = params.Lx/(params.cutoff+2*params.R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
-
+    params.NTA = params.N - params.Ntracer;
     std::cout << "Initialised Simulation w Parameters:" << std::endl;
     std::cout << "Phi is " << params.phi << std::endl;
+    std::cout << "cutoffZ is " << params.cutoffZ << std::endl;
     std::cout << "Lx is " << params.Lx <<" and Ly is "<< params.Ly << std::endl;
 
     gen = Engine(params.initseed);

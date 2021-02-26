@@ -70,6 +70,10 @@ void Domain::makeCellList(std::vector<std::shared_ptr<Particle>> particles){
     auto p = particles.begin();
     std::advance(p, boundarysize);
     int idx = 0;
+    if (NCells < 9){
+        std::cout << "domain is too small" << std::endl;
+        throw;
+    }
     while (p != particles.end()) {
         // construct grid and assign particle into cell
         double dx = Lx/NCells;
@@ -77,8 +81,8 @@ void Domain::makeCellList(std::vector<std::shared_ptr<Particle>> particles){
         int cid;
         for (int n = 0; n<=NCells;n++){
             for (int m = 0; m<=NCells;m++){
-                bool xcheck = ((*p)->getPosition()[0] > (-Lx/2 + m*dx) && ((*p)->getPosition()[0]< (-Lx/2 + dx*(m+1))));
-                bool ycheck = ((*p)->getPosition()[1] > (-Ly/2 + n*dy) && ((*p)->getPosition()[1]< (-Ly/2 + dy*(n+1))));
+                bool xcheck = ((*p)->getPosition()[0] >= (-Lx/2 + m*dx) && ((*p)->getPosition()[0]< (-Lx/2 + dx*(m+1))));
+                bool ycheck = ((*p)->getPosition()[1] >= (-Ly/2 + n*dy) && ((*p)->getPosition()[1]< (-Ly/2 + dy*(n+1))));
                 if (xcheck && ycheck){
                     cid = NCells*m + n;
 //                    std::cout << cid << std::endl;

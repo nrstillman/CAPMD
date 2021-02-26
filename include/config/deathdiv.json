@@ -1,0 +1,89 @@
+{
+    "outputfolder": "./output/deathdiv/",
+    "filename": "deathdiv_N_2000_d0_0.0_cfZ_1.15_eps_0.3",
+    "output_time": 200,
+    "output_type": "both",
+    "t_final": 100000,
+    "popdynfreq": 51,
+    "zaptime": 100001,
+    "phi": 1.0,
+    "dt": 0.01,
+    "dim": 2,
+    "maxmove": 0.25,
+    "cutoff": 3,
+    "eps": 0.001,
+    "N": 1000,
+    "Ntracer": 0,
+    "init_opt": "random_unif",
+    "bc_opt": "periodic",
+    "NTA": 0,
+    "Nstem": 0,
+    "btype": 0,
+    "flag": 0,
+    "type": 0,
+    "R": 1,
+    "poly": 0.3,
+    "ntypes": 1,
+    "fade": 1,
+    "pairstiff": [
+        [
+            10,
+            10,
+            10
+        ],
+        [
+            10,
+            1,
+            1
+        ],
+        [
+            10,
+            1,
+            1
+        ]
+    ],
+    "pairatt": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            0.15,
+            0.15
+        ],
+        [
+            0,
+            0.15,
+            0.15
+        ]
+    ],
+    "factive": [
+        0,
+        0,
+        0
+    ],
+    "zeta": [
+        0,
+        1,
+        1
+    ],
+    "tau": [
+        0,
+        200,
+        200
+    ],
+    "deathrate": [
+        0,
+        0.0, 
+        0.0
+    ],
+    "divrate": [
+        0,
+        0.1,
+        0.1
+    ],
+    "cutoffZ": 1.3,
+    "maxZ": 6
+}

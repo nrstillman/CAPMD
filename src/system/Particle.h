@@ -70,8 +70,8 @@ class Particle
         void setNumNeigh( int x) { numneigh= x;}
 
         int getZ() {return z;}
-        void setZ( int x) { z= x;}
-        void addZ(int);
+        void setZ(int x) { z= x;}
+        void addZ(int x) { z+= x;};
 
         std::array<double,2> getPosition() { return position;}
         void setPosition(std::array<double,2> x) { position = x;}

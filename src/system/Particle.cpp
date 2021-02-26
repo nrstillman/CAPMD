@@ -59,10 +59,6 @@ Particle::Particle(std::string line)
     z = 0;
 }
 
-void Particle::addZ(int i){
-    z += i;
-}
-
 void Particle::addForce(std::array<double,2> f){
     force[0] += f[0];
     force[1] += f[1];

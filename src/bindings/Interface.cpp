@@ -102,6 +102,15 @@ Parameters Interface::loadJSON(std::string filename){
             else if (it.key() == "phi"){
                 params.phi = it.value();
             }
+            else if (it.key() == "fade"){
+                params.fade = it.value();
+            }
+            else if (it.key() == "maxZ"){
+                params.maxZ = it.value();
+            }
+            else if (it.key() == "cutoffZ"){
+                params.cutoffZ = it.value();
+            }
             else if (it.key() == "deathrate"){
                 params.deathrate[0] = it.value()[0];
                 params.deathrate[1] = it.value()[1];
