@@ -61,12 +61,13 @@ struct Parameters {
     //Domain
     // x and y length
     double phi = 0.5;
-    double Lx = sqrt(N*M_PI/phi);
-    double Ly = sqrt(N*M_PI/phi);
+    double Lx = sqrt(N*M_PI/phi)*2;
+    double Ly = sqrt(N*M_PI/phi)/2;
     int NCells = Lx/(cutoff+4*R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
 
     //Interaction
     int potential = 1;
+    std::vector<double> delta = {0, 0, 0};
     int ntypes = 4;
     double fade = 3; //also run with 1
 

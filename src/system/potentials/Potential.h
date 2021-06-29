@@ -26,6 +26,7 @@ class Potential {
 
         std::vector<std::vector<double>> pairstiff; //! Particle stiffnesses ... (k_ij)
         std::vector<std::vector<double>> pairatt; //! Particle attraction strengths (epsilon_ij)
+        std::vector<double> delta; //! size of attractive well (Del_i)
 
         double fade; //! Fade-in (or out) time for particle interactions
 

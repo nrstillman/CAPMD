@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
     Interface sim = Interface(params);
 
     std::array<double, 2> x ;
-    double Rlength = params.Lx/4.;
+    double Rlength = params.Lx/10;
+    std::cout << Rlength << std::endl;
     std::array<double, 2> maxR = {Rlength, double(params.Ly)};
     std::array<double, 2> minR = {-Rlength, -1*double(params.Ly)};
 

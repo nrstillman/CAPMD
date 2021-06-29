@@ -1,5 +1,6 @@
 ./capmd/
 cmake-build-debug/
+CMakeLists.txt 
 
 .DS_Store
 .idea/
@@ -34,3 +35,7 @@ python-run/grant_fig/
 
 docs/
 src/doxyconfig
+
+hpcrun/
+include/config/wound_temp.json
+output/

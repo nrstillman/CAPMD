@@ -11,7 +11,7 @@ class Interaction {
 
     public:
         enum Potentials {
-            soft, vdw, hard
+            soft, adh, hard
         };
 
         Interaction();

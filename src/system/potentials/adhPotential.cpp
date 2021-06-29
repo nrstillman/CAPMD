@@ -1,17 +1,18 @@
 //
 // Created by Namid Stillman on 10/25/20.
 //
-#include "newPotential.h"
+#include "adhPotential.h"
 
-newPotential::newPotential(Parameters params) : Potential(params){
+adhPotential::adhPotential(Parameters params) : Potential(params){
 }
 
-void newPotential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
-    std::cout << "Chosen new potential" << std::endl;
+void adhPotential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Particle> j) {
+    std::cout << "Chosen potential w large well" << std::endl;
 
     // get pair parameters
     double kij = pairstiff[i->getType()][j->getType()];
     double eps = pairatt[i->getType()][j->getType()];
+    double del = delta[i->getType()];
 
     // compute vector distance between particles
     std::array<double,2> dr = calc_dr(i->getPosition(),j->getPosition());
@@ -23,12 +24,17 @@ void newPotential::computeForce(std::shared_ptr<Particle> i, std::shared_ptr<Par
     std::array<double,2> force = {0,0};
 
     double bij = i->getRadius()+ j->getRadius();
-    if (dx < bij*(1 + eps)) {
-        i ->addZ(1);
-        force = {-kij*(bij - dx)*(dr[0]*dr[0])/dx,-kij*(bij - dx)*(dr[1]*dr[1])/dx};
+    if (dx/bij - 1 <= eps) {
+        force = {kij*(dx - bij)*dr[0]/dx,kij*(dx - bij)*dr[1]/dx};
     }
-    else if (dx < bij*(1 + 2*eps)){
-        force = {kij*(bij - dx - 2*eps)*(dr[0]*dr[0])/dx, kij*(bij - dx - 2*eps)*(dr[1]*dr[1])/dx};
+    else if (dx/bij - 1 > eps + del*eps) {
+        force = {eps * dr[0] / dx, eps * dr[1] / dx};
+    }
+    else if ((dx/bij - 1 > eps) && (dx/bij - 1 <= 2*eps)){
+        force = {-kij*(dx - bij - 2*bij*eps)*dr[0]/dx, -kij*(dx - bij - 2*bij*eps)*dr[1]/dx};
+    }
+    if (dx/bij < 1 + 2*eps){
+        i ->addZ(1);
     }
     // multiply resulting force by amount of fade-in required. Cumulative if both particles are fading
     // used for particle fade-in post division.

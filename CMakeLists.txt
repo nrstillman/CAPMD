@@ -8,10 +8,11 @@ if(APPLE AND EXISTS /usr/local/opt/qt5)
     # This check makes sure that it's located rather than the default /usr/local prefix.
     list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 endif()
-if(APPLE AND EXISTS /usr/local/Cellar/vtk@8.2/8.2.0_2)
+if(APPLE AND EXISTS /usr/local/Cellar/vtk@8.2/8.2.0_6)
     # Even worse, homebrew installs new versions of vtk which are not longer supported
     # Instead, use an old version and make explicit here
-    set(VTK_DIR "/usr/local/Cellar/vtk@8.2/8.2.0_2/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+    set(VTK_DIR "/usr/local/Cellar/vtk@8.2/8.2.0_6/lib/cmake/vtk-8.2" CACHE PATH "VTK directory override" FORCE)
+    message(STATUS "include dir: ${VTK_DIR}")
 endif()
 if (WIN32)
     # Same problem of versions for windows builds
@@ -31,9 +32,9 @@ add_library(
     ${CMAKE_SOURCE_DIR}/src/system/potentials/Interaction.cpp
     ${CMAKE_SOURCE_DIR}/src/system/potentials/Potential.cpp
     ${CMAKE_SOURCE_DIR}/src/system/potentials/newPotential.cpp
+    ${CMAKE_SOURCE_DIR}/src/system/potentials/adhPotential.cpp
     ${CMAKE_SOURCE_DIR}/src/bindings/Interface.cpp
-    ${CMAKE_SOURCE_DIR}/src/io/Output.cpp
-)
+    ${CMAKE_SOURCE_DIR}/src/io/Output.cpp)
 
 # Add additonal directories.
 include_directories(include/config)
@@ -57,18 +58,18 @@ target_link_libraries(
         capmd
         ${VTK_LIBRARIES}
 )
-# Add pybind11 folder and make python module (called pycapmd)
-add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
-pybind11_add_module(
-    pycapmd
-    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
-)
-set_target_properties(pycapmd PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python-run/build)
-
-# Link vtk libraries to python module
-target_link_libraries(
-        pycapmd PRIVATE
-        capmd
-        ${VTK_LIBRARIES}
-)
+## Add pybind11 folder and make python module (called pycapmd)
+#add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
+#pybind11_add_module(
+#    pycapmd
+#    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
+#)
+#set_target_properties(pycapmd PROPERTIES
+#        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python-run/build)
+#
+## Link vtk libraries to python module
+#target_link_libraries(
+#        pycapmd PRIVATE
+#        capmd
+#        ${VTK_LIBRARIES}
+#)
