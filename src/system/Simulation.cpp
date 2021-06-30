@@ -49,7 +49,7 @@ Simulation::Simulation(Parameters _params){
     std::cout << "Phi is " << params.phi << std::endl;
     std::cout << "cutoffZ is " << params.cutoffZ << std::endl;
     std::cout << "Lx is " << params.Lx <<" and Ly is "<< params.Ly << std::endl;
-
+    std::cout << "NTracers is " << params.Ntracer << std::endl;
     gen = Engine(params.initseed);
     disx = Distribution(0,1);
     disy = Distribution(0,1);
