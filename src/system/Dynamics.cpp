@@ -22,7 +22,7 @@ Dynamics::Dynamics(Parameters params) {
 
     // change to periodic bc if chosen
     if (params.bc_opt == "periodic"){periodic = true;}
-    std::cout<<"Initialised Dynamics" << std::endl;
+    // std::cout<<"Initialised Dynamics" << std::endl;
 
     gen = Engine(params.angseed);
     dist = Distribution(0,1); //normal distribution with mean 0 and standard deviation 1

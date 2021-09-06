@@ -26,11 +26,17 @@ struct Parameters {
     std::string outputfolder = "output/";
     std::string output_type = "both"; //< options are vtp, text and both
     int output_time = 100;
-
+    bool log = false;
     // Random
     int initseed = 2022;
     int angseed = 2001;
     int popseed = 2021;
+
+    //Particle
+    int flag = 0;
+    int type = 1;
+    double R = 1;
+    double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
 
     // Simulation
     int t_final = 100000;
@@ -38,16 +44,9 @@ struct Parameters {
     int zaptime = 15000000;
     double dt  = 0.01; // fixed (upper bound)
     int dim = 2;
-    double maxmove = 0.25;
-    double cutoff = 3;
-    double eps = 1E-3; // this is where particles are added on
-
-    //Particle
-    int flag = 0;
-    int type = 1;
-
-    double R = 1;
-    double poly = 0.3; // Matching [Silke, H, Soft Matt. 2016]
+    double maxmove = 0.25; // rescale based on r (including polydispersity)
+    double cutoff = 3; // rescale based on r (including polydispersity)
+    double eps = 1E-6; 
 
     //Population
     int N = 1000; // Population size
@@ -60,10 +59,11 @@ struct Parameters {
 
     //Domain
     // x and y length
-    double phi = 0.5;
-    double Lx = sqrt(N*M_PI/phi)*2;
-    double Ly = sqrt(N*M_PI/phi)/2;
-    int NCells = Lx/(cutoff+4*R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
+    double phi = 1.;
+    double Lx = 50;
+    double Ly = 50;
+
+    int NCells = 20; //discretisation of domain into Ncells*Ncells for neighbourlist calc
 
     //Interaction
     int potential = 1;

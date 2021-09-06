@@ -58,7 +58,7 @@ class Simulation : virtual public Particle{
 
         // Methods for particle dynamics
         void move();
-        void move(int);
+//        void move(int);
         void populationDynamics(int);
 
         // Methods for getting sim data
@@ -80,6 +80,7 @@ class Simulation : virtual public Particle{
         std::vector<std::shared_ptr<Particle>> getAllParticles(void){return particles;};
         std::vector<std::array<double,2>> getPopulationPosition(std::vector<int>);
         std::vector<int> getPopulationId(std::vector<int>);
+        std::vector<int> getPopulationType(std::vector<int>);
 
         std::vector<std::array<double,2>> getBoundaryPosition();
         std::vector<int> getBoundaryId();

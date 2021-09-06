@@ -16,7 +16,7 @@ Domain::Domain(Parameters params){
     NCells  = params.NCells;
     std::vector<std::vector<int>> CellList(params.NCells*params.NCells);
     if (params.bc_opt == "periodic"){periodic = true;}
-    std::cout << "Initialised Domain" << std::endl;
+    // std::cout << "Initialised Domain" << std::endl;
 }
 //included as mod negative is machine depndent
 int Domain::mod(int k, int n) {

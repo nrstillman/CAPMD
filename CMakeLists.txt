@@ -58,18 +58,18 @@ target_link_libraries(
         capmd
         ${VTK_LIBRARIES}
 )
-## Add pybind11 folder and make python module (called pycapmd)
-#add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
-#pybind11_add_module(
-#    pycapmd
-#    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
-#)
-#set_target_properties(pycapmd PROPERTIES
-#        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python-run/build)
-#
-## Link vtk libraries to python module
-#target_link_libraries(
-#        pycapmd PRIVATE
-#        capmd
-#        ${VTK_LIBRARIES}
-#)
+# Add pybind11 folder and make python module (called pycapmd)
+add_subdirectory(libs/pybind11 ${CMAKE_SOURCE_DIR}/libs/pybind11)
+pybind11_add_module(
+    pycapmd
+    ${CMAKE_SOURCE_DIR}/src/bindings/bindings.cpp
+)
+set_target_properties(pycapmd PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python-run/build)
+
+# Link vtk libraries to python module
+target_link_libraries(
+        pycapmd PUBLIC
+        capmd
+        ${VTK_LIBRARIES}
+)

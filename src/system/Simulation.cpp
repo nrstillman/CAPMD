@@ -39,17 +39,32 @@ Simulation::Simulation(){
 
 Simulation::Simulation(Parameters _params){
 
-    params = _params;
     // TODO: sort out how params is loaded...
-    params.Lx = sqrt(params.N*M_PI/params.phi);
-    params.Ly = sqrt(params.N*M_PI/params.phi);
-    params.NCells = params.Lx/(params.cutoff+2*params.R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
+    params = _params;
+    params.cutoff *= params.R*(1+params.poly);// rescale by R
+    params.maxmove *= params.R*(1+params.poly); // rescale by R
+    if (params.phi != 1.0){
+        std::cout << "\nWorking from density calculation\n" <<std::endl;
+        params.Lx = sqrt(params.N*M_PI/params.phi);
+        params.Ly = sqrt(params.N*M_PI/params.phi);
+        params.NCells = params.Lx/(params.cutoff+2*params.R); //discretisation of domain into Ncells*Ncells for neighbourlist calc
+    }
+    else {
+        params.Lx = params.Lx;
+        params.Ly = params.Ly;
+        params.NCells = params.NCells;
+    }
     params.NTA = params.N - params.Ntracer;
-    std::cout << "Initialised Simulation w Parameters:" << std::endl;
-    std::cout << "Phi is " << params.phi << std::endl;
-    std::cout << "cutoffZ is " << params.cutoffZ << std::endl;
-    std::cout << "Lx is " << params.Lx <<" and Ly is "<< params.Ly << std::endl;
-    std::cout << "NTracers is " << params.Ntracer << std::endl;
+    if (params.log == false){
+        std::cout << "Initialised Simulation w Parameters:" << std::endl;
+        std::cout << "Phi is " << params.phi << std::endl;
+        std::cout << "cutoffZ is " << params.cutoffZ << std::endl;
+        std::cout << "maxmove is " << params.maxmove << std::endl;
+        std::cout << "cutoff is " << params.cutoff << std::endl;
+        std::cout << "Lx is " << params.Lx <<" and Ly is "<< params.Ly << std::endl;
+        std::cout << "NTracers is " << params.Ntracer << std::endl;
+    }
+        
     gen = Engine(params.initseed);
     disx = Distribution(0,1);
     disy = Distribution(0,1);
@@ -132,10 +147,9 @@ void Simulation::initBoundary() {
 }
 
 void Simulation::initPopulation() {
-    std::cout<<"Initialised Population" << std::endl;
+    //std::cout<<"Initialised Population" << std::endl;
     if (params.init_opt == "random_unif") {
 
-        std::cout << "N of boundary particles is " << boundarysize << std::endl;
         for (int i = boundarysize; i < boundarysize + params.N; i++) {
             // (subtracting radius to avoid initialising on boundary)
             double x = (disx(gen) - 0.5) * (params.Lx - 2*params.R);
@@ -156,10 +170,14 @@ void Simulation::initPopulation() {
             particles.push_back(std::move(pntrP));
             currentflag += 1;
         }
-        std::cout << "N of free particles is " << params.N << std::endl;
-        std::cout << "Total N of particles is " << totalSize() << std::endl;
+        if (params.log == false){
+            std::cout << "N of boundary particles is " << boundarysize << std::endl;
+            std::cout << "N of free particles is " << params.N << std::endl;
+            std::cout << "Total N of particles is " << totalSize() << std::endl;            
+        }
     }
 }
+/***
 // time stepping of the simulation
 void Simulation::move(int t_final)
 {
@@ -197,6 +215,7 @@ void Simulation::move(int t_final)
         t ++;
     }
 }
+***/
     void Simulation::move()
     {
 //        std::cout<< "---------- t=" <<timestep <<  "---------- " <<std::endl;
@@ -373,6 +392,17 @@ std::vector<int> Simulation::getPopulationId(std::vector<int> index){
     return ids;
 }
 
+
+// return the population Ids
+std::vector<int> Simulation::getPopulationType(std::vector<int> index){
+
+    std::vector<int> types;
+    for (auto i : index) {
+        types.push_back((particles[i])->getType());
+    }
+    return types;
+}
+
 // return the boundary positions
 std::vector<std::array<double,2>> Simulation::getBoundaryPosition(){
 
@@ -418,6 +448,8 @@ void Simulation::saveData(std::string outtype) {
      else if (outtype.compare("both") == 0) {
          output->savePopulation(timestep);
          output->vtp(timestep);
+     }
+     else if (outtype.compare("none") == 0) {
      }
      else {
 		 std::cout << "Error: Unknown output type, doing nothing!";

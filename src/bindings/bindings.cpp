@@ -6,7 +6,6 @@
 #include <pybind11/stl.h>
 
 #include <vector>
-#include <random>
 #include <string>
 
 #include "Particle.h"
@@ -19,7 +18,7 @@ namespace py = pybind11;
 PYBIND11_MAKE_OPAQUE(std::vector<int>);
 
 PYBIND11_MODULE(pycapmd, m) {
-//    //Main simulation happens here
+    //Main simulation happens here
     py::class_<Simulation>(m, "simulation")
         .def(py::init<Parameters>())
         .def("initPopulation", &Simulation::initPopulation)
@@ -33,13 +32,13 @@ PYBIND11_MODULE(pycapmd, m) {
         .def("getParticle", &Simulation::getParticle)
         .def("getParticlebyId", &Simulation::getParticlebyId)
         .def("getPopulationPosition", &Simulation::getPopulationPosition)
+        .def("getPopulationType", &Simulation::getPopulationType)
         .def("getPopulationId", &Simulation::getPopulationId)
         .def("getBoundaryPosition", &Simulation::getBoundaryPosition)
         .def("getBoundaryId", &Simulation::getBoundaryId)
         .def("getPopulationRadius", &Simulation::getPopulationRadius)
         .def("saveData",&Interface::saveData)
-        .def("move", py::overload_cast<int>(&Interface::move))
-        .def("move", py::overload_cast<>(&Interface::move))
+        .def("move", &Simulation::move)
         .def("populationDynamics", &Interface::populationDynamics)
         .def("killCell", &Interface::killCell)
         .def("killCells", &Interface::killCells)
@@ -62,6 +61,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("filename", &Parameters::filename)
         .def_readwrite("output_time", &Parameters::output_time)
         .def_readwrite("output_type", &Parameters::output_type)
+        .def_readwrite("log", &Parameters::log)
         // Domain
         .def_readwrite("phi", &Parameters::phi)
         .def_readwrite("Lx", &Parameters::Lx)

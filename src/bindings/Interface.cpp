@@ -55,6 +55,7 @@ Parameters Interface::loadJSON(std::string filename){
         json j = json::parse(f);
         // range-based for
         // special iterator member functions for objects
+//        TODO: Make this case insenstive
         Parameters params;
         for (json::iterator it = j.begin(); it != j.end(); ++it) {
             if (it.key() == "filename"){
@@ -101,6 +102,15 @@ Parameters Interface::loadJSON(std::string filename){
             }
             else if (it.key() == "phi"){
                 params.phi = it.value();
+            }
+            else if (it.key() == "R"){
+                params.R = it.value();
+            }
+            else if (it.key() == "Lx"){
+                params.Lx = it.value();
+            }
+            else if (it.key() == "Ly"){
+                params.Ly = it.value();
             }
             else if (it.key() == "fade"){
                 params.fade = it.value();
@@ -159,7 +169,7 @@ Parameters Interface::loadJSON(std::string filename){
                 params.pairstiff[2][2] = it.value()[2][2];
             }
             else{
-                std::cout << "Note:" << it.key() << " not updated." << std::endl;
+                std::cout << "\tNote:" << it.key() << " not updated." << std::endl;
             }
         }
         std::cout << "---------" << std::endl;

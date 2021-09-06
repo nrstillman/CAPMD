@@ -11,7 +11,7 @@ std::shared_ptr<Potential> Interaction::createPotential(Parameters params) {
     switch (params.potential) {
 
         case 1:
-            std::cout << "Using original potential" << std::endl;
+            // std::cout << "Using original potential" << std::endl;
             return std::make_shared<Potential>(params);
 
         case 2:

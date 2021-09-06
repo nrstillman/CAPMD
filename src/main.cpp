@@ -7,8 +7,7 @@
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    cout << "Number of args = " << argc << endl;
-
+//    cout << "Number of args = " << argc << endl;
     auto start = std::chrono::high_resolution_clock::now();
 
     Parameters params;
@@ -19,10 +18,10 @@ int main(int argc, char* argv[]) {
     Interface sim = Interface(params);
 
     std::array<double, 2> x ;
-    double Rlength = params.Lx/10;
+    double Rlength = params.Lx/4;
     std::cout << Rlength << std::endl;
-    std::array<double, 2> maxR = {Rlength, double(params.Ly)};
-    std::array<double, 2> minR = {-Rlength, -1*double(params.Ly)};
+    std::array<double, 2> maxR = {Rlength/2, double(params.Ly)};
+    std::array<double, 2> minR = {-Rlength/2, -1*double(params.Ly)};
 
     for (int t = 0; t<= params.t_final; t++){
         sim.move();

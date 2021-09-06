@@ -1,0 +1,79 @@
+<input name="wmxd_chamber">
+  <category name="general"> 
+    <data name="N_cells">23</data> <!--unused, just for personal records -->
+    <data name="N_types">4</data> <!--unused, just for personal records -->
+    <data name="N_prtcl_types">2</data> <!--unused, just for personal records -->
+    <data name="N_CC">8</data> <!--unused, just for personal records -->
+    <data name="N_CSC">0</data> <!--unused, just for personal records -->
+    <data name="N_VC">1</data> <!--unused, just for personal records -->
+    <data name="output_file">testing</data>  <!--output filename-->
+    <data name="NT">10000</data>  <!-- number of time points -->
+    <data name="t_final">172800</data>  <!--final time point in units of seconds (represents 2 days)-->
+    <data name="maxp">1.2e5</data> <!-- max injection (was used for a fitness function in the paper)-->
+  </category>
+
+  <category name="opt">
+    <option name="optimise">0</option>  <!-- whether or not to optimise using genetic algorithm-->
+    <option name="multi_core">0</option>  <!--whether or not to run on multiple cores (for optimisation) -->
+    <option name="visualise">0</option>  <!-- whether or not to visualise result in 3D -->
+    <option name="N_runs">5</option>  <!-- number of runs needed (for optimisation)-->
+    <option name="scenario">wmxd_chamber</option> <!-- which scenario to run. I think all will be wmxd_chamber-->
+    <option name="tissue">pure_CC.p</option> <!--how the tissue is structured. This samples from the physicell output, alternatively you can set it to be 'test' for 1 VP aned all CC-->
+    <option name="section">0</option>  <!-- unused -->
+  </category>
+
+  <cell name="VC">  <!-- represents specific cell types represented by a numeral in the tissue (line 43-56 in run_sim_optim.py) -->
+    <data name="type">VC</data>  <!-- unused, just for records-->
+    <data name="N_cell">20</data>  <!-- unused, just for records -->
+    <data name="N_prtcl">1</data>  <!--unused and redundant due to below-->
+    <data name="NR">0</data>  <!-- number of receptors-->
+    <data name="S">10e-6</data>  <!--size in m-->
+    <particle name="P0"> <!--multiple particles can be specified by adding more or these (see CSC below)-->
+        <data name="D">1e-10</data>  <!--diffusion coeff in units of m/s^2-->
+        <data name="k_a">0</data>  <!-- binding coeff-->
+        <data name="k_d">1e-4</data>  <!--unbinding coeff-->
+        <data name="k_i">1e-5</data> <!-- internalisation coeff-->
+        <data name="NP0">432792.83442621323</data>  <!--total number of NPs-->
+        <data name="NP_max">600</data>  <!--maximum number internalised to induce cell death-->
+        <data name="T">172800</data> <!--total circulation time-->
+    </particle>
+  </cell>
+  
+  <cell name="CC">
+    <data name="type">CC</data>
+    <data name="N_cell">0</data>
+    <data name="N_prtcl">2</data>
+    <data name="NR">1e5</data>
+    <data name="S">10e-6</data>
+    <particle name="P0">
+        <data name="D">1e-10</data>
+        <data name="k_a">226376.99481073412</data>
+        <data name="k_d">0.0001</data>
+        <data name="k_i">1e-5</data>
+        <data name="NP_max">8727.51551987757</data>
+    </particle>
+  </cell>
+  
+  <cell name="CSC">
+    <data name="type">CSC</data>
+    <data name="N_cell">0</data>
+    <data name="N_prtcl">2</data>
+    <data name="NR">1e5</data>
+    <data name="S">10e-6</data>
+    <particle name="P0">
+        <data name="D">1e-10</data>
+        <data name="k_a">797954.4672660378</data>
+        <data name="k_d">0.0001</data>
+        <data name="k_i">1e-5</data>
+        <data name="NP_max">100000000</data>
+    </particle>
+    <particle name="P1">
+        <data name="D">9.390957163169421e-11</data>
+        <data name="k_a">959927.2532318694</data>
+        <data name="k_d">0.0001</data>
+        <data name="k_i">1e-5</data>
+        <data name="NP_max">600</data>
+    </particle>
+  </cell>
+
+</input>
