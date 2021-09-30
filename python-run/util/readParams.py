@@ -4,12 +4,11 @@ Read in files and convert to parameter objecets
 import json
 import numpy as np
 
-def fromJSON(paramObj, fileName):
+def paramsFromFile(paramObj, fileName):
     paramObjCopy = paramObj
     try:
         with open(fileName) as jsonFile:
-            jsonLoad = json.load(jsonFile)
-            parameters = jsonLoad["Parameters"]
+            parameters = json.load(jsonFile)
             for attribute in parameters:
                 setattr(paramObjCopy, attribute, parameters[attribute])
             return paramObjCopy

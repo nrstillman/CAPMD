@@ -30,6 +30,7 @@ class Domain
         double Lx, Ly; //!< Boundary edges
         int NCells;
         bool periodic; //!< Indicating whether boundary is periodic or not
+        int neighbour_print;
         //! Domain Constructor
         Domain(Parameters);
 

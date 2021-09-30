@@ -31,7 +31,7 @@ class Particle
         std::array<double,2> force;  //!< Particle force
         std::array<double,2> vel;  //!< Particle velocity
         std::array<double,2> activeforce;  //!< Particle active force (which is output)
-
+        std::vector<int> neighbours; //
         //! Particle constructor
         Particle(int pid = 0, int ptype = 0, std::array<double,2> px = {0,0},double ptheta = 0.,double  pr = 1.);
         //! Particle copy constructor
@@ -85,6 +85,9 @@ class Particle
 
         std::array<double,2> getVel() { return vel;}
         void setVel(std::array<double,2> x)  { vel = x;}
+
+        std::vector<int> getNeighbours() { return neighbours;}
+        void setNeighbours(std::vector<int> x)  { neighbours = x;}
 
         void setActiveForce(std::array<double,2> x)  { activeforce = x;}
 

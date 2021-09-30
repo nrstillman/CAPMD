@@ -48,8 +48,11 @@ PYBIND11_MODULE(pycapmd, m) {
     //Additional info for specific particles (useful for tracking and targeting particles)
     py::class_<Particle>(m, "particle")
         .def(py::init<int, int, std::array<double, 2>, double, double>())
-        .def("setId", &Particle::setId)
         .def("getId", &Particle::getId)
+        .def("getForce", &Particle::getForce)
+        .def("getVelocity", &Particle::getVel)
+        .def("getNeighbours", &Particle::getNeighbours)
+        .def("getType", &Particle::getType)
         .def("getPosition", &Particle::getPosition)
         .def("getAge", &Particle::getAge);
 
@@ -61,6 +64,7 @@ PYBIND11_MODULE(pycapmd, m) {
         .def_readwrite("filename", &Parameters::filename)
         .def_readwrite("output_time", &Parameters::output_time)
         .def_readwrite("output_type", &Parameters::output_type)
+        .def_readwrite("neighbour_print", &Parameters::neighbour_print)
         .def_readwrite("log", &Parameters::log)
         // Domain
         .def_readwrite("phi", &Parameters::phi)

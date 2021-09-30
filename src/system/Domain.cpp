@@ -8,6 +8,7 @@
 
 // Domain constructor
 Domain::Domain(Parameters params){
+    neighbour_print = params.neighbour_print;
     cutoff = params.cutoff;
     cutoffZ = params.cutoffZ;
     maxmove = params.maxmove;
@@ -137,6 +138,9 @@ void Domain::makeNeighbourList(std::vector<std::shared_ptr<Particle>> particles)
         }
         NeighbourList.push_back(pneighs);
         (*p)->setNumNeigh(numneighs);
+        if (neighbour_print > 0){
+            (*p)->setNeighbours(ids);
+        }
 		/* std::cout << "particle " << idx << " with id " << (*p)->getId() << " has " << numneighs << " in the neighbour list " << std::endl;
 		std::cout << "neighbours are:" << std::endl;
 		for (int n = 0; n<numneighs; n++){

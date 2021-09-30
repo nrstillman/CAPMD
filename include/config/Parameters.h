@@ -26,6 +26,7 @@ struct Parameters {
     std::string outputfolder = "output/";
     std::string output_type = "both"; //< options are vtp, text and both
     int output_time = 100;
+    int neighbour_print = 0;
     bool log = false;
     // Random
     int initseed = 2022;
@@ -62,7 +63,6 @@ struct Parameters {
     double phi = 1.;
     double Lx = 50;
     double Ly = 50;
-
     int NCells = 20; //discretisation of domain into Ncells*Ncells for neighbourlist calc
 
     //Interaction

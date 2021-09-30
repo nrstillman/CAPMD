@@ -64,6 +64,9 @@ Parameters Interface::loadJSON(std::string filename){
             else if (it.key() == "outputfolder"){
                 params.outputfolder = it.value();
             }
+            else if (it.key() == "neighbour_print"){
+                params.neighbour_print = it.value();
+            }
             else if (it.key() == "output_time"){
                 params.output_time = it.value();
             }

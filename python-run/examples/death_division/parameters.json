@@ -1,46 +1,93 @@
 {
-  "Parameters":{
-
-    "outputfolder": "./output/",
-    "filename": "deathdiv",
-    "output_time": 200,
-
-    "angseed": 2000,
-    "popdynfreq": 101,
+    "outputfolder": "",
+    "filename": "test",
+    "output_time": 83,
+    "output_type": "text",
     "t_final": 10000,
-
-    "Lx": 60,
-    "Ly": 60,
+    "popdynfreq": 51,
+    "zaptime": 11000,
     
-    "dt": 0.01,
-    "dim": 2,
-    "maxmove": 0.25,
-    "cutoff": 3,
-    "eps": 0.001,
-    "N": 100,
-    "init_opt": "random_unif",
-    "bc_opt": "unbounded",
-    "NTA": 0,
-    "Nstem": 0, 
-    "btype": 0,
+    "phi": 1,
+    "R": 10,
 
+    "Lx": 1600,
+    "Ly": 800,
+
+    "dt": 0.001,
+    "dim": 2,
+
+    "eps": 0.001,
+    "N": 1000,
+    "init_opt": "random_unif",
+    "bc_opt": "periodic",
+    "Ntracer": 100,
+    "Nstem": 0,
+    "btype": 0,
     "flag": 0,
     "type": 0,
-    "R": 1,
     "poly": 0.3,
-
+    "cutoff": 3,
     "ntypes": 1,
-    "fade": 3, 
-    "pairstiff": [[10,10],[10,1]],
-    "pairatt": [[0,0],[0,0.15]],
+    "fade": 1,
+    "pairstiff": [
+        [
+            10,
+            10,
+            10
+        ],
+        [
+            10,
+            60,
+            60
+        ],
+        [
+            10,
+            60,
+            60
+        ]
+    ],
 
-    "factive": [0, 0.2],
-    "zeta": [0, 1],
-    "tau": [0, 10],
-
-    "deathrate": 0.005,
-    "divrate": 0.1,
-    "cutoffZ": 1,
-    "maxZ": 4
-  }
+    "pairatt": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            0.15,
+            0.15
+        ],
+        [
+            0,
+            0.15,
+            0.15
+        ]
+    ],
+    "factive": [
+        0,
+        70,
+        70
+    ],
+    "zeta": [
+        0,
+        1,
+        1
+    ],
+    "tau": [
+        0,
+        2.5,
+        2.5
+    ],
+    "deathrate": [
+        0,
+        0,
+        0.005
+    ],
+    "divrate": [
+        0.0,
+        0.0,
+        0.2
+    ],
+    "maxZ": 6
 }

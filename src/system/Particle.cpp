@@ -55,6 +55,7 @@ Particle::Particle(std::string line)
     position = {properties.at(3), properties.at(4)};
     theta = properties.at(5);
     radius = properties.at(6);
+    neighbours = {};
     numneigh = 0;
     z = 0;
 }
